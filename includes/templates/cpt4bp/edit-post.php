@@ -1,0 +1,1 @@
+<?php echo cpt4bp_create_edit_form(); ?>
