@@ -54,26 +54,41 @@ function cpt4bp_groups_load_template_filter($found_template, $templates) {
 	return apply_filters('cpt4bp_groups_load_template_filter', $found_template, $templates);
 }
 
-function cpt4bp_form_add_element($form_fields_new, $post_type, $field_type, $value){
-	
-	if($field_type  == 'test')
-		$form_fields_new[4] 	= new Element_Textbox("Values: <smal>value 1, value 2, ... </smal>", "cpt4bp_options[bp_post_types][".$post_type."][form_fields][".$field_id."][Values]", array('value' => $cpt4bp_options['bp_post_types'][$post_args[1]][form_fields][$field_id][Values]));
-		
+function cpt4bp_form_add_element($form_fields_new, $post_type, $field_type, $field_id, $value){
+	global $cpt4bp;
+	if($field_type  == 'AttachGroupType')
+		$form_fields_new[4] 	= new Element_Select("Attach Group Type:", "cpt4bp_options[bp_post_types][".$post_type."][form_fields][".$field_id."][AttachGroupType]", $cpt4bp['selected_post_types'], array('value' => $value));
 	return $form_fields_new;	
 }
-add_filter('cpt4bp_form_add_element','cpt4bp_form_add_element',1,4);
+add_filter('cpt4bp_form_add_element','cpt4bp_form_add_element',1,5);
 
 
-function cpt4bp_form_display_element($form, $customfield, $customfield_val){
+function cpt4bp_form_display_element($form,$post_id,$posttype,$customfield,$customfield_val){
 								
-	if($customfield['type']  == 'test'){
-		$element_attr = $customfield['required'] ? array('required' => true, 'value' => $customfield_val) : array('value' => $customfield_val);
-		$form->addElement(new Element_Textbox($customfield['name'] . ':<p><smal>' . $customfield['description'] . '</smal></p>', sanitize_title($customfield['name']), $element_attr));
+	if($customfield['type']  == 'AttachGroupType'){
+		
+		$attached_tax_name = $posttype . '_attached_' . $customfield['AttachGroupType'];
+		$term_list = wp_get_post_terms($post_id, $attached_tax_name, array("fields" => "ids"));
+
+		$args = array('multiple' => $customfield['multiple'], 'selected_cats' => $term_list, 'hide_empty' => 0, 'id' => $key, 'child_of' => 0, 'echo' => FALSE, 'selected' => false, 'hierarchical' => 1, 'name' => sanitize_title($customfield['name']) . '[]', 'class' => 'postform', 'depth' => 0, 'tab_index' => 0, 'taxonomy' => $attached_tax_name, 'hide_if_empty' => FALSE, );
+
+		$dropdown = wp_dropdown_categories($args);
+
+		if (is_array($customfield['multiple'])) {
+			$dropdown = str_replace('id=', 'multiple="multiple" id=', $dropdown);
+		}
+		if (is_array($term_list)) {
+			foreach ($term_list as $value) {
+				$dropdown = str_replace(' value="' . $value . '"', ' value="' . $value . '" selected="selected"', $dropdown);
+			}
+		}
+
+		$form->addElement(new Element_HTML($dropdown));
 	}
 	return $form;
 	
 }
-add_filter('cpt4bp_form_display_element','cpt4bp_form_display_element',1,3);
+add_filter('cpt4bp_form_display_element','cpt4bp_form_display_element',1,5);
 
 
 function cpt4bp_add_form_element_in_sidebar($form, $selected_post_types){
@@ -85,12 +100,6 @@ function cpt4bp_add_form_element_in_sidebar($form, $selected_post_types){
 }
 add_filter('cpt4bp_add_form_element_in_sidebar','cpt4bp_add_form_element_in_sidebar',1,2);
 
-function cpt4bp_add_form_element_in_sidebar_test($form, $selected_post_types){
-	
-		$form->addElement(new Element_HTML('<p><a href="test/'.$selected_post_types.'" class="action">Test</a></p>'));
-	return $form;
-}
-add_filter('cpt4bp_add_form_element_in_sidebar','cpt4bp_add_form_element_in_sidebar_test',2,2);
 
 function cpt4bp_admin_settings_form_post_type_sidebar($form, $selected_post_types){
 	global $cpt4bp;
@@ -100,7 +109,7 @@ function cpt4bp_admin_settings_form_post_type_sidebar($form, $selected_post_type
 	if(bp_is_active('groups')){						
 		$form->addElement(new Element_HTML('
 		<div class="accordion-group">
-			<div class="accordion-heading"><a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion_'.$selected_post_types.'" href="#accordion_'.$selected_post_types.'_group_options">Groups Control</a></div>
+			<div class="accordion-heading"><p class="accordion-toggle" data-toggle="collapse" data-parent="#accordion_'.$selected_post_types.'" href="#accordion_'.$selected_post_types.'_group_options">Groups Control</p></div>
 		    <div id="accordion_'.$selected_post_types.'_group_options" class="accordion-body collapse">
 				<div class="accordion-inner">')); 
 					$form->addElement(new Element_HTML('<p>
@@ -134,6 +143,9 @@ add_filter('cpt4bp_admin_settings_form_post_type_sidebar','cpt4bp_admin_settings
 
 function form_element_group_hooks($form_element_hooks){
 	if(bp_is_active('groups')){
+		
+		remove_filter( 'form_element_hooks', 'form_element_single_hooks' );
+		
 		array_push($form_element_hooks,
 			'cpt4bp_before_groups_single_title',
 			'cpt4bp_groups_single_title',
@@ -156,7 +168,7 @@ function form_element_group_hooks($form_element_hooks){
 	return $form_element_hooks;
 }
 
-add_filter('form_element_hooks','form_element_group_hooks');
+add_filter('form_element_hooks','form_element_group_hooks',1,1);
 
 /**
  * Locate a template

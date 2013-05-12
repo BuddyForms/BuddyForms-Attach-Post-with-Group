@@ -36,6 +36,8 @@ if (class_exists('BP_Group_Extension')) :
 						add_action($customfield['display'], create_function('', 'echo "' . addcslashes($post_meta_tmp, '"') . '";'));
 					endif;
 				endforeach;
+			} else {
+				$this->enable_edit_item	= false;
 			}
 
 			switch ($cpt4bp['bp_post_types'][$attached_post_type]['groups']['display_post']) {
@@ -66,7 +68,7 @@ if (class_exists('BP_Group_Extension')) :
 		}
 
 		function display_post() {
-			cpt4bp_ge_locate_template('cpt4bp/single-post.php');
+			cpt4bp_locate_template('cpt4bp/single-post.php');
 		}
 
 		/**
