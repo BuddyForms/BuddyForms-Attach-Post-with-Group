@@ -45,7 +45,7 @@ add_action('groups_group_details_edited', 'cpt4bp_group_header_fields_save');
 
 function cpt4bp_groups_load_template_filter($found_template, $templates) {
 	global $bp;
-		echo $filtert_template;
+	
 	if ($bp->current_component == BP_GROUPS_SLUG && $bp->current_action == 'home') {
 		$templates = cpt4bp_ge_locate_template('cpt4bp/bp/groups-home.php');
 		exit ;
@@ -141,34 +141,39 @@ function cpt4bp_admin_settings_form_post_type_sidebar($form, $selected_post_type
 add_filter('cpt4bp_admin_settings_form_post_type_sidebar','cpt4bp_admin_settings_form_post_type_sidebar',1,2);
 
 
-function form_element_group_hooks($form_element_hooks){
+function form_element_group_hooks($form_element_hooks,$post_type,$field_id){
+	
+	$cpt4bp_options = get_option('cpt4bp_options');
+	
 	if(bp_is_active('groups')){
+		if(isset($cpt4bp_options['bp_post_types'][$post_type]['groups']['attache'])){
+			remove_filter( 'form_element_hooks', 'form_element_single_hooks' );
 		
-		remove_filter( 'form_element_hooks', 'form_element_single_hooks' );
+			array_push($form_element_hooks,
+				'cpt4bp_before_groups_single_title',
+				'cpt4bp_groups_single_title',
+				'cpt4bp_before_groups_single_content',
+				'cpt4bp_groups_single_content',
+				'cpt4bp_after_groups_single_content',
+				'bp_before_group_header',
+				'bp_after_group_menu_admins',
+				'bp_before_group_menu_mods',
+				'bp_after_group_menu_mods', 
+				'bp_before_group_header_meta',
+				'bp_group_header_actions', 
+				'bp_group_header_meta',
+				'bp_after_group_header',
+				'bp_before_group_activity_post_form',
+				'bp_before_group_activity_content',
+				'bp_after_group_activity_content'
+			);
+		}
 		
-		array_push($form_element_hooks,
-			'cpt4bp_before_groups_single_title',
-			'cpt4bp_groups_single_title',
-			'cpt4bp_before_groups_single_content',
-			'cpt4bp_groups_single_content',
-			'cpt4bp_after_groups_single_content',
-			'bp_before_group_header',
-			'bp_after_group_menu_admins',
-			'bp_before_group_menu_mods',
-			'bp_after_group_menu_mods', 
-			'bp_before_group_header_meta',
-			'bp_group_header_actions', 
-			'bp_group_header_meta',
-			'bp_after_group_header',
-			'bp_before_group_activity_post_form',
-			'bp_before_group_activity_content',
-			'bp_after_group_activity_content'
-		);
 	}
 	return $form_element_hooks;
 }
 
-add_filter('form_element_hooks','form_element_group_hooks',1,1);
+add_filter('form_element_hooks','form_element_group_hooks',1,3);
 
 /**
  * Locate a template
