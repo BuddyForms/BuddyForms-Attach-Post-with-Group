@@ -1,5 +1,33 @@
 <?php 
 
+function cpt4bp_delete_a_group($post_id){
+	CPT4BP_GroupControl::delete_a_group($post_id);
+}
+add_action('cpt4bp_delete_post', 'cpt4bp_delete_a_group');			
+
+function groups_edit_form($args = Array()){
+	global $bp;
+	
+	if($bp->current_component != 'groups')
+		return;
+
+	$groups_post_id = groups_get_groupmeta( bp_get_group_id(), 'group_post_id' );
+	$posttype		= groups_get_groupmeta( bp_get_group_id(), 'group_type' );
+	$the_post		= get_post( $groups_post_id );
+	$post_id		= $the_post->ID;
+	
+	$args = Array(
+		'posttype' => $posttype,
+		'the_post' => $the_post,
+		'post_id' => $post_id
+	);
+
+	return $args;
+}
+add_filter('cpt4bp_create_edit_form_atts','groups_edit_form',1,1);
+ 	
+
+
 /**
  * Delete a product post
  *
@@ -47,7 +75,7 @@ function cpt4bp_groups_load_template_filter($found_template, $templates) {
 	global $bp;
 	
 	if ($bp->current_component == BP_GROUPS_SLUG && $bp->current_action == 'home') {
-		$templates = cpt4bp_ge_locate_template('cpt4bp/bp/groups-home.php');
+		$templates = cpt4bp_ge_locate_template('cpt4bp/groups/groups-home.php');
 		exit ;
 	}
 

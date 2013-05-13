@@ -33,7 +33,7 @@
 				// Group is visible
 				if ( bp_group_is_visible() ) : 
 
-					cpt4bp_locate_template('cpt4bp/single-post.php');
+					cpt4bp_ge_locate_template('cpt4bp/groups/single-post.php');
 				
 				// Group is not visible
 				elseif ( ! bp_group_is_visible() ) :

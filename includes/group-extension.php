@@ -68,7 +68,7 @@ if (class_exists('BP_Group_Extension')) :
 		}
 
 		function display_post() {
-			cpt4bp_locate_template('cpt4bp/single-post.php');
+			cpt4bp_ge_locate_template('cpt4bp/groups/single-post.php');
 		}
 
 		/**
@@ -80,7 +80,7 @@ if (class_exists('BP_Group_Extension')) :
 		public function edit_screen() {
 			global $post;
 
-			cpt4bp_ge_locate_template('cpt4bp/edit-post.php');
+			cpt4bp_ge_locate_template('cpt4bp/groups/edit-post.php');
 
 			wp_nonce_field('groups_edit_save_' . $this->slug);
 		}
