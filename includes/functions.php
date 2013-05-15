@@ -24,7 +24,7 @@ function groups_edit_form($args = Array()){
 
 	return $args;
 }
-add_filter('cpt4bp_create_edit_form_atts','groups_edit_form',1,1);
+add_filter('cpt4bp_create_edit_form_args','groups_edit_form',1,1);
  	
 
 
@@ -82,16 +82,16 @@ function cpt4bp_groups_load_template_filter($found_template, $templates) {
 	return apply_filters('cpt4bp_groups_load_template_filter', $found_template, $templates);
 }
 
-function cpt4bp_form_add_element($form_fields_new, $post_type, $field_type, $field_id, $value){
+function cpt4bp_form_element_add_field_ge($form_fields_new, $post_type, $field_type, $field_id, $value){
 	global $cpt4bp;
 	if($field_type  == 'AttachGroupType')
 		$form_fields_new[4] 	= new Element_Select("Attach Group Type:", "cpt4bp_options[bp_post_types][".$post_type."][form_fields][".$field_id."][AttachGroupType]", $cpt4bp['selected_post_types'], array('value' => $value));
 	return $form_fields_new;	
 }
-add_filter('cpt4bp_form_add_element','cpt4bp_form_add_element',1,5);
+add_filter('cpt4bp_form_element_add_field','cpt4bp_form_element_add_field_ge',1,5);
 
 
-function cpt4bp_form_display_element($form,$post_id,$posttype,$customfield,$customfield_val){
+function cpt4bp_create_edit_form_display_element_group($form,$post_id,$posttype,$customfield,$customfield_val){
 								
 	if($customfield['type']  == 'AttachGroupType'){
 		
@@ -116,7 +116,7 @@ function cpt4bp_form_display_element($form,$post_id,$posttype,$customfield,$cust
 	return $form;
 	
 }
-add_filter('cpt4bp_form_display_element','cpt4bp_form_display_element',1,5);
+add_filter('cpt4bp_create_edit_form_display_element','cpt4bp_create_edit_form_display_element_group',1,5);
 
 
 function cpt4bp_add_form_element_in_sidebar($form, $selected_post_types){
