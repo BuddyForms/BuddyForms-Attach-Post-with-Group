@@ -94,7 +94,7 @@ if (class_exists('BP_Group_Extension')) :
 		public function display() {
 			global $bp, $wc_query;
 
-			buddyforms_locate_template('buddyforms/single-post.php');
+			buddyforms_ge_locate_template('buddyforms/single-post.php');
 
 		}
 

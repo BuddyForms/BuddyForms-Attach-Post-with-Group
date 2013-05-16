@@ -1,7 +1,7 @@
 <?php 
 
 function buddyforms_delete_a_group($post_id){
-	buddyforms_GroupControl::delete_a_group($post_id);
+	BuddyForms_GroupControl::delete_a_group($post_id);
 }
 add_action('buddyforms_delete_post', 'buddyforms_delete_a_group');			
 
@@ -129,7 +129,7 @@ function buddyforms_add_form_element_in_sidebar($form, $selected_post_types){
 add_filter('buddyforms_add_form_element_in_sidebar','buddyforms_add_form_element_in_sidebar',1,2);
 
 
-function buddyforms_admin_settings_form_post_type_sidebar($form, $selected_post_types){
+function buddyforms_admin_settings_sidebar_metabox($form, $selected_post_types){
 	global $buddyforms;
 	
 	$buddyforms_options = get_option('buddyforms_options');
@@ -166,18 +166,18 @@ function buddyforms_admin_settings_form_post_type_sidebar($form, $selected_post_
 	}				  
 	return $form;
 }	
-add_filter('buddyforms_admin_settings_form_post_type_sidebar','buddyforms_admin_settings_form_post_type_sidebar',1,2);
+add_filter('buddyforms_admin_settings_sidebar_metabox','buddyforms_admin_settings_sidebar_metabox',1,2);
 
 
-function form_element_group_hooks($form_element_hooks,$post_type,$field_id){
+function form_element_group_hooks($buddyforms_form_element_hooks,$post_type,$field_id){
 	
 	$buddyforms_options = get_option('buddyforms_options');
 	
 	if(bp_is_active('groups')){
 		if(isset($buddyforms_options['bp_post_types'][$post_type]['groups']['attache'])){
-			remove_filter( 'form_element_hooks', 'form_element_single_hooks' );
+			remove_filter( 'buddyforms_form_element_hooks', 'form_element_single_hooks' );
 		
-			array_push($form_element_hooks,
+			array_push($buddyforms_form_element_hooks,
 				'buddyforms_before_groups_single_title',
 				'buddyforms_groups_single_title',
 				'buddyforms_before_groups_single_content',
@@ -198,10 +198,10 @@ function form_element_group_hooks($form_element_hooks,$post_type,$field_id){
 		}
 		
 	}
-	return $form_element_hooks;
+	return $buddyforms_form_element_hooks;
 }
 
-add_filter('form_element_hooks','form_element_group_hooks',1,3);
+add_filter('buddyforms_form_element_hooks','form_element_group_hooks',1,3);
 
 /**
  * Locate a template
@@ -213,7 +213,7 @@ function buddyforms_ge_locate_template($file) {
 	if (locate_template(array($file), false)) {
 		locate_template(array($file), true);
 	} else {
-		include (buddyforms_GE_TEMPLATE_PATH . $file);
+		include (BUDDYFORMS_GE_TEMPLATE_PATH . $file);
 	}
 }
 ?>

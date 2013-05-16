@@ -1,5 +1,5 @@
 <?php
-class buddyforms_Group_Extension {
+class BuddyForms_Group_Extension {
 	public $post_type_name;
 	public $associated_item_tax_name;
 
@@ -52,10 +52,10 @@ class buddyforms_Group_Extension {
 			define('buddyforms_GE_INSTALL_PATH', dirname(__FILE__) . '/');
 
 		if (!defined('buddyforms_GE_INCLUDES_PATH'))
-			define('buddyforms_GE_INCLUDES_PATH', buddyforms_GE_INSTALL_PATH . 'includes/');
+			define('buddyforms_GE_INCLUDES_PATH', BUDDYFORMS_GE_INSTALL_PATH . 'includes/');
 
 		if (!defined('buddyforms_GE_TEMPLATE_PATH'))
-			define('buddyforms_GE_TEMPLATE_PATH', buddyforms_GE_INCLUDES_PATH . 'templates/');
+			define('buddyforms_GE_TEMPLATE_PATH', BUDDYFORMS_GE_INCLUDES_PATH . 'templates/');
 	}
 
 	/**
@@ -66,8 +66,8 @@ class buddyforms_Group_Extension {
 	 */
 
 	public function includes() {
-		require_once (buddyforms_GE_INCLUDES_PATH . 'group-control.php');
-		require_once (buddyforms_GE_INCLUDES_PATH . 'functions.php');
+		require_once (BUDDYFORMS_GE_TEMPLATE_PATH . 'group-control.php');
+		require_once (BUDDYFORMS_GE_TEMPLATE_PATH . 'functions.php');
 
 		}
 
@@ -90,7 +90,7 @@ class buddyforms_Group_Extension {
 	 */
 	public function setup_group_extension() {
 		//echo buddyforms_GE_INCLUDES_PATH . 'group-extension.php';
-		require_once (buddyforms_GE_INCLUDES_PATH . 'group-extension.php');
+		require_once (BUDDYFORMS_GE_INCLUDES_PATH . 'group-extension.php');
 	}
 
 	/**
