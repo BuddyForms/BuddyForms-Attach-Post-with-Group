@@ -1,10 +1,10 @@
 <?php
-class CPT4BP_GroupControl {
+class buddyforms_GroupControl {
 
 	/**
 	 * Initiate the class
 	 *
-	 * @package CPT4BP
+	 * @package buddyforms
 	 * @since 0.1-beta
 	 */
 	public function __construct() {
@@ -15,16 +15,16 @@ class CPT4BP_GroupControl {
 	/**
 	 * Creates a group if a group associated post is created
 	 *
-	 * @package CPT4BP
+	 * @package buddyforms
 	 * @since 0.1-beta
 	 */
 	public function create_a_group($post_ID, $post) {
-		global $bp, $cpt4bp;
+		global $bp, $buddyforms;
 
-		if (!isset($cpt4bp['selected_post_types']))
+		if (!isset($buddyforms['selected_post_types']))
 			return;
 
-		if (!isset($cpt4bp['bp_post_types'][$post->post_type]['groups']['attache']))
+		if (!isset($buddyforms['bp_post_types'][$post->post_type]['groups']['attache']))
 			return;
 
 		if (!class_exists('BP_Groups_Group'))
@@ -34,7 +34,7 @@ class CPT4BP_GroupControl {
 		if ($post->post_type == 'revision')
 			$post = get_post($post->post_parent);
 
-		if (in_array($post->post_type, $cpt4bp['selected_post_types'])) {
+		if (in_array($post->post_type, $buddyforms['selected_post_types'])) {
 			$post_group_id = get_post_meta($post->ID, '_post_group_id', true);
 
 			$new_group = new BP_Groups_Group();
@@ -76,14 +76,14 @@ class CPT4BP_GroupControl {
 	/**
 	 * Deletes a group if a group associated post is deleted
 	 *
-	 * @package CPT4BP
+	 * @package buddyforms
 	 * @since 0.1-beta
 	 */
 	public function delete_a_group($post_id) {
-		global $cpt4bp;
+		global $buddyforms;
 		$post = get_post($post_id);
 
-		if (in_array($post->post_type, $cpt4bp['selected_post_types'])) {
+		if (in_array($post->post_type, $buddyforms['selected_post_types'])) {
 			$post_group_id = get_post_meta($post->ID, '_post_group_id', true);
 
 			if (!empty($post_group_id))
@@ -95,7 +95,7 @@ class CPT4BP_GroupControl {
 	 * Add member to group as admin
 	 * credidts go to boon georges. This function is coppyed from the group management plugin.
 	 *
-	 * @package CPT4BP
+	 * @package buddyforms
 	 * @since 0.1-beta
 	 */
 	public static function add_member_to_group($group_id, $user_id = false) {
@@ -132,7 +132,7 @@ class CPT4BP_GroupControl {
 			return false;
 
 		/* Record this in activity streams */
-		groups_record_activity(array('user_id' => $user_id, 'action' => apply_filters('groups_activity_joined_group', sprintf(__('%s joined the group %s', 'cpt4bp'), bp_core_get_userlink($user_id), '<a href="' . bp_get_group_permalink($bp->groups->current_group) . '">' . esc_html($bp->groups->current_group->name) . '</a>')), 'type' => 'joined_group', 'item_id' => $group_id));
+		groups_record_activity(array('user_id' => $user_id, 'action' => apply_filters('groups_activity_joined_group', sprintf(__('%s joined the group %s', 'buddyforms'), bp_core_get_userlink($user_id), '<a href="' . bp_get_group_permalink($bp->groups->current_group) . '">' . esc_html($bp->groups->current_group->name) . '</a>')), 'type' => 'joined_group', 'item_id' => $group_id));
 
 		/* Modify group meta */
 		groups_update_groupmeta($group_id, 'total_member_count', (int) groups_get_groupmeta($group_id, 'total_member_count') + 1);
@@ -144,5 +144,5 @@ class CPT4BP_GroupControl {
 	}
 
 }
-add_action('cpt4bp_init', new CPT4BP_GroupControl());
+add_action('buddyforms_init', new buddyforms_GroupControl());
 ?>

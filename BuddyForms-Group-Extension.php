@@ -1,12 +1,12 @@
 <?php
-class CPT4BP_Group_Extension {
+class buddyforms_Group_Extension {
 	public $post_type_name;
 	public $associated_item_tax_name;
 
 	/**
 	 * Initiate the class
 	 *
-	 * @package CPT4BP
+	 * @package buddyforms
 	 * @since 0.1-beta
 	 */
 	public function __construct() {
@@ -24,18 +24,18 @@ class CPT4BP_Group_Extension {
 	}
 
 	/**
-	 * Defines cpt4bp_init action
+	 * Defines buddyforms_init action
 	 *
 	 * This action fires on WP's init action and provides a way for the rest of WP,
 	 * as well as other dependent plugins, to hook into the loading process in an
 	 * orderly fashion.
 	 *
-	 * @package CPT4BP
+	 * @package buddyforms
 	 * @since 0.1-beta
 	 */
 
 	public function init_hook() {
-		do_action('cpt4bp_GE_init');
+		do_action('buddyforms_GE_init');
 	}
 
 	/**
@@ -43,71 +43,71 @@ class CPT4BP_Group_Extension {
 	 *
 	 * These constants can be overridden in bp-custom.php or wp-config.php.
 	 *
-	 * @package CPT4BP
+	 * @package buddyforms
 	 * @since 0.1-beta
 	 */
 
 	public function load_constants() {
-		if (!defined('CPT4BP_GE_INSTALL_PATH'))
-			define('CPT4BP_GE_INSTALL_PATH', dirname(__FILE__) . '/');
+		if (!defined('buddyforms_GE_INSTALL_PATH'))
+			define('buddyforms_GE_INSTALL_PATH', dirname(__FILE__) . '/');
 
-		if (!defined('CPT4BP_GE_INCLUDES_PATH'))
-			define('CPT4BP_GE_INCLUDES_PATH', CPT4BP_GE_INSTALL_PATH . 'includes/');
+		if (!defined('buddyforms_GE_INCLUDES_PATH'))
+			define('buddyforms_GE_INCLUDES_PATH', buddyforms_GE_INSTALL_PATH . 'includes/');
 
-		if (!defined('CPT4BP_GE_TEMPLATE_PATH'))
-			define('CPT4BP_GE_TEMPLATE_PATH', CPT4BP_GE_INCLUDES_PATH . 'templates/');
+		if (!defined('buddyforms_GE_TEMPLATE_PATH'))
+			define('buddyforms_GE_TEMPLATE_PATH', buddyforms_GE_INCLUDES_PATH . 'templates/');
 	}
 
 	/**
-	 * Includes files needed by CPT4BP
+	 * Includes files needed by buddyforms
 	 *
-	 * @package CPT4BP
+	 * @package buddyforms
 	 * @since 0.1-beta
 	 */
 
 	public function includes() {
-		require_once (CPT4BP_GE_INCLUDES_PATH . 'group-control.php');
-		require_once (CPT4BP_GE_INCLUDES_PATH . 'functions.php');
+		require_once (buddyforms_GE_INCLUDES_PATH . 'group-control.php');
+		require_once (buddyforms_GE_INCLUDES_PATH . 'functions.php');
 
 		}
 
 	/**
 	 * Loads the textdomain for the plugin
 	 *
-	 * @package CPT4BP
+	 * @package buddyforms
 	 * @since 0.1-beta
 	 */
 
 	public function load_plugin_textdomain() {
-		load_plugin_textdomain('cpt4bp', false, dirname(plugin_basename(__FILE__)) . '/languages/');
+		load_plugin_textdomain('buddyforms', false, dirname(plugin_basename(__FILE__)) . '/languages/');
 	}
 
 	/**
 	 * Load the group extension file
 	 *
-	 * @package CPT4BP
+	 * @package buddyforms
 	 * @since 0.1-beta
 	 */
 	public function setup_group_extension() {
-		//echo CPT4BP_GE_INCLUDES_PATH . 'group-extension.php';
-		require_once (CPT4BP_GE_INCLUDES_PATH . 'group-extension.php');
+		//echo buddyforms_GE_INCLUDES_PATH . 'group-extension.php';
+		require_once (buddyforms_GE_INCLUDES_PATH . 'group-extension.php');
 	}
 
 	/**
-	 * Registers BuddyPress CPT4BP taxonomies for AttachGroupTypes
+	 * Registers BuddyPress buddyforms taxonomies for AttachGroupTypes
 	 *
-	 * @package CPT4BP
+	 * @package buddyforms
 	 * @since 0.1-beta
 	 */
 	public function register_taxonomy() {
-		global $cpt4bp;
+		global $buddyforms;
 
-		if (!isset($cpt4bp['selected_post_types']))
+		if (!isset($buddyforms['selected_post_types']))
 			return;
 
-		foreach ($cpt4bp['selected_post_types'] as $post_type) :
-			if (isset($cpt4bp['bp_post_types'][$post_type]['form_fields'])) {
-				foreach ($cpt4bp['bp_post_types'][$post_type]['form_fields'] as $key => $form_field) {
+		foreach ($buddyforms['selected_post_types'] as $post_type) :
+			if (isset($buddyforms['bp_post_types'][$post_type]['form_fields'])) {
+				foreach ($buddyforms['bp_post_types'][$post_type]['form_fields'] as $key => $form_field) {
 
 					if ($form_field['type'] == 'AttachGroupType') {
 
@@ -136,19 +136,19 @@ class CPT4BP_Group_Extension {
 	/**
 	 * Change the slug to groups slug to keep it consistent
 	 *
-	 * @package CPT4BP
+	 * @package buddyforms
 	 * @since 0.1-beta
 	 */
 	public function remove_slug($permalink, $post, $leavename) {
-		global $cpt4bp;
+		global $buddyforms;
 
-		if (!isset($cpt4bp['selected_post_types']))
+		if (!isset($buddyforms['selected_post_types']))
 			return $permalink;
 
 		if(!bp_is_active('groups'))
 			return $permalink;
 
-		if (!isset($cpt4bp['bp_post_types'][$post->post_type]['groups']['attache']))
+		if (!isset($buddyforms['bp_post_types'][$post->post_type]['groups']['attache']))
 			return $permalink;
 		
 		$post_group_id = get_post_meta($post->ID, '_post_group_id', true);
@@ -157,7 +157,7 @@ class CPT4BP_Group_Extension {
 		if ($post->ID != $group_post_id)
 			return $permalink;
 
-		$post_types = $cpt4bp['selected_post_types'];
+		$post_types = $buddyforms['selected_post_types'];
 
 		foreach ($post_types as $post_type) {
 			if ($post_type)
@@ -170,19 +170,19 @@ class CPT4BP_Group_Extension {
 	/**
 	 * Redirect a post to its group
 	 *
-	 * @package CPT4BP
+	 * @package buddyforms
 	 * @since 0.1-beta
 	 */
 	public function theme_redirect() {
-		global $wp_query, $cpt4bp, $bp;
+		global $wp_query, $buddyforms, $bp;
 
-		if (!isset($cpt4bp['selected_post_types']))
+		if (!isset($buddyforms['selected_post_types']))
 			return;
 
 		if(!bp_is_active('groups'))
 			return;
 
-		if (!isset($cpt4bp['bp_post_types'][$wp_query->query_vars['post_type']]['groups']['attache']))
+		if (!isset($buddyforms['bp_post_types'][$wp_query->query_vars['post_type']]['groups']['attache']))
 			return;
 
 		$post_id = $wp_query->post->ID;
@@ -193,7 +193,7 @@ class CPT4BP_Group_Extension {
 			return;
 
 		//A Specific Custom Post Type redirect to the atached group
-		if (in_array($wp_query->query_vars['post_type'], $cpt4bp['selected_post_types'])) {
+		if (in_array($wp_query->query_vars['post_type'], $buddyforms['selected_post_types'])) {
 
 			if (is_singular()) {
 				$link = get_bloginfo('url') . '/' . BP_GROUPS_SLUG . '/' . get_post_meta($wp_query->post->ID, '_link_to_group', true);
@@ -208,7 +208,7 @@ class CPT4BP_Group_Extension {
 	/**
 	 * Perform the redirect
 	 *
-	 * @package CPT4BP
+	 * @package buddyforms
 	 * @since 0.1-beta
 	 */
 	public static function do_theme_redirect($url) {

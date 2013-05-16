@@ -1,9 +1,9 @@
 <?php 
 
-function cpt4bp_delete_a_group($post_id){
-	CPT4BP_GroupControl::delete_a_group($post_id);
+function buddyforms_delete_a_group($post_id){
+	buddyforms_GroupControl::delete_a_group($post_id);
 }
-add_action('cpt4bp_delete_post', 'cpt4bp_delete_a_group');			
+add_action('buddyforms_delete_post', 'buddyforms_delete_a_group');			
 
 function groups_edit_form($args = Array()){
 	global $bp;
@@ -24,31 +24,31 @@ function groups_edit_form($args = Array()){
 
 	return $args;
 }
-add_filter('cpt4bp_create_edit_form_args','groups_edit_form',1,1);
+add_filter('buddyforms_create_edit_form_args','groups_edit_form',1,1);
  	
 
 
 /**
  * Delete a product post
  *
- * @package CPT4BP
+ * @package buddyforms
  * @since 0.1-beta
  */
-function cpt4bp_delete_product_post($group_id) {
+function buddyforms_delete_product_post($group_id) {
 	$groups_post_id = groups_get_groupmeta($group_id, 'group_post_id');
 
 	wp_delete_post($groups_post_id);
 }
 
-add_action('groups_before_delete_group', 'cpt4bp_delete_product_post');
+add_action('groups_before_delete_group', 'buddyforms_delete_product_post');
 
 /**
  * Update a product post
  *
- * @package CPT4BP
+ * @package buddyforms
  * @since 0.1-beta
  */
-function cpt4bp_group_header_fields_save($group_id) {
+function buddyforms_group_header_fields_save($group_id) {
 	$groups_post_id = groups_get_groupmeta($group_id, 'group_post_id');
 	$posttype = groups_get_groupmeta($group_id, 'group_type');
 
@@ -57,7 +57,7 @@ function cpt4bp_group_header_fields_save($group_id) {
 	// update the new post
 	$post_id = wp_update_post($my_post);
 }
-add_action('groups_group_details_edited', 'cpt4bp_group_header_fields_save');
+add_action('groups_group_details_edited', 'buddyforms_group_header_fields_save');
 
  /**
  * this function is a bit tricky and needs some fixing.
@@ -71,27 +71,27 @@ add_action('groups_group_details_edited', 'cpt4bp_group_header_fields_save');
  * @return string
  */
 
-function cpt4bp_groups_load_template_filter($found_template, $templates) {
+function buddyforms_groups_load_template_filter($found_template, $templates) {
 	global $bp;
 	
 	if ($bp->current_component == BP_GROUPS_SLUG && $bp->current_action == 'home') {
-		$templates = cpt4bp_ge_locate_template('cpt4bp/groups/groups-home.php');
+		$templates = buddyforms_ge_locate_template('buddyforms/groups/groups-home.php');
 		exit ;
 	}
 
-	return apply_filters('cpt4bp_groups_load_template_filter', $found_template, $templates);
+	return apply_filters('buddyforms_groups_load_template_filter', $found_template, $templates);
 }
 
-function cpt4bp_form_element_add_field_ge($form_fields_new, $post_type, $field_type, $field_id, $value){
-	global $cpt4bp;
+function buddyforms_form_element_add_field_ge($form_fields_new, $post_type, $field_type, $field_id, $value){
+	global $buddyforms;
 	if($field_type  == 'AttachGroupType')
-		$form_fields_new[4] 	= new Element_Select("Attach Group Type:", "cpt4bp_options[bp_post_types][".$post_type."][form_fields][".$field_id."][AttachGroupType]", $cpt4bp['selected_post_types'], array('value' => $value));
+		$form_fields_new[4] 	= new Element_Select("Attach Group Type:", "buddyforms_options[bp_post_types][".$post_type."][form_fields][".$field_id."][AttachGroupType]", $buddyforms['selected_post_types'], array('value' => $value));
 	return $form_fields_new;	
 }
-add_filter('cpt4bp_form_element_add_field','cpt4bp_form_element_add_field_ge',1,5);
+add_filter('buddyforms_form_element_add_field','buddyforms_form_element_add_field_ge',1,5);
 
 
-function cpt4bp_create_edit_form_display_element_group($form,$post_id,$posttype,$customfield,$customfield_val){
+function buddyforms_create_edit_form_display_element_group($form,$post_id,$posttype,$customfield,$customfield_val){
 								
 	if($customfield['type']  == 'AttachGroupType'){
 		
@@ -116,23 +116,23 @@ function cpt4bp_create_edit_form_display_element_group($form,$post_id,$posttype,
 	return $form;
 	
 }
-add_filter('cpt4bp_create_edit_form_display_element','cpt4bp_create_edit_form_display_element_group',1,5);
+add_filter('buddyforms_create_edit_form_display_element','buddyforms_create_edit_form_display_element_group',1,5);
 
 
-function cpt4bp_add_form_element_in_sidebar($form, $selected_post_types){
+function buddyforms_add_form_element_in_sidebar($form, $selected_post_types){
 	
 	if(bp_is_active('groups')){		
 		$form->addElement(new Element_HTML('<p><a href="AttachGroupType/'.$selected_post_types.'" class="action">AttachGroupType</a></p>'));
 	}
 	return $form;
 }
-add_filter('cpt4bp_add_form_element_in_sidebar','cpt4bp_add_form_element_in_sidebar',1,2);
+add_filter('buddyforms_add_form_element_in_sidebar','buddyforms_add_form_element_in_sidebar',1,2);
 
 
-function cpt4bp_admin_settings_form_post_type_sidebar($form, $selected_post_types){
-	global $cpt4bp;
+function buddyforms_admin_settings_form_post_type_sidebar($form, $selected_post_types){
+	global $buddyforms;
 	
-	$cpt4bp_options = get_option('cpt4bp_options');
+	$buddyforms_options = get_option('buddyforms_options');
 	
 	if(bp_is_active('groups')){						
 		$form->addElement(new Element_HTML('
@@ -147,17 +147,17 @@ function cpt4bp_admin_settings_form_post_type_sidebar($form, $selected_post_type
 				    draft = hidden<br>
 				    publish = public<br>
 					</p>'));
-					$form->addElement(new Element_Checkbox("Attach to Group?", "cpt4bp_options[bp_post_types][".$selected_post_types."][groups][attache]", array("Yes. I want to create a group for each post of this post type and attach the post to the group."), array('value' => $cpt4bp_options['bp_post_types'][$selected_post_types]['groups'][attache])));
+					$form->addElement(new Element_Checkbox("Attach to Group?", "buddyforms_options[bp_post_types][".$selected_post_types."][groups][attache]", array("Yes. I want to create a group for each post of this post type and attach the post to the group."), array('value' => $buddyforms_options['bp_post_types'][$selected_post_types]['groups'][attache])));
 					$form->addElement(new Element_HTML('<br>'));
-					$form->addElement(new Element_Select("Display Post: <p>the option \"replace home create new tab activity\" only works with a buddypress theme. </p>", "cpt4bp_options[bp_post_types][".$selected_post_types."][groups][display_post]", array(
+					$form->addElement(new Element_Select("Display Post: <p>the option \"replace home create new tab activity\" only works with a buddypress theme. </p>", "buddyforms_options[bp_post_types][".$selected_post_types."][groups][display_post]", array(
 					'nothing',
 					'create a new tab', 
 					'replace home new tab activity')
-					,array('value' => $cpt4bp_options['bp_post_types'][$selected_post_types]['groups'][display_post])));
+					,array('value' => $buddyforms_options['bp_post_types'][$selected_post_types]['groups'][display_post])));
 					
 					$form->addElement(new Element_HTML('<br><br><p>The title and content is displayed in the group header. If you want to display it somewere else, you can do it here but need to adjust the groups-header.php in your theme. If you want to hide it there.</p>'));
-					$form->addElement( new Element_Select("Display Title:", "cpt4bp_options[bp_post_types][".$selected_post_types."][groups][title][display]", $cpt4bp[hooks][form_element], array('value' => $cpt4bp_options['bp_post_types'][$selected_post_types][groups]['title']['display'])));
-					$form->addElement( new Element_Select("Display Content:", "cpt4bp_options[bp_post_types][".$selected_post_types."][groups][content][display]", $cpt4bp[hooks][form_element], array('value' => $cpt4bp_options['bp_post_types'][$selected_post_types][groups]['content']['display'])));
+					$form->addElement( new Element_Select("Display Title:", "buddyforms_options[bp_post_types][".$selected_post_types."][groups][title][display]", $buddyforms[hooks][form_element], array('value' => $buddyforms_options['bp_post_types'][$selected_post_types][groups]['title']['display'])));
+					$form->addElement( new Element_Select("Display Content:", "buddyforms_options[bp_post_types][".$selected_post_types."][groups][content][display]", $buddyforms[hooks][form_element], array('value' => $buddyforms_options['bp_post_types'][$selected_post_types][groups]['content']['display'])));
 	
 		$form->addElement(new Element_HTML('
 				</div>
@@ -166,23 +166,23 @@ function cpt4bp_admin_settings_form_post_type_sidebar($form, $selected_post_type
 	}				  
 	return $form;
 }	
-add_filter('cpt4bp_admin_settings_form_post_type_sidebar','cpt4bp_admin_settings_form_post_type_sidebar',1,2);
+add_filter('buddyforms_admin_settings_form_post_type_sidebar','buddyforms_admin_settings_form_post_type_sidebar',1,2);
 
 
 function form_element_group_hooks($form_element_hooks,$post_type,$field_id){
 	
-	$cpt4bp_options = get_option('cpt4bp_options');
+	$buddyforms_options = get_option('buddyforms_options');
 	
 	if(bp_is_active('groups')){
-		if(isset($cpt4bp_options['bp_post_types'][$post_type]['groups']['attache'])){
+		if(isset($buddyforms_options['bp_post_types'][$post_type]['groups']['attache'])){
 			remove_filter( 'form_element_hooks', 'form_element_single_hooks' );
 		
 			array_push($form_element_hooks,
-				'cpt4bp_before_groups_single_title',
-				'cpt4bp_groups_single_title',
-				'cpt4bp_before_groups_single_content',
-				'cpt4bp_groups_single_content',
-				'cpt4bp_after_groups_single_content',
+				'buddyforms_before_groups_single_title',
+				'buddyforms_groups_single_title',
+				'buddyforms_before_groups_single_content',
+				'buddyforms_groups_single_content',
+				'buddyforms_after_groups_single_content',
 				'bp_before_group_header',
 				'bp_after_group_menu_admins',
 				'bp_before_group_menu_mods',
@@ -209,11 +209,11 @@ add_filter('form_element_hooks','form_element_group_hooks',1,3);
  * @package BuddyPress Custom Group Types
  * @since 0.1-beta
  */
-function cpt4bp_ge_locate_template($file) {
+function buddyforms_ge_locate_template($file) {
 	if (locate_template(array($file), false)) {
 		locate_template(array($file), true);
 	} else {
-		include (CPT4BP_GE_TEMPLATE_PATH . $file);
+		include (buddyforms_GE_TEMPLATE_PATH . $file);
 	}
 }
 ?>
