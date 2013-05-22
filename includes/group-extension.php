@@ -1,7 +1,7 @@
 <?php
 if (class_exists('BP_Group_Extension')) :
 	class buddyforms_Groups extends BP_Group_Extension {
-		public $enable_create_step	= true;
+		public $enable_create_step	= false;
 		public $enable_nav_item		= false;
 		public $enable_edit_item	= true;
 
@@ -13,17 +13,28 @@ if (class_exists('BP_Group_Extension')) :
 		*/
 		public function __construct() {
 			global $bp, $buddyforms;
-
-			/**
-			 * @TODO Is this supposed to loop through everything and constantly replace the parameters?
-			 */
-			if (bp_has_groups()) :
-				while (bp_groups()) : bp_the_group();
-					$attached_post_id = groups_get_groupmeta(bp_get_group_id(), 'group_post_id');
-					$attached_post_type = groups_get_groupmeta(bp_get_group_id(), 'group_type');
-				endwhile;
-			endif;
-
+			
+			// $group = groups_get_group( array( 'group_id' => bp_get_current_group_id() ) );
+			
+			//unset( $bp->groups->group_creation_steps );
+			// echo '<pre>';
+			// print_r( $bp);
+			// echo '</pre>';
+			
+			// if(bp_get_group_has_avatar()){
+				// echo 'ja mann';
+			// }
+			 /* Fetch the avatar from the folder, if not provide backwards compat. */
+ 
+			//if ( !$avatar = bp_core_fetch_avatar( array( 'item_id' => bp_get_current_group_id()) ))
+ 			
+			
+			$this->attached_post_id	= groups_get_groupmeta( bp_get_current_group_id(), 'group_post_id');
+			$this->attached_post_type	= groups_get_groupmeta( bp_get_current_group_id(), 'group_type');
+			
+			$attached_post_id = $this->attached_post_id;
+			$attached_post_type = $this->attached_post_type;
+			
 			if (!empty($buddyforms['bp_post_types'][$attached_post_type]['form_fields'])) {
 				foreach ($buddyforms['bp_post_types'][$attached_post_type]['form_fields'] as $key => $customfield) :
 					$customfield_value = get_post_meta($attached_post_id, sanitize_title($customfield['name']), true);
@@ -61,10 +72,31 @@ if (class_exists('BP_Group_Extension')) :
 				add_action($buddyforms['bp_post_types'][$attached_post_type][groups][content][display], create_function('', 'echo "<div class=\"group_content\">' . get_post_field('post_content', $attached_post_id) . '</div>";'));
 			}
 
-			$this->name				= $buddyforms['bp_post_types'][$attached_post_type]['singular_name'];
+			$this->name					= $buddyforms['bp_post_types'][$attached_post_type]['singular_name'];
 			$this->nav_item_position	= 20;
-			$this->slug				= $buddyforms['bp_post_types'][$attached_post_type]['slug'];
+			$this->slug					= $buddyforms['bp_post_types'][$attached_post_type]['slug'];
+			
+			if(isset($this->attached_post_id))
+				add_filter('bp_get_group_avatar',array($this, 'display_avatar'), 1, 1);
+			
 
+		}
+
+		function display_avatar($avatar){
+			
+			
+			$dom = new DOMDocument();
+			$dom->loadHTML($avatar);
+			$src = $dom->getElementsByTagName('img')->item(0)->getAttribute('src');
+			$src_headers = @get_headers($src);
+			if($src_headers[0] == 'HTTP/1.1 200 OK') 
+				return $avatar;
+			
+			if(has_post_thumbnail($this->attached_post_id)){
+				$avatar = get_the_post_thumbnail($this->attached_post_id, array(150,150),array('class' => 'avatar'));	
+			}
+			
+			return $avatar;
 		}
 
 		function display_post() {

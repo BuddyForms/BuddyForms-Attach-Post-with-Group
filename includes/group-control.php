@@ -57,6 +57,8 @@ class buddyforms_GroupControl {
 			$new_group->enable_forum = 0;
 			$new_group->date_created = current_time('mysql');
 			$new_group->total_member_count = 1;
+			$new_group->avatar_thumb = 'http://localhost/~svenl77/buddyforms/wp-content/uploads/group-avatars/6/73f9a93d5211bf3104ea66ec06039953-bpfull.jpg'; 
+			$new_group->avatar_full = 	'http://localhost/~svenl77/buddyforms/wp-content/uploads/group-avatars/6/73f9a93d5211bf3104ea66ec06039953-bpfull.jpg';
 			$new_group->save();
 
 			update_post_meta($post->ID, '_post_group_id', $new_group->id);
