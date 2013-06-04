@@ -106,8 +106,8 @@ class BuddyForms_Group_Extension {
 			return;
 
 		foreach ($buddyforms['selected_post_types'] as $post_type) :
-			if (isset($buddyforms['bp_post_types'][$post_type]['form_fields'])) {
-				foreach ($buddyforms['bp_post_types'][$post_type]['form_fields'] as $key => $form_field) {
+			if (isset($buddyforms['buddyforms'][$post_type]['form_fields'])) {
+				foreach ($buddyforms['buddyforms'][$post_type]['form_fields'] as $key => $form_field) {
 
 					if ($form_field['type'] == 'AttachGroupType') {
 
@@ -148,7 +148,7 @@ class BuddyForms_Group_Extension {
 		if(!bp_is_active('groups'))
 			return $permalink;
 
-		if (!isset($buddyforms['bp_post_types'][$post->post_type]['groups']['attache']))
+		if (!isset($buddyforms['buddyforms'][$post->post_type]['groups']['attache']))
 			return $permalink;
 		
 		$post_group_id = get_post_meta($post->ID, '_post_group_id', true);
@@ -182,7 +182,7 @@ class BuddyForms_Group_Extension {
 		if(!bp_is_active('groups'))
 			return;
 
-		if (!isset($buddyforms['bp_post_types'][$wp_query->query_vars['post_type']]['groups']['attache']))
+		if (!isset($buddyforms['buddyforms'][$wp_query->query_vars['post_type']]['groups']['attache']))
 			return;
 
 		$post_id = $wp_query->post->ID;

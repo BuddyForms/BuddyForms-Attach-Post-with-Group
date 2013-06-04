@@ -35,8 +35,8 @@ if (class_exists('BP_Group_Extension')) :
 			$attached_post_id = $this->attached_post_id;
 			$attached_post_type = $this->attached_post_type;
 			
-			if (!empty($buddyforms['bp_post_types'][$attached_post_type]['form_fields'])) {
-				foreach ($buddyforms['bp_post_types'][$attached_post_type]['form_fields'] as $key => $customfield) :
+			if (!empty($buddyforms['buddyforms'][$attached_post_type]['form_fields'])) {
+				foreach ($buddyforms['buddyforms'][$attached_post_type]['form_fields'] as $key => $customfield) :
 					$customfield_value = get_post_meta($attached_post_id, sanitize_title($customfield['name']), true);
 					if ($customfield_value != '' && $customfield['display'] != 'no') :
 						$post_meta_tmp = '<div class="post_meta ' . sanitize_title($customfield['name']) . '">';
@@ -51,7 +51,7 @@ if (class_exists('BP_Group_Extension')) :
 				$this->enable_edit_item	= false;
 			}
 
-			switch ($buddyforms['bp_post_types'][$attached_post_type]['groups']['display_post']) {
+			switch ($buddyforms['buddyforms'][$attached_post_type]['groups']['display_post']) {
 
 				case 'nothing' :
 					add_action('bp_before_group_activity_post_form', array($this, 'display_post'), 1);
@@ -65,16 +65,16 @@ if (class_exists('BP_Group_Extension')) :
 					break;
 			}
 
-			if ($buddyforms['bp_post_types'][$attached_post_type][groups][title][display] != 'no') {
-				add_action($buddyforms['bp_post_types'][$attached_post_type][groups][title][display], create_function('', 'echo "<div class=\"group_title\">' . get_the_title($attached_post_id) . '</div>";'));
+			if ($buddyforms['buddyforms'][$attached_post_type][groups][title][display] != 'no') {
+				add_action($buddyforms['buddyforms'][$attached_post_type][groups][title][display], create_function('', 'echo "<div class=\"group_title\">' . get_the_title($attached_post_id) . '</div>";'));
 			}
-			if ($buddyforms['bp_post_types'][$attached_post_type][groups][content][display] != 'no') {
-				add_action($buddyforms['bp_post_types'][$attached_post_type][groups][content][display], create_function('', 'echo "<div class=\"group_content\">' . get_post_field('post_content', $attached_post_id) . '</div>";'));
+			if ($buddyforms['buddyforms'][$attached_post_type][groups][content][display] != 'no') {
+				add_action($buddyforms['buddyforms'][$attached_post_type][groups][content][display], create_function('', 'echo "<div class=\"group_content\">' . get_post_field('post_content', $attached_post_id) . '</div>";'));
 			}
 
-			$this->name					= $buddyforms['bp_post_types'][$attached_post_type]['singular_name'];
+			$this->name					= $buddyforms['buddyforms'][$attached_post_type]['singular_name'];
 			$this->nav_item_position	= 20;
-			$this->slug					= $buddyforms['bp_post_types'][$attached_post_type]['slug'];
+			$this->slug					= $buddyforms['buddyforms'][$attached_post_type]['slug'];
 			
 			if(isset($this->attached_post_id))
 				add_filter('bp_get_group_avatar',array($this, 'display_avatar'), 1, 1);

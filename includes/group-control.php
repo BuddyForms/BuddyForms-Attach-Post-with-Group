@@ -24,7 +24,7 @@ class buddyforms_GroupControl {
 		if (!isset($buddyforms['selected_post_types']))
 			return;
 
-		if (!isset($buddyforms['bp_post_types'][$post->post_type]['groups']['attache']))
+		if (!isset($buddyforms['buddyforms'][$post->post_type]['groups']['attache']))
 			return;
 
 		if (!class_exists('BP_Groups_Group'))

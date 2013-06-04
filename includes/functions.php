@@ -85,7 +85,7 @@ function buddyforms_groups_load_template_filter($found_template, $templates) {
 function buddyforms_form_element_add_field_ge($form_fields_new, $post_type, $field_type, $field_id, $value){
 	global $buddyforms;
 	if($field_type  == 'AttachGroupType')
-		$form_fields_new[4] 	= new Element_Select("Attach Group Type:", "buddyforms_options[bp_post_types][".$post_type."][form_fields][".$field_id."][AttachGroupType]", $buddyforms['selected_post_types'], array('value' => $value));
+		$form_fields_new[4] 	= new Element_Select("Attach Group Type:", "buddyforms_options[buddyforms][".$post_type."][form_fields][".$field_id."][AttachGroupType]", $buddyforms['selected_post_types'], array('value' => $value));
 	return $form_fields_new;	
 }
 add_filter('buddyforms_form_element_add_field','buddyforms_form_element_add_field_ge',1,5);
@@ -147,17 +147,17 @@ function buddyforms_admin_settings_sidebar_metabox($form, $selected_post_types){
 				    draft = hidden<br>
 				    publish = public<br>
 					</p>'));
-					$form->addElement(new Element_Checkbox("Attach to Group?", "buddyforms_options[bp_post_types][".$selected_post_types."][groups][attache]", array("Yes. I want to create a group for each post of this post type and attach the post to the group."), array('value' => $buddyforms_options['bp_post_types'][$selected_post_types]['groups'][attache])));
+					$form->addElement(new Element_Checkbox("Attach to Group?", "buddyforms_options[buddyforms][".$selected_post_types."][groups][attache]", array("Yes. I want to create a group for each post of this post type and attach the post to the group."), array('value' => $buddyforms_options['buddyforms'][$selected_post_types]['groups'][attache])));
 					$form->addElement(new Element_HTML('<br>'));
-					$form->addElement(new Element_Select("Display Post: <p>the option \"replace home create new tab activity\" only works with a buddypress theme. </p>", "buddyforms_options[bp_post_types][".$selected_post_types."][groups][display_post]", array(
+					$form->addElement(new Element_Select("Display Post: <p>the option \"replace home create new tab activity\" only works with a buddypress theme. </p>", "buddyforms_options[buddyforms][".$selected_post_types."][groups][display_post]", array(
 					'nothing',
 					'create a new tab', 
 					'replace home new tab activity')
-					,array('value' => $buddyforms_options['bp_post_types'][$selected_post_types]['groups'][display_post])));
+					,array('value' => $buddyforms_options['buddyforms'][$selected_post_types]['groups'][display_post])));
 					
 					$form->addElement(new Element_HTML('<br><br><p>The title and content is displayed in the group header. If you want to display it somewere else, you can do it here but need to adjust the groups-header.php in your theme. If you want to hide it there.</p>'));
-					$form->addElement( new Element_Select("Display Title:", "buddyforms_options[bp_post_types][".$selected_post_types."][groups][title][display]", $buddyforms[hooks][form_element], array('value' => $buddyforms_options['bp_post_types'][$selected_post_types][groups]['title']['display'])));
-					$form->addElement( new Element_Select("Display Content:", "buddyforms_options[bp_post_types][".$selected_post_types."][groups][content][display]", $buddyforms[hooks][form_element], array('value' => $buddyforms_options['bp_post_types'][$selected_post_types][groups]['content']['display'])));
+					$form->addElement( new Element_Select("Display Title:", "buddyforms_options[buddyforms][".$selected_post_types."][groups][title][display]", $buddyforms[hooks][form_element], array('value' => $buddyforms_options['buddyforms'][$selected_post_types][groups]['title']['display'])));
+					$form->addElement( new Element_Select("Display Content:", "buddyforms_options[buddyforms][".$selected_post_types."][groups][content][display]", $buddyforms[hooks][form_element], array('value' => $buddyforms_options['buddyforms'][$selected_post_types][groups]['content']['display'])));
 	
 		$form->addElement(new Element_HTML('
 				</div>
@@ -174,7 +174,7 @@ function form_element_group_hooks($buddyforms_form_element_hooks,$post_type,$fie
 	$buddyforms_options = get_option('buddyforms_options');
 	
 	if(bp_is_active('groups')){
-		if(isset($buddyforms_options['bp_post_types'][$post_type]['groups']['attache'])){
+		if(isset($buddyforms_options['buddyforms'][$post_type]['groups']['attache'])){
 			remove_filter( 'buddyforms_form_element_hooks', 'form_element_single_hooks' );
 		
 			array_push($buddyforms_form_element_hooks,
