@@ -1,5 +1,5 @@
 <?php
-class buddyforms_GroupControl {
+class BuddyForms_GroupControl {
 
 	/**
 	 * Initiate the class
@@ -20,11 +20,16 @@ class buddyforms_GroupControl {
 	 */
 	public function create_a_group($post_ID, $post) {
 		global $bp, $buddyforms;
-
-		if (!isset($buddyforms['selected_post_types']))
+				
+		$form_slug = get_post_meta($post_ID,'_bf_form_slug', true);
+		
+		if (!isset($form_slug))
+			return;
+		
+		if (!isset($buddyforms['buddyforms']))
 			return;
 
-		if (!isset($buddyforms['buddyforms'][$post->post_type]['groups']['attache']))
+		if (!isset($buddyforms['buddyforms'][$form_slug]['groups']['attache'][0]))
 			return;
 
 		if (!class_exists('BP_Groups_Group'))
@@ -34,7 +39,9 @@ class buddyforms_GroupControl {
 		if ($post->post_type == 'revision')
 			$post = get_post($post->post_parent);
 
-		if (in_array($post->post_type, $buddyforms['selected_post_types'])) {
+		if ($post->post_type != $buddyforms['buddyforms'][$form_slug]['post_type']) 
+			return;
+			
 			$post_group_id = get_post_meta($post->ID, '_post_group_id', true);
 
 			$new_group = new BP_Groups_Group();
@@ -57,8 +64,8 @@ class buddyforms_GroupControl {
 			$new_group->enable_forum = 0;
 			$new_group->date_created = current_time('mysql');
 			$new_group->total_member_count = 1;
-			$new_group->avatar_thumb = 'http://localhost/~svenl77/buddyforms/wp-content/uploads/group-avatars/6/73f9a93d5211bf3104ea66ec06039953-bpfull.jpg'; 
-			$new_group->avatar_full = 	'http://localhost/~svenl77/buddyforms/wp-content/uploads/group-avatars/6/73f9a93d5211bf3104ea66ec06039953-bpfull.jpg';
+			// $new_group->avatar_thumb = 'http://localhost/~svenl77/buddyforms/wp-content/uploads/group-avatars/6/73f9a93d5211bf3104ea66ec06039953-bpfull.jpg'; 
+			// $new_group->avatar_full = 	'http://localhost/~svenl77/buddyforms/wp-content/uploads/group-avatars/6/73f9a93d5211bf3104ea66ec06039953-bpfull.jpg';
 			$new_group->save();
 
 			update_post_meta($post->ID, '_post_group_id', $new_group->id);
@@ -72,7 +79,6 @@ class buddyforms_GroupControl {
 			groups_update_groupmeta($new_group->id, 'group_type', $post->post_type);
 
 			self::add_member_to_group($new_group->id, $post->post_author);
-		}
 	}
 
 	/**
@@ -146,5 +152,5 @@ class buddyforms_GroupControl {
 	}
 
 }
-add_action('buddyforms_init', new buddyforms_GroupControl());
+add_action('buddyforms_init', new BuddyForms_GroupControl());
 ?>

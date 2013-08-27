@@ -13,9 +13,9 @@ class BuddyForms_Group_Extension {
 		$this->init_hook();
 		$this->load_constants();
 
-		add_action('bp_include', array($this, 'includes'), 4, 1);
+		add_action('init', array($this, 'includes'));
 		add_action('init', array($this, 'load_plugin_textdomain'), 10, 1);
-		add_action('init', array($this, 'register_taxonomy'), 10, 2);
+		//add_action('init', array($this, 'register_taxonomy'), 10, 2);
 		add_action('bp_init', array($this, 'setup_group_extension'), 10, 1);
 		add_action('template_redirect', array($this, 'theme_redirect'), 1, 2);
 		
@@ -102,12 +102,12 @@ class BuddyForms_Group_Extension {
 	public function register_taxonomy() {
 		global $buddyforms;
 
-		if (!isset($buddyforms['selected_post_types']))
+		if (!isset($buddyforms['buddyforms']))
 			return;
 
-		foreach ($buddyforms['selected_post_types'] as $post_type) :
-			if (isset($buddyforms['buddyforms'][$post_type]['form_fields'])) {
-				foreach ($buddyforms['buddyforms'][$post_type]['form_fields'] as $key => $form_field) {
+		foreach ($buddyforms['buddyforms'] as $key => $buddyform) :
+			if (isset($buddyform['form_fields'])) {
+				foreach ($buddyform['form_fields'] as $key => $form_field) {
 
 					if ($form_field['type'] == 'AttachGroupType') {
 
@@ -140,28 +140,28 @@ class BuddyForms_Group_Extension {
 	 * @since 0.1-beta
 	 */
 	public function remove_slug($permalink, $post, $leavename) {
-		global $buddyforms;
+		global $buddyforms, $bp;
 
-		if (!isset($buddyforms['selected_post_types']))
+		if (!isset($buddyforms['buddyforms']))
 			return $permalink;
 
 		if(!bp_is_active('groups'))
 			return $permalink;
-
-		if (!isset($buddyforms['buddyforms'][$post->post_type]['groups']['attache']))
-			return $permalink;
 		
-		$post_group_id = get_post_meta($post->ID, '_post_group_id', true);
-		$group_post_id = groups_get_groupmeta($post_group_id, 'group_post_id');
-
+		$post_group_id	= get_post_meta($post->ID, '_post_group_id', true);
+		$bf_form_slug	= get_post_meta($post->ID, '_bf_form_slug', true);
+		
+		$group_post_id	= groups_get_groupmeta($post_group_id, 'group_post_id');
+		
 		if ($post->ID != $group_post_id)
 			return $permalink;
 
-		$post_types = $buddyforms['selected_post_types'];
+		if (!isset($buddyforms['buddyforms'][$bf_form_slug]['groups']['attache']))
+			return $permalink;
 
-		foreach ($post_types as $post_type) {
-			if ($post_type)
-				$permalink = str_replace(get_bloginfo('url') . '/' . $post_type, get_bloginfo('url') . '/' . BP_GROUPS_SLUG, $permalink);
+		foreach ($buddyforms['buddyforms'] as $key => $buddyform) {
+			if (isset($buddyform['groups']['attache']))
+				$permalink = str_replace(get_bloginfo('url') . '/' . $buddyform['post_type'], get_bloginfo('url') . '/' . $bp->groups->root_slug, $permalink);
 		}
 
 		return $permalink;
@@ -176,16 +176,21 @@ class BuddyForms_Group_Extension {
 	public function theme_redirect() {
 		global $wp_query, $buddyforms, $bp;
 
-		if (!isset($buddyforms['selected_post_types']))
+		if (!isset($buddyforms['buddyforms']))
 			return;
 
 		if(!bp_is_active('groups'))
 			return;
 
-		if (!isset($buddyforms['buddyforms'][$wp_query->query_vars['post_type']]['groups']['attache']))
+		if(!isset($wp_query->post_ID))
 			return;
+		
+		$post_id = $wp_query->post_ID;
+		$bf_form_slug = get_post_meta($post_id, '_bf_form_slug', true);
+		
+		if (!isset($buddyforms['buddyforms'][$bf_form_slug]['groups']['attache']))
+			 return;
 
-		$post_id = $wp_query->post->ID;
 		$post_group_id = get_post_meta($post_id, '_post_group_id', true);
 		$group_post_id = groups_get_groupmeta($post_group_id, 'group_post_id');
 
@@ -193,7 +198,7 @@ class BuddyForms_Group_Extension {
 			return;
 
 		//A Specific Custom Post Type redirect to the atached group
-		if (in_array($wp_query->query_vars['post_type'], $buddyforms['selected_post_types'])) {
+		if ( $wp_query->query_vars['post_type'] ==  $buddyforms['buddyforms'][$bf_form_slug]['post_type'] ) {
 
 			if (is_singular()) {
 				$link = get_bloginfo('url') . '/' . BP_GROUPS_SLUG . '/' . get_post_meta($wp_query->post->ID, '_link_to_group', true);
