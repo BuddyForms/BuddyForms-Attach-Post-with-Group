@@ -34,7 +34,7 @@ if (class_exists('BP_Group_Extension')) :
 			$this->attached_post_type	= groups_get_groupmeta( bp_get_current_group_id(), 'group_type');
 			$this->attached_form_slug	= get_post_meta($this->attached_post_id, '_bf_form_slug', true);
 			
-			
+			add_filter('buddyforms_user_can_edit', array($this, 'buddyforms_user_can_edit'),1);
 
 			
 			if ( isset( $buddyforms['buddyforms'][$this->attached_form_slug]['form_fields'] ) ){
@@ -91,6 +91,11 @@ if (class_exists('BP_Group_Extension')) :
 
 		}
 
+		function buddyforms_user_can_edit($user_can_edit){
+			//if(groups_is_user_member( bp_displayed_user_id(), bp_get_current_group_id() ) )  // this is a extra security check but for some reason it does not work...
+				return true;
+		}
+		
 		function display_avatar($avatar){
 			
 			

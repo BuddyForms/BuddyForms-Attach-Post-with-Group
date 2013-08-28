@@ -135,6 +135,7 @@ function buddyforms_admin_settings_sidebar_metabox($form, $selected_form_slug){
 	global $buddyforms;
 	
 	$buddyforms_options = get_option('buddyforms_options');
+	$buddyforms['hooks']['form_element'] = apply_filters('buddyforms_form_element_hooks',$buddyforms['hooks']['form_element'],$selected_form_slug);
 	
 	if(bp_is_active('groups')){						
 		$form->addElement(new Element_HTML('
@@ -178,12 +179,12 @@ function buddyforms_admin_settings_sidebar_metabox($form, $selected_form_slug){
 add_filter('buddyforms_admin_settings_sidebar_metabox','buddyforms_admin_settings_sidebar_metabox',1,2);
 
 
-function form_element_group_hooks($buddyforms_form_element_hooks,$post_type,$field_id){
+function form_element_group_hooks($buddyforms_form_element_hooks,$form_slug){
 	
 	$buddyforms_options = get_option('buddyforms_options');
 	
 	if(bp_is_active('groups')){
-		if(isset($buddyforms_options['buddyforms'][$post_type]['groups']['attache'])){
+		if(isset($buddyforms_options['buddyforms'][$form_slug]['groups']['attache'])){
 			remove_filter( 'buddyforms_form_element_hooks', 'form_element_single_hooks' );
 		
 			array_push($buddyforms_form_element_hooks,
@@ -210,7 +211,7 @@ function form_element_group_hooks($buddyforms_form_element_hooks,$post_type,$fie
 	return $buddyforms_form_element_hooks;
 }
 
-add_filter('buddyforms_form_element_hooks','form_element_group_hooks',1,3);
+add_filter('buddyforms_form_element_hooks','form_element_group_hooks',1,2);
 
 /**
  * Locate a template

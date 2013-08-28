@@ -20,7 +20,13 @@ class BuddyForms_GroupControl {
 	 */
 	public function create_a_group($post_ID, $post) {
 		global $bp, $buddyforms;
-				
+		
+		
+		
+		// echo '<pre>';
+		// print_r($buddyforms);
+		// echo '</pre>';
+
 		$form_slug = get_post_meta($post_ID,'_bf_form_slug', true);
 		
 		if (!isset($form_slug))

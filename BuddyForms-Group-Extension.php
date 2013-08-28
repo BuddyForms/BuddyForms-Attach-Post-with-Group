@@ -13,13 +13,13 @@ class BuddyForms_Group_Extension {
 		$this->init_hook();
 		$this->load_constants();
 
-		add_action('init', array($this, 'includes'));
-		add_action('init', array($this, 'load_plugin_textdomain'), 10, 1);
-		//add_action('init', array($this, 'register_taxonomy'), 10, 2);
-		add_action('bp_init', array($this, 'setup_group_extension'), 10, 1);
-		add_action('template_redirect', array($this, 'theme_redirect'), 1, 2);
+		add_action('init'				, array($this, 'includes'));
+		add_action('init'				, array($this, 'load_plugin_textdomain'), 10, 1);
+		add_action('init'				, array($this, 'register_taxonomy'), 10, 2);
+		add_action('bp_init'			, array($this, 'setup_group_extension'), 10, 1);
+		add_action('template_redirect'	, array($this, 'theme_redirect'), 1, 2);
 		
-		add_filter('post_type_link', array($this, 'remove_slug'), 10, 3);
+		add_filter('post_type_link'		, array($this, 'remove_slug'), 10, 3);
 
 	}
 
@@ -35,7 +35,7 @@ class BuddyForms_Group_Extension {
 	 */
 
 	public function init_hook() {
-		do_action('buddyforms_GE_init');
+		do_action('buddyforms_ge_init');
 	}
 
 	/**
@@ -48,6 +48,7 @@ class BuddyForms_Group_Extension {
 	 */
 
 	public function load_constants() {
+		
 		if (!defined('BUDDYFORMS_GE_INSTALL_PATH'))
 			define('BUDDYFORMS_GE_INSTALL_PATH', dirname(__FILE__) . '/');
 
@@ -56,6 +57,7 @@ class BuddyForms_Group_Extension {
 
 		if (!defined('BUDDYFORMS_GE_TEMPLATE_PATH'))
 			define('BUDDYFORMS_GE_TEMPLATE_PATH', BUDDYFORMS_GE_INCLUDES_PATH . 'templates/');
+		
 	}
 
 	/**
@@ -66,6 +68,7 @@ class BuddyForms_Group_Extension {
 	 */
 
 	public function includes() {
+		
 		require_once (BUDDYFORMS_GE_INCLUDES_PATH . 'group-control.php');
 		require_once (BUDDYFORMS_GE_INCLUDES_PATH . 'functions.php');
 
@@ -79,7 +82,9 @@ class BuddyForms_Group_Extension {
 	 */
 
 	public function load_plugin_textdomain() {
+		
 		load_plugin_textdomain('buddyforms', false, dirname(plugin_basename(__FILE__)) . '/languages/');
+	
 	}
 
 	/**
@@ -89,8 +94,9 @@ class BuddyForms_Group_Extension {
 	 * @since 0.1-beta
 	 */
 	public function setup_group_extension() {
-		//echo buddyforms_GE_INCLUDES_PATH . 'group-extension.php';
+
 		require_once (BUDDYFORMS_GE_INCLUDES_PATH . 'group-extension.php');
+
 	}
 
 	/**
