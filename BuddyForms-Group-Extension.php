@@ -18,7 +18,7 @@ class BuddyForms_Group_Extension {
 		add_action('init'				, array($this, 'load_plugin_textdomain'), 10, 1);
 		add_action('init'				, array($this, 'register_taxonomy'), 10, 2);
 		add_action('bp_init'			, array($this, 'setup_group_extension'), 10, 1);
-		add_action('template_redirect'	, array($this, 'theme_redirect'), 1, 2);
+	//	add_action('template_redirect'	, array($this, 'theme_redirect'), 1, 2);
 		
 		add_filter('post_type_link'		, array($this, 'remove_slug'), 1, 3);
 
@@ -157,6 +157,7 @@ class BuddyForms_Group_Extension {
 		
 		$post_group_id	= get_post_meta($post->ID, '_post_group_id', true);
 		$bf_form_slug	= get_post_meta($post->ID, '_bf_form_slug', true);
+		
 		
 		$group_post_id	= groups_get_groupmeta($post_group_id, 'group_post_id');
 		

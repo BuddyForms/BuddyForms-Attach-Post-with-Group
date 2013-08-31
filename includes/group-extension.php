@@ -85,8 +85,8 @@ if (class_exists('BP_Group_Extension')) :
 				$this->nav_item_position	= 20;
 				$this->slug					= $buddyforms['buddyforms'][$this->attached_form_slug]['slug'];
 				
-				if(isset($this->attached_post_id))
-					add_filter('bp_get_group_avatar',array($this, 'display_avatar'), 1, 1);
+				// if(isset($this->attached_post_id))
+					// add_filter('bp_get_group_avatar',array($this, 'display_avatar'), 1, 1);
 			}
 
 		}

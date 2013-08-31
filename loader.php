@@ -7,7 +7,7 @@
  Author: Sven Lehnert
  Author URI: http://themekraft.com
  Licence: GPLv3
- Network: true
+ Network: false
  */
 
 define('buddyforms-Group-Extension', '0.1');
