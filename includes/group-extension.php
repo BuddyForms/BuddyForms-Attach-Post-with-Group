@@ -35,7 +35,8 @@ if (class_exists('BP_Group_Extension')) :
 			$this->attached_form_slug	= get_post_meta($this->attached_post_id, '_bf_form_slug', true);
 			
 			add_filter('buddyforms_user_can_edit', array($this, 'buddyforms_user_can_edit'),1);
-
+			
+			//add_filter('buddyforms_wp_editor', array($this, 'buddyforms_wp_editor_hidden'),1);
 			
 			if ( isset( $buddyforms['buddyforms'][$this->attached_form_slug]['form_fields'] ) ){
 				foreach ($buddyforms['buddyforms'][$this->attached_form_slug]['form_fields'] as $key => $form_field) :
@@ -95,7 +96,9 @@ if (class_exists('BP_Group_Extension')) :
 			//if(groups_is_user_member( bp_displayed_user_id(), bp_get_current_group_id() ) )  // this is a extra security check but for some reason it does not work...
 				return true;
 		}
-		
+		function buddyforms_wp_editor_hidden($wp_editor){
+			return '';
+		}
 		function display_avatar($avatar){
 			
 			
@@ -126,7 +129,12 @@ if (class_exists('BP_Group_Extension')) :
 		public function edit_screen() {
 			global $post, $form_slug;
 			$form_slug = $this->attached_form_slug;
-			//buddyforms_ge_locate_template('buddyforms/groups/edit-post.php');
+			echo '<style>.bf_form_title{
+				display: none;
+			}
+			.bf_form_content{
+				display: none;
+			}</style>';
 			echo buddyforms_create_edit_form();
 			wp_nonce_field('groups_edit_save_' . $this->slug);
 		}
