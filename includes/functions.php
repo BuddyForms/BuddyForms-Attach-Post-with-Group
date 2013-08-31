@@ -8,7 +8,7 @@ add_action('buddyforms_delete_post', 'buddyforms_delete_a_group');
 function groups_edit_form($args = Array()){
 	global $bp;
 	
-	echo $bp->current_component;
+	//echo $bp->current_component;
 	
 	if($bp->current_component != 'groups')
 		return $args;

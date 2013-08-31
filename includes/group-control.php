@@ -8,7 +8,13 @@ class BuddyForms_GroupControl {
 	 * @since 0.1-beta
 	 */
 	public function __construct() {
-		add_action('save_post', array($this, 'create_a_group'), 10, 2);
+		
+		if(is_admin()){
+			add_action('save_post', array($this, 'create_a_group'), 10, 2);
+		} else {
+			add_action('buddyforms_after_save_post', array($this, 'create_a_group'), 10, 2);
+		}
+		
 		add_action('wp_trash_post', array($this, 'delete_a_group'), 10, 1);
 	}
 
@@ -18,16 +24,16 @@ class BuddyForms_GroupControl {
 	 * @package buddyforms
 	 * @since 0.1-beta
 	 */
-	public function create_a_group($post_ID, $post) {
+	public function create_a_group($post_ID) {
 		global $bp, $buddyforms;
 		
-		
-		
-		// echo '<pre>';
-		// print_r($buddyforms);
-		// echo '</pre>';
+		$post = get_post($post_ID);
 
-		$form_slug = get_post_meta($post_ID,'_bf_form_slug', true);
+		// make sure we get the correct data
+		if ($post->post_type == 'revision')
+			$post = get_post($post->post_parent);
+
+		$form_slug = get_post_meta($post->ID,'_bf_form_slug', true);
 		
 		if (!isset($form_slug))
 			return;
@@ -40,10 +46,6 @@ class BuddyForms_GroupControl {
 
 		if (!class_exists('BP_Groups_Group'))
 			return;
-
-		// make sure we get the correct data
-		if ($post->post_type == 'revision')
-			$post = get_post($post->post_parent);
 
 		if ($post->post_type != $buddyforms['buddyforms'][$form_slug]['post_type']) 
 			return;

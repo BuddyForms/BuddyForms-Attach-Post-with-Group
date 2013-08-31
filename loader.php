@@ -24,7 +24,7 @@ function buddyforms_Group_Extension_init() {
 	if (is_multisite() && BP_ROOT_BLOG != $wpdb->blogid)
 		return;
 
-	require (dirname(__FILE__) . '/buddyforms-Group-Extension.php');
+	require (dirname(__FILE__) . '/buddyforms-group-extension.php');
 	$buddyforms_Group_Extension = new buddyforms_Group_Extension();
 }
 
