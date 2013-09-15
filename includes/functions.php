@@ -17,13 +17,15 @@ function groups_edit_form($args = Array()){
 	$posttype		= groups_get_groupmeta( bp_get_group_id(), 'group_type' );
 	$the_post		= get_post( $groups_post_id );
 	$post_id		= $the_post->ID;
+	$form_slug		= get_post_meta($groups_post_id,'_bf_form_slug', true);
 	
 	$args = Array(
-		'posttype' => $posttype,
-		'the_post' => $the_post,
-		'post_id' => $post_id
+		 'post_type' => $posttype,
+		 'the_post' => $the_post,
+		 'post_id' => $post_id,
+		'form_slug'	=> $form_slug
 	);
-
+print_r($args);
 	return $args;
 }
 add_filter('buddyforms_create_edit_form_args','groups_edit_form',1,1);

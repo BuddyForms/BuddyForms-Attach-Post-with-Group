@@ -57,6 +57,7 @@ if (class_exists('BP_Group_Extension')) :
 			} else {
 				$this->enable_edit_item	= false;
 			}
+			
 	
 			if( isset($this->attached_form_slug) && isset($buddyforms['buddyforms'][$this->attached_form_slug]['groups']['display_post'])){
 
@@ -127,18 +128,38 @@ if (class_exists('BP_Group_Extension')) :
 		 * @since 0.1-beta
 		 */
 		public function edit_screen() {
-			global $post, $form_slug;
+			global $buddyforms;
+			
 			$form_slug = $this->attached_form_slug;
-			echo '<style>.bf_form_title{
-				display: none;
-			}
-			.bf_form_content{
-				display: none;
-			}</style>';
-			echo buddyforms_create_edit_form();
-			wp_nonce_field('groups_edit_save_' . $this->slug);
+			$attached_post_id = $this->attached_post_id;
+			$customfields = $buddyforms['buddyforms'][$form_slug]['form_fields'];
+			
+			// if post edit screen is displayed
+			wp_enqueue_style('the-form-css', plugins_url('css/the-form.css', __FILE__));	
+			
+			bf_post_meta('', $attached_post_id, $customfields);	
+			
 		}
+		
+		function edit_screen_save($group_id){
+			global $buddyforms;
+			
+			$form_slug = $this->attached_form_slug;
+			$attached_post_id = $this->attached_post_id;
+			$customfields = $buddyforms['buddyforms'][$form_slug]['form_fields'];
+			
+			bf_update_post_meta($attached_post_id, $customfields);
+			//groups_update_groupmeta( bp_get_current_group_id(), 'bf_post_meta' . bp_get_current_group_id(), $customfields );
+			add_action('template_notices', create_function('', 'echo "<div id=\"message\" class=\"bp-template-notice updated\">
 
+			<p>Post successfully updated.</p>
+
+		</div>";'));
+
+			
+			
+			
+		}
 		/**
 		* Display or edit a Post
 		*
