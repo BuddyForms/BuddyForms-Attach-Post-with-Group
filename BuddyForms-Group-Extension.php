@@ -118,20 +118,34 @@ class BuddyForms_Group_Extension {
 				foreach ($buddyform['form_fields'] as $key => $form_field) {
 
 					if ($form_field['type'] == 'AttachGroupType') {
+						
+						$form_slug = $buddyform['slug'];
+						$labels_group_groups = array(
+							'name'			=> sprintf(__('%s Categories'), $form_field['name']),
+							'singular_name'	=> sprintf(__('%s Category'), $form_field['name'])
+						);
 
-						$labels_group_groups = array('name' => sprintf(__('%s Categories'), $form_field['name']), 'singular_name' => sprintf(__('%s Category'), $form_field['name']), );
+						register_taxonomy( $form_slug . '_attached_' . $form_field['AttachGroupType'], $buddyform['post_type'], array(
+							'hierarchical' => true, 
+							'labels' => $labels_group_groups,
+							'show_ui' => true,
+							'query_var' => true,
+							'rewrite' => array('slug' => $form_slug . '_attached_' . $form_field['AttachGroupType']),
+							'show_in_nav_menus' => false, 
+							)
+						);
 
-						register_taxonomy($post_type . '_attached_' . $form_field['AttachGroupType'], $post_type, array('hierarchical' => true, 'labels' => $labels_group_groups, 'show_ui' => true, 'query_var' => true, 'rewrite' => array('slug' => $post_type . '_attached_' . $form_field['AttachGroupType']), 'show_in_nav_menus' => false, ));
-
-						$args = array('post_type' => $form_field['AttachGroupType'], // my custom post type
-						'posts_per_page'	=> -1, // show all posts
-						'post_status'		=> 'publish');
+						$args = array(
+							'post_type'=> $buddyforms['buddyforms'][$form_field['AttachGroupType']]['post_type'], // my custom post type
+							'posts_per_page'	=> -1, // show all posts
+							'post_status'		=> 'publish'
+						);
 
 						$attached_posts = new WP_Query($args);
 
 						while ($attached_posts->have_posts()) :
 							$attached_posts->the_post();
-							wp_set_object_terms(get_the_ID(), get_the_title(), $post_type . '_attached_' . $form_field['AttachGroupType']);
+							wp_set_object_terms(get_the_ID(), get_the_title(), $form_slug . '_attached_' . $form_field['AttachGroupType']);
 						endwhile;
 
 					}

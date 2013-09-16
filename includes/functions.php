@@ -86,37 +86,78 @@ function buddyforms_groups_load_template_filter($found_template, $templates) {
 	return apply_filters('buddyforms_groups_load_template_filter', $found_template, $templates);
 }
 
-function buddyforms_form_element_add_field_ge($form_fields_new, $post_type, $field_type, $field_id){
+function buddyforms_form_element_add_field_ge($form_fields, $form_slug, $field_type, $field_id){
 	global $buddyforms;
-	if($field_type  == 'AttachGroupType')
-		$form_fields_new[4] 	= new Element_Select("Attach Group Type:", "buddyforms_options[buddyforms][".$post_type."][form_fields][".$field_id."][AttachGroupType]", $buddyforms['selected_post_types'], array('value' => $value));
-	return $form_fields_new;	
+
+	if($field_type != 'AttachGroupType')
+		return $form_fields;	
+ 
+	$AttachGroupType	= Array();
+	
+	$value = '';
+	if(isset($buddyforms['buddyforms'][$form_slug]['form_fields'][$field_id]['AttachGroupType']))
+		$value	= $buddyforms['buddyforms'][$form_slug]['form_fields'][$field_id]['AttachGroupType'];
+
+	foreach ($buddyforms['buddyforms'] as $key => $buddyform) {
+		
+		if(isset($buddyform['groups']['attache']))
+			$AttachGroupType[$key] = $buddyform['name'];
+	
+	}
+	
+	$form_fields['left']['AttachGroupType'] 	= new Element_Select("Attach Group Type:", "buddyforms_options[buddyforms][".$form_slug."][form_fields][".$field_id."][AttachGroupType]", $AttachGroupType, array('value' => $value));
+	
+	$multiple = 'false';
+	if(isset($buddyforms_options['buddyforms'][$form_slug]['form_fields'][$field_id]['multiple']))
+		$multiple = $buddyforms_options['buddyforms'][$form_slug]['form_fields'][$field_id]['multiple'];
+		$form_fields['left']['multiple'] = new Element_Checkbox("Multiple:","buddyforms_options[buddyforms][".$form_slug."][form_fields][".$field_id."][multiple]",array(''),array('value' => $multiple));
+				
+	return $form_fields;	
 }
 add_filter('buddyforms_form_element_add_field','buddyforms_form_element_add_field_ge',1,5);
 
 
-function buddyforms_create_edit_form_display_element_group($form,$post_id,$posttype,$customfield,$customfield_val){
+function buddyforms_create_edit_form_display_element_group($form,$post_id,$form_slug,$customfield,$customfield_val){
 								
 	if($customfield['type']  == 'AttachGroupType'){
 		
-		$attached_tax_name = $posttype . '_attached_' . $customfield['AttachGroupType'];
+		$attached_tax_name = $form_slug . '_attached_' . $customfield['AttachGroupType'];
 		$term_list = wp_get_post_terms($post_id, $attached_tax_name, array("fields" => "ids"));
 
-		$args = array('multiple' => $customfield['multiple'], 'selected_cats' => $term_list, 'hide_empty' => 0, 'id' => $key, 'child_of' => 0, 'echo' => FALSE, 'selected' => false, 'hierarchical' => 1, 'name' => sanitize_title($customfield['name']) . '[]', 'class' => 'postform', 'depth' => 0, 'tab_index' => 0, 'taxonomy' => $attached_tax_name, 'hide_if_empty' => FALSE, );
+		$args = array(
+			//'multiple' => $customfield['multiple'],
+			'selected_cats' => $term_list,
+			'hide_empty' => 0,
+			//'id' => $key,
+			'child_of' => 0,
+			'echo' => FALSE,
+			'selected' => false,
+			'hierarchical' => 1,
+			'name' => sanitize_title($customfield['name']) . '[]',
+			'class' => 'postform chosen',
+			'depth' => 0,
+			'tab_index' => 0,
+			'taxonomy' => $attached_tax_name,
+			'hide_if_empty' => FALSE
+		);
 
 		$dropdown = wp_dropdown_categories($args);
 
-		if (is_array($customfield['multiple'])) {
-			$dropdown = str_replace('id=', 'multiple="multiple" id=', $dropdown);
-		}
+		 if (is_array($customfield['multiple'])) {
+			 $dropdown = str_replace('id=', 'multiple="multiple" id=', $dropdown);
+		 }
 		if (is_array($term_list)) {
 			foreach ($term_list as $value) {
 				$dropdown = str_replace(' value="' . $value . '"', ' value="' . $value . '" selected="selected"', $dropdown);
 			}
 		}
+		$element = new Element_HTML('<label>'.$customfield['name'] . ':</label><p><i>' . $customfield['description'] . '</i></p>');
+		bf_add_element($form, $element);
+					
+		$element = new Element_HTML($dropdown);
+		bf_add_element($form, $element);
 
-		$form->addElement(new Element_HTML($dropdown));
-	}
+		}
 	return $form;
 	
 }
