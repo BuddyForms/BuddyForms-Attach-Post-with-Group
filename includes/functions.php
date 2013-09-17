@@ -125,7 +125,7 @@ function buddyforms_create_edit_form_display_element_group($form,$post_id,$form_
 		$term_list = wp_get_post_terms($post_id, $attached_tax_name, array("fields" => "ids"));
 
 		$args = array(
-			//'multiple' => $customfield['multiple'],
+			'multiple' => $customfield['multiple'],
 			'selected_cats' => $term_list,
 			'hide_empty' => 0,
 			//'id' => $key,
@@ -202,17 +202,32 @@ function buddyforms_admin_settings_sidebar_metabox($form, $selected_form_slug){
 					
 					$form->addElement(new Element_Checkbox("Attach to Group?", "buddyforms_options[buddyforms][".$selected_form_slug."][groups][attache]", array("Yes. I want to create a group for each post of this post type and attach the post to the group."), array('value' => $attache)));
 					$form->addElement(new Element_HTML('<br>'));
+					
+					$display_post = '';
+					if(isset($buddyforms_options['buddyforms'][$selected_form_slug]['groups']['display_post']))
+						$display_post = $buddyforms_options['buddyforms'][$selected_form_slug]['groups']['display_post'];
+					
 					$form->addElement(new Element_Select("Display Post: <p>the option \"replace home create new tab activity\" only works with a buddypress theme. </p>", "buddyforms_options[buddyforms][".$selected_form_slug."][groups][display_post]", array(
 					'nothing',
 					'create a new tab', 
 					'replace home new tab activity')
-					,array('value' => $buddyforms_options['buddyforms'][$selected_form_slug]['groups']['display_post'])));
+					,array('value' => $display_post)));
 					
 					$form->addElement(new Element_HTML('<br><br><p>The title and content is displayed in the group header. If you want to display it somewere else, you can do it here but need to adjust the groups-header.php in your theme. If you want to hide it there.</p>'));
-					$form->addElement( new Element_Select("Display Title:", "buddyforms_options[buddyforms][".$selected_form_slug."][groups][title][display]", $buddyforms['hooks']['form_element'], array('value' => $buddyforms_options['buddyforms'][$selected_form_slug]['groups']['title']['display'])));
-					$form->addElement( new Element_Select("Display Content:", "buddyforms_options[buddyforms][".$selected_form_slug."][groups][content][display]", $buddyforms['hooks']['form_element'], array('value' => $buddyforms_options['buddyforms'][$selected_form_slug]['groups']['content']['display'])));
+					
+					$display = '';
+					if(isset($buddyforms_options['buddyforms'][$selected_form_slug]['groups']['title']['display']))
+						$display = $buddyforms_options['buddyforms'][$selected_form_slug]['groups']['title']['display'];
+					
+					$form->addElement( new Element_Select("Display Title:", "buddyforms_options[buddyforms][".$selected_form_slug."][groups][title][display]", $buddyforms['hooks']['form_element'], array('value' =>$display)));
+					
+					$display = '';
+					if(isset($buddyforms_options['buddyforms'][$selected_form_slug]['groups']['content']['display']))
+						$display = $buddyforms_options['buddyforms'][$selected_form_slug]['groups']['content']['display'];
+					
+					$form->addElement( new Element_Select("Display Content:", "buddyforms_options[buddyforms][".$selected_form_slug."][groups][content][display]", $buddyforms['hooks']['form_element'], array('value' => $display)));
 	
-		$form->addElement(new Element_HTML('
+			$form->addElement(new Element_HTML('
 				</div>
 			</div>
 		</div>'));	
