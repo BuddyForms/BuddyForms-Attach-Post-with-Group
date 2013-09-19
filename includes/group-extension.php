@@ -92,11 +92,21 @@ if (class_exists('BP_Group_Extension')) :
 			$customfields = $buddyforms['buddyforms'][$form_slug]['form_fields'];
 			
 			bf_update_post_meta($attached_post_id, $customfields);
-			//groups_update_groupmeta( bp_get_current_group_id(), 'bf_post_meta' . bp_get_current_group_id(), $customfields );
-			add_action('template_notices', create_function('', 'echo "<div id=\"message\" class=\"bp-template-notice updated\">
-				<p>Post successfully updated.</p>
-			</div>";'));
 			
+			foreach( $customfields as $key => $customfield ) : 
+			  
+				if( $customfield['type'] == 'AttachGroupType' ){
+						
+					$taxonomy = get_taxonomy($form_slug . '_attached_' . $customfield['AttachGroupType']);
+					if (isset($taxonomy->hierarchical) && $taxonomy->hierarchical == true)  {
+						wp_set_post_terms( $attached_post_id, $_POST[ $customfield['slug'] ], $form_slug . '_attached_' . $customfield['AttachGroupType'], false );
+					}
+					
+				}
+				
+			endforeach;
+			
+			bp_core_add_message( "Post successfully updated." );
 		}
 		
 		/**

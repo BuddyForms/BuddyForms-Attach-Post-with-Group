@@ -97,14 +97,13 @@ class BuddyForms_GroupControl {
 	 */
 	public function delete_a_group($post_id) {
 		global $buddyforms;
+		
 		$post = get_post($post_id);
+		$post_group_id = get_post_meta($post->ID, '_post_group_id', true);
 
-		if (in_array($post->post_type, $buddyforms['selected_post_types'])) {
-			$post_group_id = get_post_meta($post->ID, '_post_group_id', true);
+		if (!empty($post_group_id))
+			groups_delete_group($post_group_id);
 
-			if (!empty($post_group_id))
-				groups_delete_group($post_group_id);
-		}
 	}
 
 	/**

@@ -1,36 +1,15 @@
 <?php 
 
+/**
+ * Delete a Group
+ *
+ * @package buddyforms
+ * @since 0.1-beta
+ */
+add_action('buddyforms_delete_post', 'buddyforms_delete_a_group');	
 function buddyforms_delete_a_group($post_id){
 	BuddyForms_GroupControl::delete_a_group($post_id);
-}
-add_action('buddyforms_delete_post', 'buddyforms_delete_a_group');			
-
-function groups_edit_form($args = Array()){
-	global $bp;
-	
-	//echo $bp->current_component;
-	
-	if($bp->current_component != 'groups')
-		return $args;
-
-	$groups_post_id = groups_get_groupmeta( bp_get_group_id(), 'group_post_id' );
-	$posttype		= groups_get_groupmeta( bp_get_group_id(), 'group_type' );
-	$the_post		= get_post( $groups_post_id );
-	$post_id		= $the_post->ID;
-	$form_slug		= get_post_meta($groups_post_id,'_bf_form_slug', true);
-	
-	$args = Array(
-		 'post_type' => $posttype,
-		 'the_post' => $the_post,
-		 'post_id' => $post_id,
-		'form_slug'	=> $form_slug
-	);
-print_r($args);
-	return $args;
-}
-add_filter('buddyforms_create_edit_form_args','groups_edit_form',1,1);
- 	
-
+}	
 
 /**
  * Delete a post
@@ -163,7 +142,6 @@ function buddyforms_create_edit_form_display_element_group($form,$post_id,$form_
 }
 add_filter('buddyforms_create_edit_form_display_element','buddyforms_create_edit_form_display_element_group',1,5);
 
-
 function buddyforms_add_form_element_in_sidebar($form, $selected_post_types){
 	
 	if(bp_is_active('groups')){		
@@ -235,7 +213,6 @@ function buddyforms_admin_settings_sidebar_metabox($form, $selected_form_slug){
 	return $form;
 }	
 add_filter('buddyforms_admin_settings_sidebar_metabox','buddyforms_admin_settings_sidebar_metabox',1,2);
-
 
 function form_element_group_hooks($buddyforms_form_element_hooks,$form_slug){
 	
