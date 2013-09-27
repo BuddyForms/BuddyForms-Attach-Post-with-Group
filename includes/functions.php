@@ -1,5 +1,38 @@
 <?php 
 
+add_action('buddyforms_update_post_meta', 'bf_ge_updtae_post_meta', 2);
+
+
+function bf_ge_updtae_post_meta($customfield, $post_id){
+	
+	$post_type = get_post_type($post_id);
+	$form_slug = get_post_meta($post_id, '_bf_form_slug');
+	
+	if(!isset($form_slug))
+		return;
+			  
+	if( $customfield['type'] == 'AttachGroupType' ){
+			
+		$taxonomy = get_taxonomy($form_slug . '_attached_' . $customfield['AttachGroupType']);
+		if (isset($taxonomy->hierarchical) && $taxonomy->hierarchical == true)  {
+			wp_set_post_terms( $post_id, $_POST[ $customfield['slug'] ], $form_slug . '_attached_' . $customfield['AttachGroupType'], false );
+		}
+		
+	}
+	if( $customfield['slug'] == 'post_excerpt' ){
+		$my_post = array(
+            'ID'        		=> $post_id,
+            'post_excerpt'		=> $_POST['post_excerpt'],
+            'post_type' 		=> $post_type,
+            'post_status' 		=> 'publish'
+		);
+          
+		// Update the new post
+        $post_id = wp_update_post( $my_post );
+	}
+
+}
+
 /**
  * Delete a Group
  *
@@ -103,8 +136,12 @@ function buddyforms_create_edit_form_display_element_group($form,$post_id,$form_
 		$attached_tax_name = $form_slug . '_attached_' . $customfield['AttachGroupType'];
 		$term_list = wp_get_post_terms($post_id, $attached_tax_name, array("fields" => "ids"));
 
+		$multiple = '';
+		if(isset($customfield['multiple']))
+			$multiple = $customfield['multiple'];
+		
 		$args = array(
-			'multiple' => $customfield['multiple'],
+			'multiple' => $multiple,
 			'selected_cats' => $term_list,
 			'hide_empty' => 0,
 			//'id' => $key,
@@ -122,7 +159,7 @@ function buddyforms_create_edit_form_display_element_group($form,$post_id,$form_
 
 		$dropdown = wp_dropdown_categories($args);
 
-		 if (is_array($customfield['multiple'])) {
+		 if (isset($multiple) && is_array($multiple)) {
 			 $dropdown = str_replace('id=', 'multiple="multiple" id=', $dropdown);
 		 }
 		if (is_array($term_list)) {

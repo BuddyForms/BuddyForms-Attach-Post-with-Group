@@ -71,41 +71,36 @@ if (class_exists('BP_Group_Extension')) :
 		 * @since 0.1-beta
 		 */
 		public function edit_screen() {
-			global $buddyforms;
+			global $buddyforms, $wp_query, $form_slug;
 			
-			$form_slug = $this->attached_form_slug;
-			$attached_post_id = $this->attached_post_id;
-			$customfields = $buddyforms['buddyforms'][$form_slug]['form_fields'];
+			$form_slug			= $this->attached_form_slug;
+			$attached_post_id	= $this->attached_post_id;
+			$customfields		= $buddyforms['buddyforms'][$form_slug]['form_fields'];
 			
 			// if post edit screen is displayed
 			wp_enqueue_style('the-form-css', plugins_url('css/the-form.css', __FILE__));	
 			
 			bf_post_meta('', $form_slug, $attached_post_id, $customfields);	
 			
+			if(isset($buddyforms['buddyforms'][$form_slug]['revision'])){
+				 
+				buddyforms_wp_list_post_revisions($attached_post_id);
+
+			 }
+			
 		}
 		
 		function edit_screen_save($group_id){
 			global $buddyforms;
 			
-			$form_slug = $this->attached_form_slug;
-			$attached_post_id = $this->attached_post_id;
-			$customfields = $buddyforms['buddyforms'][$form_slug]['form_fields'];
+			$form_slug			= $this->attached_form_slug;
+			$post_type			= $this->attached_post_type;
+			$attached_post_id	= $this->attached_post_id;
+			
+			$customfields		= $buddyforms['buddyforms'][$form_slug]['form_fields'];
 			
 			bf_update_post_meta($attached_post_id, $customfields);
-			
-			foreach( $customfields as $key => $customfield ) : 
-			  
-				if( $customfield['type'] == 'AttachGroupType' ){
-						
-					$taxonomy = get_taxonomy($form_slug . '_attached_' . $customfield['AttachGroupType']);
-					if (isset($taxonomy->hierarchical) && $taxonomy->hierarchical == true)  {
-						wp_set_post_terms( $attached_post_id, $_POST[ $customfield['slug'] ], $form_slug . '_attached_' . $customfield['AttachGroupType'], false );
-					}
-					
-				}
 				
-			endforeach;
-			
 			bp_core_add_message( "Post successfully updated." );
 		}
 		

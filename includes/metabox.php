@@ -8,7 +8,8 @@ function bf_add_custom_box() {
 	
 	$screens = Array();
 	foreach ($buddyforms['buddyforms'] as $key => $buddyform) {
-		array_push($screens, $buddyform['post_type']);
+		if(isset($buddyform['post_type']))
+			array_push($screens, $buddyform['post_type']);
 	}
     
       foreach ( $screens as $screen ) {
@@ -42,11 +43,11 @@ function bf_inner_custom_box( $post ) {
    */
   $value = get_post_meta( $post->ID, '_bf_form_slug', true );
 
-  echo '<label for="bf_new_field">';
+  echo '<label for="_bf_form_slug">';
        _e( "Select the form", 'bf_textdomain' );
   echo '</label> ';
-  //echo '<input type="text" id="bf_new_field" name="bf_new_field" value="' . esc_attr( $value ) . '" size="25" />';
-	echo ' <p><select name="bf_new_field" id="bf_new_field">';
+  //echo '<input type="text" id="_bf_form_slug" name="_bf_form_slug" value="' . esc_attr( $value ) . '" size="25" />';
+	echo ' <p><select name="_bf_form_slug" id="_bf_form_slug">';
 	echo ' <option value="none" '.$selected.' > none </option>';
 	
 	foreach ($buddyforms['buddyforms'] as $key => $buddyform) {
@@ -102,7 +103,7 @@ function bf_save_postdata( $post_id ) {
   /* OK, its safe for us to save the data now. */
 
   // Sanitize user input.
-  $mydata = sanitize_text_field( $_POST['bf_new_field'] );
+  $mydata = sanitize_text_field( $_POST['_bf_form_slug'] );
 
   // Update the meta field in the database.
   update_post_meta( $post_id, '_bf_form_slug', $mydata );
