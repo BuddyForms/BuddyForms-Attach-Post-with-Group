@@ -1,13 +1,13 @@
 <?php 
 
-add_action('buddyforms_update_post_meta', 'bf_ge_updtae_post_meta', 2);
+add_action('buddyforms_update_post_meta', 'bf_ge_updtae_post_meta', 99, 2);
 
 
 function bf_ge_updtae_post_meta($customfield, $post_id){
-	
+		
 	$post_type = get_post_type($post_id);
-	$form_slug = get_post_meta($post_id, '_bf_form_slug');
-	
+	$form_slug = get_post_meta($post_id, '_bf_form_slug', true);
+
 	if(!isset($form_slug))
 		return;
 			  

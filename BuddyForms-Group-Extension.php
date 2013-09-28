@@ -70,9 +70,9 @@ class BuddyForms_Group_Extension {
 
 	public function includes() {
 		
-		require_once (BUDDYFORMS_GE_INCLUDES_PATH . 'group-control.php');
-		require_once (BUDDYFORMS_GE_INCLUDES_PATH . 'functions.php');
-		require_once (BUDDYFORMS_GE_INCLUDES_PATH . 'metabox.php');
+		require_once (BUDDYFORMS_GE_INCLUDES_PATH	. 'group-control.php');
+		require_once (BUDDYFORMS_GE_INCLUDES_PATH	. 'functions.php');
+		require_once (BUDDYFORMS_GE_INCLUDES_PATH	. 'metabox.php');
 
 		}
 
@@ -96,7 +96,10 @@ class BuddyForms_Group_Extension {
 	 * @since 0.1-beta
 	 */
 	public function setup_group_extension() {
-
+		
+		if(!function_exists('buddyforms_wp_list_post_revisions'))
+			require_once (BUDDYFORMS_INCLUDES_PATH		. 'revisions.php');
+		
 		require_once (BUDDYFORMS_GE_INCLUDES_PATH . 'group-extension.php');
 
 	}

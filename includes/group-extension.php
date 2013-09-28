@@ -12,11 +12,20 @@ if (class_exists('BP_Group_Extension')) :
 		* @since 0.1-beta
 		*/
 		public function __construct() {
-			global $bp, $buddyforms;
+			global $bp, $buddyforms, $wp_query, $post_id, $form_slug;
 			
 			$this->attached_post_id		= groups_get_groupmeta( bp_get_current_group_id(), 'group_post_id');
 			$this->attached_post_type	= groups_get_groupmeta( bp_get_current_group_id(), 'group_type');
 			$this->attached_form_slug	= get_post_meta($this->attached_post_id, '_bf_form_slug', true);
+			
+			if(isset($buddyforms['buddyforms'][$this->attached_form_slug]['revision'])){
+					
+				$form_slug	= $this->attached_form_slug;
+				$post_id	= $this->attached_post_id;
+				
+				add_action( 'bp_after_group_details_admin',  create_function('', 'global $post_id; buddyforms_wp_list_post_revisions($post_id);'));
+			
+			 }
 			
 			add_action('buddyforms_hook_fields_from_post_id', create_function('', 'return "' . $this->attached_post_id . '";'));
 
@@ -82,11 +91,8 @@ if (class_exists('BP_Group_Extension')) :
 			
 			bf_post_meta('', $form_slug, $attached_post_id, $customfields);	
 			
-			if(isset($buddyforms['buddyforms'][$form_slug]['revision'])){
-				 
-				buddyforms_wp_list_post_revisions($attached_post_id);
-
-			 }
+			
+			
 			
 		}
 		
