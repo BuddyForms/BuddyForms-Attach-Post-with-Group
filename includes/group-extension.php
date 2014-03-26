@@ -79,7 +79,7 @@ if (class_exists('BP_Group_Extension')) :
 		 * @package buddyforms
 		 * @since 0.1-beta
 		 */
-		public function edit_screen() {
+		public function edit_screen($group_id = NULL) {
 			global $buddyforms, $wp_query, $form_slug;
 			
 			$form_slug			= $this->attached_form_slug;
@@ -96,7 +96,7 @@ if (class_exists('BP_Group_Extension')) :
 			
 		}
 		
-		function edit_screen_save($group_id){
+		function edit_screen_save($group_id = NULL){
 			global $buddyforms;
 			
 			$form_slug			= $this->attached_form_slug;

@@ -193,7 +193,7 @@ function buddyforms_admin_settings_sidebar_metabox($form, $selected_form_slug){
 	global $buddyforms;
 	
 	$buddyforms_options = get_option('buddyforms_options');
-	$buddyforms['hooks']['form_element'] = apply_filters('buddyforms_form_element_hooks',$buddyforms['hooks']['form_element'],$selected_form_slug);
+	//$buddyforms['hooks']['form_element'] = apply_filters('buddyforms_form_element_hooks',$buddyforms['hooks']['form_element'],$selected_form_slug);
 	
 	if(bp_is_active('groups')){						
 		$form->addElement(new Element_HTML('
@@ -228,20 +228,20 @@ function buddyforms_admin_settings_sidebar_metabox($form, $selected_form_slug){
 					'replace home new tab activity')
 					,array('value' => $display_post)));
 					
-					$form->addElement(new Element_HTML('<br><br><p>The title and content is displayed in the group header. If you want to display it somewere else, you can do it here but need to adjust the groups-header.php in your theme. If you want to hide it there.</p>'));
+					/*$form->addElement(new Element_HTML('<br><br><p>The title and content is displayed in the group header. If you want to display it somewere else, you can do it here but need to adjust the groups-header.php in your theme. If you want to hide it there.</p>'));
 					
 					$display = '';
 					if(isset($buddyforms_options['buddyforms'][$selected_form_slug]['groups']['title']['display']))
 						$display = $buddyforms_options['buddyforms'][$selected_form_slug]['groups']['title']['display'];
-					
+
 					$form->addElement( new Element_Select("Display Title:", "buddyforms_options[buddyforms][".$selected_form_slug."][groups][title][display]", $buddyforms['hooks']['form_element'], array('value' =>$display)));
-					
+
 					$display = '';
 					if(isset($buddyforms_options['buddyforms'][$selected_form_slug]['groups']['content']['display']))
 						$display = $buddyforms_options['buddyforms'][$selected_form_slug]['groups']['content']['display'];
-					
-					$form->addElement( new Element_Select("Display Content:", "buddyforms_options[buddyforms][".$selected_form_slug."][groups][content][display]", $buddyforms['hooks']['form_element'], array('value' => $display)));
-	
+
+					$form->addElement( new Element_Select("Display Content:", "buddyforms_options[buddyforms][".$selected_form_slug."][groups][content][display]", $buddyforms['hooks']['form_element'], array('value' => $display)));*/
+
 			$form->addElement(new Element_HTML('
 				</div>
 			</div>
