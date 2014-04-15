@@ -19,7 +19,7 @@ class BuddyForms_Group_Extension {
 		add_action('init'				, array($this, 'register_taxonomy'), 10, 2);
 		add_action('bp_init'			, array($this, 'setup_group_extension'), 10, 1);
 		add_action('template_redirect'	, array($this, 'theme_redirect'), 1, 2);
-		
+
 		add_filter('post_type_link'		, array($this, 'remove_slug'), 1, 3);
 
 	}
@@ -69,12 +69,11 @@ class BuddyForms_Group_Extension {
 	 */
 
 	public function includes() {
-		
-		require_once (BUDDYFORMS_GE_INCLUDES_PATH	. 'group-control.php');
-		require_once (BUDDYFORMS_GE_INCLUDES_PATH	. 'functions.php');
-		require_once (BUDDYFORMS_GE_INCLUDES_PATH	. 'metabox.php');
 
-		}
+        require_once (BUDDYFORMS_GE_INCLUDES_PATH	. 'group-control.php');
+        require_once (BUDDYFORMS_GE_INCLUDES_PATH	. 'functions.php');
+
+	}
 
 	/**
 	 * Loads the textdomain for the plugin
@@ -166,13 +165,13 @@ class BuddyForms_Group_Extension {
 	 */
 	public function remove_slug($permalink, $post, $leavename) {
 		global $buddyforms, $bp;
-		
+
 		if (!isset($buddyforms['buddyforms']))
 			return $permalink;
 
 		if(!bp_is_active('groups'))
 			return $permalink;
-		
+
 		$post_group_id	= get_post_meta($post->ID, '_post_group_id', true);
 		$bf_form_slug	= get_post_meta($post->ID, '_bf_form_slug', true);
 		
@@ -184,7 +183,7 @@ class BuddyForms_Group_Extension {
 
 		if (isset($buddyforms['buddyforms'][$bf_form_slug]['groups']['attache'])){
 			$permalink = str_replace(get_bloginfo('url') . '/' . $buddyforms['buddyforms'][$bf_form_slug]['post_type'], get_bloginfo('url') . '/' . $bp->groups->root_slug, $permalink);
-		}	
+		}
 
 		return $permalink;
 	}
@@ -198,37 +197,40 @@ class BuddyForms_Group_Extension {
 	public function theme_redirect() {
 		global $wp_query, $buddyforms, $bp;
 
+/*        echo '<pre>';
+        print_r($bp);
+        echo '</pre>';*/
+
+/*        if(bp_current_action() == 'delete')
+            return;*/
+
 		if (!isset($buddyforms['buddyforms']))
 			return;
 
 		if(!bp_is_active('groups'))
 			return;
 
-		if(!isset($wp_query->post_ID))
-			return;
-		
-		$post_id = $wp_query->post_ID;
-		$bf_form_slug = get_post_meta($post_id, '_bf_form_slug', true);
-				
+		$bf_form_slug = get_post_meta(get_the_ID(), '_bf_form_slug', true);
+
 		if (!isset($buddyforms['buddyforms'][$bf_form_slug]['groups']['attache']))
 			 return;
 
-		$post_group_id = get_post_meta($post_id, '_post_group_id', true);
+		$post_group_id = get_post_meta(get_the_ID(), '_post_group_id', true);
 		$group_post_id = groups_get_groupmeta($post_group_id, 'group_post_id');
 
-		if ($post_id != $group_post_id)
+
+
+		if (get_the_ID() != $group_post_id)
 			return;
 
-		//A Specific Custom Post Type redirect to the atached group
-		if ( $wp_query->query_vars['post_type'] ==  $buddyforms['buddyforms'][$bf_form_slug]['post_type'] ) {
 
-			if (is_singular()) {
-				$link = get_bloginfo('url') . '/' . BP_GROUPS_SLUG . '/' . get_post_meta($wp_query->post->ID, '_link_to_group', true);
-				wp_redirect($link, '301');
-				exit ;
-			}
+        if (is_singular()) {
+            $link = get_bloginfo('url') . '/' . BP_GROUPS_SLUG . '/' . get_post_meta($wp_query->post->ID, '_link_to_group', true);
+            wp_redirect($link, '301');
+            exit ;
+        }
 
-		}
+
 
 	}
 

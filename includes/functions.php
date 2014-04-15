@@ -39,7 +39,7 @@ function bf_ge_updtae_post_meta($customfield, $post_id){
  * @package buddyforms
  * @since 0.1-beta
  */
-add_action('buddyforms_delete_post', 'buddyforms_delete_a_group');	
+add_action('buddyforms_delete_post', 'buddyforms_delete_a_group');
 function buddyforms_delete_a_group($post_id){
 	BuddyForms_GroupControl::delete_a_group($post_id);
 }	
@@ -53,10 +53,13 @@ function buddyforms_delete_a_group($post_id){
 function buddyforms_delete_product_post($group_id) {
 	$groups_post_id = groups_get_groupmeta($group_id, 'group_post_id');
 
-	wp_delete_post($groups_post_id);
+	$post = get_post($groups_post_id);
+
+
+    wp_delete_post($groups_post_id);
 }
 
-add_action('groups_before_delete_group', 'buddyforms_delete_product_post');
+//add_action('groups_before_delete_group', 'buddyforms_delete_product_post');
 
 /**
  * Update a product post
@@ -282,7 +285,6 @@ function form_element_group_hooks($buddyforms_form_element_hooks,$form_slug){
 	}
 	return $buddyforms_form_element_hooks;
 }
-
 add_filter('buddyforms_form_element_hooks','form_element_group_hooks',1,2);
 
 /**

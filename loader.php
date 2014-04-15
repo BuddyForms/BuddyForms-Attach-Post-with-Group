@@ -25,7 +25,7 @@ function buddyforms_Group_Extension_init() {
 		return;
 
 	require (dirname(__FILE__) . '/buddyforms-groups.php');
-	$buddyforms_Group_Extension = new buddyforms_Group_Extension();
+	$buddyforms_Group_Extension = new BuddyForms_Group_Extension();
 }
 
 add_action('bp_loaded', 'buddyforms_Group_Extension_init', 0);

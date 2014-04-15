@@ -86,6 +86,23 @@ class BuddyForms_GroupControl {
 			groups_update_groupmeta($new_group->id, 'group_post_id', $post->ID);
 			groups_update_groupmeta($new_group->id, 'group_type', $post->post_type);
 
+			/*if( isset( $_FILES['file']['size'] ) && $_FILES['file']['size'] > 0 ) {
+				echo 'no';
+
+			}*/
+
+
+        //$image_id = get_post_thumbnail_id($post->ID);
+        //$image_url = wp_get_attachment_image_src($image_id);
+
+        //print_r($image_url);
+
+        //$image_url = $image_url[0];
+
+
+
+        //set_group_avatar_by_group_id( $new_group->id );
+
 			self::add_member_to_group($new_group->id, $post->post_author);
 	}
 
@@ -163,4 +180,43 @@ class BuddyForms_GroupControl {
 
 }
 add_action('buddyforms_init', new BuddyForms_GroupControl());
+
+
+function set_group_avatar_by_group_id($group_id){
+    global $bp;
+
+    // I have to define the action here instead of in the form via a hidden field, because I like to act on other form inputs where I can not add my hidden fields
+    $_POST['action'] = 'bp_avatar_upload';
+
+
+    // I need to add the group as current_group to the global $bp->groups->current_group.
+    // The function groups_avatar_upload_dir needs the current_group id in the global $bp->groups->current_group->id to work...
+    $current_group = groups_get_group(array('group_id' => $group_id));
+    $bp->groups->current_group = $current_group;
+
+    // This is needed, otherwise there is no avatar_admin object to be filled up by the bp_core_avatar_handle_upload function
+    $bp->avatar_admin = new stdClass();
+
+
+    //print_r($_FILES);
+
+
+
+    if ( !empty( $_FILES ) ) {
+
+        // Pass the file to the avatar upload handler
+        if ( bp_core_avatar_handle_upload( $_FILES, 'groups_avatar_upload_dir' ) ) {
+
+            $bp->avatar_admin->step = 'crop-image';
+
+            // Now we need to crop the image. This will also save the cropped images to the correct group folder.
+            if ( !bp_core_avatar_handle_crop( array( 'object' => 'group', 'avatar_dir' => 'group-avatars', 'item_id' => $bp->groups->current_group->id, 'original_file' => $bp->avatar_admin->image->dir) ) )
+                bp_core_add_message( __( 'There was an error saving the group avatar, please try uploading again.', 'buddypress' ), 'error' );
+            else
+                bp_core_add_message( __( 'The group avatar was uploaded successfully!', 'buddypress' ) );
+
+        }
+    }
+}
+
 ?>

@@ -1,6 +1,6 @@
 <?php
 if (class_exists('BP_Group_Extension')) :
-	class buddyforms_Groups extends BP_Group_Extension {
+	class BuddyForms_Groups extends BP_Group_Extension {
 		public $enable_create_step	= false;
 		public $enable_nav_item		= false;
 		public $enable_edit_item	= true;
@@ -12,12 +12,16 @@ if (class_exists('BP_Group_Extension')) :
 		* @since 0.1-beta
 		*/
 		public function __construct() {
-			global $bp, $buddyforms, $wp_query, $post_id, $form_slug;
-			
+			global $buddyforms, $post_id, $form_slug;
+
+
+
+
 			$this->attached_post_id		= groups_get_groupmeta( bp_get_current_group_id(), 'group_post_id');
 			$this->attached_post_type	= groups_get_groupmeta( bp_get_current_group_id(), 'group_type');
 			$this->attached_form_slug	= get_post_meta($this->attached_post_id, '_bf_form_slug', true);
-			
+
+
 			if(isset($buddyforms['buddyforms'][$this->attached_form_slug]['revision'])){
 					
 				$form_slug	= $this->attached_form_slug;
@@ -59,7 +63,7 @@ if (class_exists('BP_Group_Extension')) :
 				
 				if ($buddyforms['buddyforms'][$this->attached_form_slug]['groups']['content']['display'] != 'no')
 					add_action($buddyforms['buddyforms'][$this->attached_form_slug]['groups']['content']['display'], create_function('', 'echo "<div class=\"group_content\">' . get_post_field('post_content', $this->attached_post_id) . '</div>";'));
-				
+
 	
 				$this->name					= $buddyforms['buddyforms'][$this->attached_form_slug]['singular_name'];
 				$this->nav_item_position	= 20;
@@ -144,5 +148,5 @@ if (class_exists('BP_Group_Extension')) :
 
 	}
 
-	bp_register_group_extension('buddyforms_Groups');
+    bp_register_group_extension('BuddyForms_Groups');
 endif;
