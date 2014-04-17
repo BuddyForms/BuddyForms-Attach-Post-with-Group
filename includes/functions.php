@@ -1,8 +1,38 @@
-<?php 
+<?php
 
+/**
+ * Display featured image if group avatar is not set and group is attached with a post
+ *
+ * @package buddyforms
+ * @since 1.0
+ */
+add_filter( 'bp_get_group_avatar','bf_display_featured_image_as_group_avatar',1,1 );
+function bf_display_featured_image_as_group_avatar($avatar){
+    global $groups_template;
+
+    $group_post_id	= groups_get_groupmeta(bp_get_group_id(), 'group_post_id');
+
+    if(isset($group_post_id)){
+
+        $image_id = get_post_thumbnail_id($group_post_id);
+        $image_url = wp_get_attachment_image_src($image_id);
+
+        if(isset($image_url[0]))
+            $avatar = '<img src="' . esc_url( $image_url[0] ) . '" class="avatar" alt="' . esc_attr( $groups_template->group->name ) . '" />';
+
+    }
+
+    return $avatar;
+
+}
+
+/**
+ * update post meta
+ *
+ * @package buddyforms
+ * @since 1.0
+ */
 add_action('buddyforms_update_post_meta', 'bf_ge_updtae_post_meta', 99, 2);
-
-
 function bf_ge_updtae_post_meta($customfield, $post_id){
 		
 	$post_type = get_post_type($post_id);
