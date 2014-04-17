@@ -24,13 +24,11 @@ function bf_display_featured_image_as_group_avatar($avatar){
     if(!isset($image_url[0]))
         return $avatar;
 
-
+    $avatar_size = 'width="150" height="150"';
     if(!bp_is_group_single())
         $avatar_size = 'width="50" height="50"';
 
     $avatar = '<img src="' . esc_url( $image_url[0] ) . '" class="avatar" alt="' . esc_attr( $groups_template->group->name ) . '" ' . $avatar_size . '/>';
-
-
 
     return $avatar;
 

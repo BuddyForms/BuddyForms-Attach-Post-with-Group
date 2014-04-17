@@ -57,11 +57,11 @@ if (class_exists('BP_Group_Extension')) :
 						
 				endswitch;
 	
-				if ($buddyforms['buddyforms'][$this->attached_form_slug]['groups']['title']['display'] != 'no')
+				if ( isset( $buddyforms['buddyforms'][$this->attached_form_slug]['groups']['title']['display'] ) && $buddyforms['buddyforms'][$this->attached_form_slug]['groups']['title']['display'] != 'no')
 					add_action($buddyforms['buddyforms'][$this->attached_form_slug]['groups']['title']['display'], create_function('', 'echo "<div class=\"group_title\">' . get_the_title($this->attached_post_id) . '</div>";'));
 				
 				
-				if ($buddyforms['buddyforms'][$this->attached_form_slug]['groups']['content']['display'] != 'no')
+				if ( isset( $buddyforms['buddyforms'][$this->attached_form_slug]['groups']['content']['display'] ) && $buddyforms['buddyforms'][$this->attached_form_slug]['groups']['content']['display'] != 'no')
 					add_action($buddyforms['buddyforms'][$this->attached_form_slug]['groups']['content']['display'], create_function('', 'echo "<div class=\"group_content\">' . get_post_field('post_content', $this->attached_post_id) . '</div>";'));
 
 	
