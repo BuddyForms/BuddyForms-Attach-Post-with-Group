@@ -2,8 +2,8 @@
 /*
  Plugin Name: BuddyForms-Group-Extension
  Plugin URI: http://themekraft.com
- Description:   
- Version: 0.1 beta
+ Description: Create engaged communities with every post.
+ Version: 1.0
  Author: Sven Lehnert
  Author URI: http://themekraft.com
  Licence: GPLv3
