@@ -12,11 +12,8 @@ function bf_display_featured_image_as_group_avatar($avatar){
 
     $group_post_id	= groups_get_groupmeta(bp_get_group_id(), 'group_post_id');
 
-
-
     if(!isset($group_post_id))
         return $avatar;
-
 
     $image_id = get_post_thumbnail_id($group_post_id);
     $image_url = wp_get_attachment_image_src($image_id);
@@ -195,7 +192,8 @@ function buddyforms_create_edit_form_display_element_group($form,$post_id,$form_
 			'depth' => 0,
 			'tab_index' => 0,
 			'taxonomy' => $attached_tax_name,
-			'hide_if_empty' => FALSE
+			'hide_if_empty' => FALSE,
+            'show_option_none' => 'Nothing Selected'
 		);
 
 		$dropdown = wp_dropdown_categories($args);
@@ -231,12 +229,10 @@ add_filter('buddyforms_add_form_element_in_sidebar','buddyforms_add_form_element
 
 
 function buddyforms_admin_settings_sidebar_metabox($form, $selected_form_slug){
-	global $buddyforms;
-	
+
 	$buddyforms_options = get_option('buddyforms_options');
-	//$buddyforms['hooks']['form_element'] = apply_filters('buddyforms_form_element_hooks',$buddyforms['hooks']['form_element'],$selected_form_slug);
-	
-	if(bp_is_active('groups')){						
+
+    if(bp_is_active('groups')){
 		$form->addElement(new Element_HTML('
 		<div class="accordion-group">
 			<div class="accordion-heading"><p class="accordion-toggle" data-toggle="collapse" data-parent="#accordion_'.$selected_form_slug.'" href="#accordion_'.$selected_form_slug.'_group_options">Groups Control</p></div>
@@ -268,20 +264,6 @@ function buddyforms_admin_settings_sidebar_metabox($form, $selected_form_slug){
 					'create a new tab', 
 					'replace home new tab activity')
 					,array('value' => $display_post)));
-					
-					/*$form->addElement(new Element_HTML('<br><br><p>The title and content is displayed in the group header. If you want to display it somewere else, you can do it here but need to adjust the groups-header.php in your theme. If you want to hide it there.</p>'));
-					
-					$display = '';
-					if(isset($buddyforms_options['buddyforms'][$selected_form_slug]['groups']['title']['display']))
-						$display = $buddyforms_options['buddyforms'][$selected_form_slug]['groups']['title']['display'];
-
-					$form->addElement( new Element_Select("Display Title:", "buddyforms_options[buddyforms][".$selected_form_slug."][groups][title][display]", $buddyforms['hooks']['form_element'], array('value' =>$display)));
-
-					$display = '';
-					if(isset($buddyforms_options['buddyforms'][$selected_form_slug]['groups']['content']['display']))
-						$display = $buddyforms_options['buddyforms'][$selected_form_slug]['groups']['content']['display'];
-
-					$form->addElement( new Element_Select("Display Content:", "buddyforms_options[buddyforms][".$selected_form_slug."][groups][content][display]", $buddyforms['hooks']['form_element'], array('value' => $display)));*/
 
 			$form->addElement(new Element_HTML('
 				</div>
@@ -291,39 +273,6 @@ function buddyforms_admin_settings_sidebar_metabox($form, $selected_form_slug){
 	return $form;
 }	
 add_filter('buddyforms_admin_settings_sidebar_metabox','buddyforms_admin_settings_sidebar_metabox',1,2);
-
-function form_element_group_hooks($buddyforms_form_element_hooks,$form_slug){
-	
-	$buddyforms_options = get_option('buddyforms_options');
-	
-	if(bp_is_active('groups')){
-		if(isset($buddyforms_options['buddyforms'][$form_slug]['groups']['attache'])){
-			remove_filter( 'buddyforms_form_element_hooks', 'form_element_single_hooks' );
-		
-			array_push($buddyforms_form_element_hooks,
-				'buddyforms_before_groups_single_title',
-				'buddyforms_groups_single_title',
-				'buddyforms_before_groups_single_content',
-				'buddyforms_groups_single_content',
-				'buddyforms_after_groups_single_content',
-				'bp_before_group_header',
-				'bp_after_group_menu_admins',
-				'bp_before_group_menu_mods',
-				'bp_after_group_menu_mods', 
-				'bp_before_group_header_meta',
-				'bp_group_header_actions', 
-				'bp_group_header_meta',
-				'bp_after_group_header',
-				'bp_before_group_activity_post_form',
-				'bp_before_group_activity_content',
-				'bp_after_group_activity_content'
-			);
-		}
-		
-	}
-	return $buddyforms_form_element_hooks;
-}
-add_filter('buddyforms_form_element_hooks','form_element_group_hooks',1,2);
 
 /**
  * Locate a template
