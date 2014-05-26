@@ -3,7 +3,7 @@ Contributors: svenl77
 Tags: buddypress, user, members, profiles, custom post types, taxonomy, frontend posting, frontend editing, groups, post attached to groups
 Requires at least: WordPress 3.x, BuddyPress 1.7.x
 Tested up to: WordPress 3.9, BuddyPress 2.x
-Stable tag: 1.0
+Stable tag: 1.0.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -71,6 +71,11 @@ BuddyForms gives you these possibilities for a wide variety of uses.
 coming soon
 
 == Changelog ==
+
+= 1.0.1 =
+* clean up code
+* remove old hooks
+* add 'show_option_none' => 'Nothing Selected'
 
 = 1.0 =
 final 1.0 version
