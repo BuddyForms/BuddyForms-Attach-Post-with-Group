@@ -218,14 +218,14 @@ function buddyforms_create_edit_form_display_element_group($form,$post_id,$form_
 }
 add_filter('buddyforms_create_edit_form_display_element','buddyforms_create_edit_form_display_element_group',1,5);
 
-function buddyforms_add_form_element_in_sidebar($form, $selected_post_types){
+function buddyforms_add_form_element_to_sidebar($form, $form_slug){
 	
 	if(bp_is_active('groups')){		
-		$form->addElement(new Element_HTML('<p><a href="AttachGroupType/'.$selected_post_types.'" class="action">AttachGroupType</a></p>'));
+		$form->addElement(new Element_HTML('<p><a href="AttachGroupType/'.$form_slug.'" class="action">AttachGroupType</a></p>'));
 	}
 	return $form;
 }
-add_filter('buddyforms_add_form_element_in_sidebar','buddyforms_add_form_element_in_sidebar',1,2);
+add_filter('buddyforms_add_form_element_to_sidebar','buddyforms_add_form_element_to_sidebar',1,2);
 
 
 function buddyforms_admin_settings_sidebar_metabox($form, $selected_form_slug){
