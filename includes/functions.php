@@ -245,15 +245,23 @@ function buddyforms_admin_settings_sidebar_metabox($form, $selected_form_slug){
 				    draft = hidden<br>
 				    publish = public<br>
 					</p>'));
-					
-					$attache = '';					
-					if(isset($buddyforms_options['buddyforms'][$selected_form_slug]['groups']['attache']))
-						$attache = $buddyforms_options['buddyforms'][$selected_form_slug]['groups']['attache'];
-					
 
-					
-					$form->addElement(new Element_Checkbox("Attach to Group?", "buddyforms_options[buddyforms][".$selected_form_slug."][groups][attache]", array("Yes. I want to create a group for each post of this post type and attach the post to the group."), array('value' => $attache)));
-					$form->addElement(new Element_HTML('<br>'));
+                    $attache = '';
+                    if(isset($buddyforms_options['buddyforms'][$selected_form_slug]['groups']['attache']))
+                        $attache = $buddyforms_options['buddyforms'][$selected_form_slug]['groups']['attache'];
+
+                    $form->addElement(new Element_Checkbox("Attach with Group?", "buddyforms_options[buddyforms][".$selected_form_slug."][groups][attache]", array("Create a group for each post of this post type."), array('value' => $attache)));
+
+                    $form->addElement(new Element_HTML('<br>'));
+
+                    $redirect = '';
+                    if(isset($buddyforms_options['buddyforms'][$selected_form_slug]['groups']['redirect']))
+                        $redirect = $buddyforms_options['buddyforms'][$selected_form_slug]['groups']['redirect'];
+
+                    $form->addElement(new Element_Checkbox("Redirect to Group?", "buddyforms_options[buddyforms][".$selected_form_slug."][groups][redirect]", array("Redirect the post to the group."), array('value' => $redirect)));
+
+                    $form->addElement(new Element_HTML('<br>'));
+
 					
 					$display_post = '';
 					if(isset($buddyforms_options['buddyforms'][$selected_form_slug]['groups']['display_post']))

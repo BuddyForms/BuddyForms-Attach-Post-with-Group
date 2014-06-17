@@ -174,15 +174,17 @@ class BuddyForms_Group_Extension {
 
 		$post_group_id	= get_post_meta($post->ID, '_post_group_id', true);
 		$bf_form_slug	= get_post_meta($post->ID, '_bf_form_slug', true);
-		
-		
+
+        if ( !isset($buddyforms['buddyforms'][$bf_form_slug]['groups']['redirect']))
+            return $permalink;
+
 		$group_post_id	= groups_get_groupmeta($post_group_id, 'group_post_id');
 		
 		if ($post->ID != $group_post_id)
 			return $permalink;
 
 		if (isset($buddyforms['buddyforms'][$bf_form_slug]['groups']['attache'])){
-			$permalink = str_replace(get_bloginfo('url') . '/' . $buddyforms['buddyforms'][$bf_form_slug]['post_type'], get_bloginfo('url') . '/' . $bp->groups->root_slug, $permalink);
+            $permalink = get_bloginfo('url') . '/' . $bp->groups->root_slug . '/' . basename($permalink);
 		}
 
 		return $permalink;
@@ -213,6 +215,9 @@ class BuddyForms_Group_Extension {
 
 		if (!isset($buddyforms['buddyforms'][$bf_form_slug]['groups']['attache']))
 			 return;
+
+        if ( !isset($buddyforms['buddyforms'][$bf_form_slug]['groups']['redirect']))
+            return;
 
 		$post_group_id = get_post_meta(get_the_ID(), '_post_group_id', true);
 		$group_post_id = groups_get_groupmeta($post_group_id, 'group_post_id');
