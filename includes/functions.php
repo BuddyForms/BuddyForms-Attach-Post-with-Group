@@ -155,12 +155,12 @@ function buddyforms_form_element_add_field_ge($form_fields, $form_slug, $field_t
 	
 	}
 	
-	$form_fields['left']['AttachGroupType'] 	= new Element_Select("Attach Group Type:", "buddyforms_options[buddyforms][".$form_slug."][form_fields][".$field_id."][AttachGroupType]", $AttachGroupType, array('value' => $value));
+	$form_fields['left']['AttachGroupType'] 	= new Element_Select('<b>' . __("Attach Group Type:", 'buddyforms'), "buddyforms_options[buddyforms][".$form_slug."][form_fields][".$field_id."][AttachGroupType]", $AttachGroupType, array('value' => $value));
 	
 	$multiple = 'false';
 	if(isset($buddyforms_options['buddyforms'][$form_slug]['form_fields'][$field_id]['multiple']))
 		$multiple = $buddyforms_options['buddyforms'][$form_slug]['form_fields'][$field_id]['multiple'];
-		$form_fields['left']['multiple'] = new Element_Checkbox("Multiple:","buddyforms_options[buddyforms][".$form_slug."][form_fields][".$field_id."][multiple]",array(''),array('value' => $multiple));
+		$form_fields['left']['multiple'] = new Element_Checkbox('',"buddyforms_options[buddyforms][".$form_slug."][form_fields][".$field_id."][multiple]",array('multiple' => '<b>' . __("Multiple:", 'buddyforms') . '</b>' ),array('value' => $multiple));
 				
 	return $form_fields;	
 }
@@ -239,9 +239,9 @@ function buddyforms_admin_settings_sidebar_metabox($form, $selected_form_slug){
 		    <div id="accordion_'.$selected_form_slug.'_group_options" class="accordion-body collapse">
 				<div class="accordion-inner">')); 
 					$form->addElement(new Element_HTML('<p>
-					Here you can attach this post type to groups. Every time a new post is created a new group will be created too.<br>
-					Important:<br>
-					Post status will affect group privacy options.
+					Attach this form to groups. If a new post is created, a new group will be attached to the post.<br><br>
+					<b>Important: </b>
+					Post status will affect group privacy options.<br>
 				    draft = hidden<br>
 				    publish = public<br>
 					</p>'));
@@ -250,7 +250,7 @@ function buddyforms_admin_settings_sidebar_metabox($form, $selected_form_slug){
                     if(isset($buddyforms_options['buddyforms'][$selected_form_slug]['groups']['attache']))
                         $attache = $buddyforms_options['buddyforms'][$selected_form_slug]['groups']['attache'];
 
-                    $form->addElement(new Element_Checkbox("Attach with Group?", "buddyforms_options[buddyforms][".$selected_form_slug."][groups][attache]", array("Create a group for each post of this post type."), array('value' => $attache)));
+                    $form->addElement(new Element_Checkbox("<b>Attach with Group</b>", "buddyforms_options[buddyforms][".$selected_form_slug."][groups][attache]", array("create_group" => "Create a group for each post of this form."), array('value' => $attache)));
 
                     $form->addElement(new Element_HTML('<br>'));
 
@@ -258,7 +258,7 @@ function buddyforms_admin_settings_sidebar_metabox($form, $selected_form_slug){
                     if(isset($buddyforms_options['buddyforms'][$selected_form_slug]['groups']['redirect']))
                         $redirect = $buddyforms_options['buddyforms'][$selected_form_slug]['groups']['redirect'];
 
-                    $form->addElement(new Element_Checkbox("Redirect to Group?", "buddyforms_options[buddyforms][".$selected_form_slug."][groups][redirect]", array("Redirect the post to the group."), array('value' => $redirect)));
+                    $form->addElement(new Element_Checkbox("<b>Redirect to Group</b>", "buddyforms_options[buddyforms][".$selected_form_slug."][groups][redirect]", array("redirect_group" => "Redirect the post to the group."), array('value' => $redirect)));
 
                     $form->addElement(new Element_HTML('<br>'));
 
@@ -267,7 +267,7 @@ function buddyforms_admin_settings_sidebar_metabox($form, $selected_form_slug){
 					if(isset($buddyforms_options['buddyforms'][$selected_form_slug]['groups']['display_post']))
 						$display_post = $buddyforms_options['buddyforms'][$selected_form_slug]['groups']['display_post'];
 					
-					$form->addElement(new Element_Select("Display Post: <p>the option \"replace home create new tab activity\" only works with a buddypress theme. </p>", "buddyforms_options[buddyforms][".$selected_form_slug."][groups][display_post]", array(
+					$form->addElement(new Element_Select("<b>Display Post</b><p>the option \"replace home create new tab activity\" only works with a buddypress themes. </p>", "buddyforms_options[buddyforms][".$selected_form_slug."][groups][display_post]", array(
 					'nothing',
 					'create a new tab', 
 					'replace home new tab activity')
