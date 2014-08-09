@@ -234,7 +234,7 @@ function buddyforms_admin_settings_sidebar_metabox($form, $selected_form_slug){
 
     if(bp_is_active('groups')){
 		$form->addElement(new Element_HTML('
-		<div class="accordion-group">
+		<div class="accordion-group postbox">
 			<div class="accordion-heading"><p class="accordion-toggle" data-toggle="collapse" data-parent="#accordion_'.$selected_form_slug.'" href="#accordion_'.$selected_form_slug.'_group_options">Groups Control</p></div>
 		    <div id="accordion_'.$selected_form_slug.'_group_options" class="accordion-body collapse">
 				<div class="accordion-inner">')); 
