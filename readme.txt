@@ -2,8 +2,8 @@
 Contributors: svenl77
 Tags: buddypress, user, members, profiles, custom post types, taxonomy, frontend posting, frontend editing, groups, post attached to groups
 Requires at least: WordPress 3.x, BuddyPress 1.7.x
-Tested up to: WordPress 3.9.x, BuddyPress 2.x
-Stable tag: 1.0.3
+Tested up to: WordPress 4.0, BuddyPress 2.x
+Stable tag: 1.0.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -72,8 +72,9 @@ coming soon
 
 == Changelog ==
 
-= 1.0.3 =
+= 1.0.4 =
 Added to new Shortcodes and Template Tags to link to the Attached Group/Post
+css bug fixes
 
 = 1.0.2 =
 Add a new option to redirect a group to the attached post

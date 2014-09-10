@@ -3,7 +3,7 @@
  Plugin Name: BuddyForms Attach Posts to Groups Extension
  Plugin URI: http://themekraft.com
  Description: Create engaged communities with every post.
- Version: 1.0.3
+ Version: 1.0.4
  Author: Sven Lehnert
  Author URI: http://themekraft.com
  Licence: GPLv3
