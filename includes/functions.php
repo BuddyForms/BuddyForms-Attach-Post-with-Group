@@ -313,6 +313,9 @@ function buddyforms_link_to_group(){
     if(!isset($group_id))
         return;
 
+    if(!function_exists('groups_get_group'))
+        return;
+
     $group = groups_get_group( array( 'group_id' => $group_id ) );
 
     return trailingslashit( bp_get_root_domain() . '/' . bp_get_groups_root_slug() . '/' . $group->slug . '/'  );
@@ -329,6 +332,9 @@ function buddyforms_link_to_group(){
  */
 add_shortcode('buddyforms_link_to_post','buddyforms_link_to_post');
 function buddyforms_link_to_post(){
+
+    if(!function_exists('bp_get_group_id'))
+        return;
 
     $group_id = bp_get_group_id();
     $post_id = groups_get_groupmeta( $group_id, 'group_post_id');
