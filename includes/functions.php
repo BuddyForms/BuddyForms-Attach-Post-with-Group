@@ -167,8 +167,10 @@ function buddyforms_form_element_add_field_ge($form_fields, $form_slug, $field_t
 add_filter('buddyforms_form_element_add_field','buddyforms_form_element_add_field_ge',1,5);
 
 
-function buddyforms_create_edit_form_display_element_group($form,$post_id,$form_slug,$customfield,$customfield_val){
-								
+function buddyforms_attach_groups_create_edit_form_display_element_group($form, $form_args){
+
+    extract($form_args);
+
 	if($customfield['type']  == 'AttachGroupType'){
 		
 		$attached_tax_name = $form_slug . '_attached_' . $customfield['AttachGroupType'];
@@ -216,7 +218,7 @@ function buddyforms_create_edit_form_display_element_group($form,$post_id,$form_
 	return $form;
 	
 }
-add_filter('buddyforms_create_edit_form_display_element','buddyforms_create_edit_form_display_element_group',1,5);
+add_filter('buddyforms_create_edit_form_display_element','buddyforms_attach_groups_create_edit_form_display_element_group',1,2);
 
 function buddyforms_add_form_element_to_sidebar($form, $form_slug){
 	
