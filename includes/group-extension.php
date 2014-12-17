@@ -93,7 +93,7 @@ if (class_exists('BP_Group_Extension')) :
 			// if post edit screen is displayed
 			wp_enqueue_style('the-form-css', plugins_url('css/the-form.css', __FILE__));	
 			
-			bf_post_meta('', $form_slug, $attached_post_id, $customfields);	
+			bf_form_elements('', $form_slug, $attached_post_id, $customfields);
 			
 			
 			
