@@ -27,7 +27,7 @@
  ****************************************************************************
  */
 
-define('BuddyForms-Attach-Posts-to-Groups-sExtension', '1.0.2');
+define('BuddyForms-Attach-Posts-to-Groups-Extension', '1.0.5');
 
 /**
  * Loads BuddyForms Attach Posts to Groups Extension files only if BuddyPress is present

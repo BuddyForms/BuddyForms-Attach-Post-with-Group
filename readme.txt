@@ -2,8 +2,8 @@
 Contributors: svenl77
 Tags: buddypress, user, members, profiles, custom post types, taxonomy, frontend posting, frontend editing, groups, post attached to groups
 Requires at least: WordPress 3.x, BuddyPress 1.7.x
-Tested up to: WordPress 4.0, BuddyPress 2.x
-Stable tag: 1.0.4
+Tested up to: WordPress 4.1, BuddyPress 2.x
+Stable tag: 1.0.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -71,6 +71,11 @@ BuddyForms gives you these possibilities for a wide variety of uses.
 coming soon
 
 == Changelog ==
+
+= 1.0.5 =
+check if function exists to avoid breaking code if the buddypress groups component is not activated.
+changed the hook to $form_args
+rename function to more specific function names
 
 = 1.0.4 =
 Added to new Shortcodes and Template Tags to link to the Attached Group/Post
