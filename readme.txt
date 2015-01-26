@@ -58,7 +58,7 @@ Activate BuddyPress in the "Plugins" admin panel using the "Activate" link. If y
 Which plugins do I need to install before?
 
 You need the BuddyForms plugin and the BuddyPress plugin installed before.
-Get BuddyForms here: http://buddyforms.com
+<a href="http://themekraft.com/store/wordpress-front-end-editor-and-form-builder-buddyforms/" target="_blank">Get BuddyForms now!</a>
 Get BuddyPress here: http://buddypress.org
 
 When is it the right choice for you?
