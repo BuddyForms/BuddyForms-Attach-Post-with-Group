@@ -98,7 +98,7 @@ class BuddyForms_GroupControl {
 		$post = get_post($post_id);
 		$post_group_id = get_post_meta($post->ID, '_post_group_id', true);
 		
-		//$terms = wp_get_object_terms($post->ID, 'product'); // jajajaja ein PAUSE
+		//$terms = wp_get_object_terms($post->ID, 'product');
 		//wp_remove_object_terms( $post_group_id, $terms, $taxonomy );
 		
 		if (!empty($post_group_id))

@@ -88,16 +88,20 @@ if (class_exists('BP_Group_Extension')) :
 			
 			$form_slug			= $this->attached_form_slug;
 			$attached_post_id	= $this->attached_post_id;
-			$customfields		= $buddyforms['buddyforms'][$form_slug]['form_fields'];
-			
+
 			// if post edit screen is displayed
-			wp_enqueue_style('the-form-css', plugins_url('css/the-form.css', __FILE__));	
-			
-			bf_form_elements('', $form_slug, $attached_post_id, $customfields);
-			
-			
-			
-			
+			wp_enqueue_style('the-form-css', plugins_url('css/the-form.css', __FILE__));
+
+			$args = array(
+				'post_type' => $buddyforms['buddyforms'][$form_slug]['post_type'],
+				'post_id' => $attached_post_id,
+				'revision_id' => false,
+				'form_slug' => $form_slug,
+			);
+
+			echo buddyforms_create_edit_form_shortcode($args);
+
+
 		}
 		
 		function edit_screen_save($group_id = NULL){
@@ -120,9 +124,8 @@ if (class_exists('BP_Group_Extension')) :
 		* @package buddyforms
 		* @since 0.1-beta
 		*/
-		public function display() {
-			global $bp, $wc_query;
-
+		public function display($group_id = NULL) {
+			$group_id = bp_get_group_id();
 			buddyforms_ge_locate_template('buddyforms/groups/single-post.php');
 
 		}
