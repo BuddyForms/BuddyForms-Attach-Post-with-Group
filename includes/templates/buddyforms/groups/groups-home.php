@@ -31,10 +31,10 @@
 
 
 				// Group is visible
-				if ( bp_group_is_visible() ) : 
+				if ( bp_group_is_visible() ) :
 
 					buddyforms_ge_locate_template('buddyforms/groups/single-post.php');
-				
+
 				// Group is not visible
 				elseif ( ! bp_group_is_visible() ) :
 
@@ -54,7 +54,7 @@
 						<?php do_action( 'bp_after_group_status_message' );
 
 					endif;
-				endif;			
+				endif;
 
 				do_action( 'bp_after_group_body' ); ?>
 

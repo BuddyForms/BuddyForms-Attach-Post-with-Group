@@ -76,7 +76,8 @@ function bf_ge_updtae_post_meta($customfield, $post_id){
  */
 add_action('buddyforms_delete_post', 'buddyforms_delete_a_group');
 function buddyforms_delete_a_group($post_id){
-	BuddyForms_GroupControl::delete_a_group($post_id);
+    $BuddyForms_GroupControl = new BuddyForms_GroupControl;
+    $BuddyForms_GroupControl->delete_a_group($post_id);
 }	
 
 /**
@@ -151,15 +152,16 @@ function buddyforms_form_element_add_field_ge($form_fields, $form_slug, $field_t
 	foreach ($buddyforms['buddyforms'] as $key => $buddyform) {
 		
 		if(isset($buddyform['groups']['attache']))
-			$AttachGroupType[$key] = $buddyform['name'];
+			$AttachGroupType[$buddyform['post_type']] = $buddyform['name'];
 	
 	}
 	
-	$form_fields['left']['AttachGroupType'] 	= new Element_Select('<b>' . __("Attach Group Type:", 'buddyforms'), "buddyforms_options[buddyforms][".$form_slug."][form_fields][".$field_id."][AttachGroupType]", $AttachGroupType, array('value' => $value));
+	$form_fields['left']['AttachGroupType'] 	= new Element_Select('<b>' . __("Attach Group Type:", 'buddyforms'). '</b>', "buddyforms_options[buddyforms][".$form_slug."][form_fields][".$field_id."][AttachGroupType]", $AttachGroupType, array('value' => $value));
 	
 	$multiple = 'false';
 	if(isset($buddyforms_options['buddyforms'][$form_slug]['form_fields'][$field_id]['multiple']))
 		$multiple = $buddyforms_options['buddyforms'][$form_slug]['form_fields'][$field_id]['multiple'];
+
 		$form_fields['left']['multiple'] = new Element_Checkbox('',"buddyforms_options[buddyforms][".$form_slug."][form_fields][".$field_id."][multiple]",array('multiple' => '<b>' . __("Multiple:", 'buddyforms') . '</b>' ),array('value' => $multiple));
 				
 	return $form_fields;	
@@ -223,7 +225,7 @@ add_filter('buddyforms_create_edit_form_display_element','buddyforms_attach_grou
 function buddyforms_add_form_element_to_sidebar($form, $form_slug){
 	
 	if(bp_is_active('groups')){		
-		$form->addElement(new Element_HTML('<p><a href="AttachGroupType/'.$form_slug.'" class="action">AttachGroupType</a></p>'));
+		$form->addElement(new Element_HTML('<p><a href="AttachGroupType/'.$form_slug.'/unique" class="action">AttachGroupType</a></p>'));
 	}
 	return $form;
 }

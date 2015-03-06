@@ -35,14 +35,26 @@ define('BuddyForms-Attach-Posts-to-Groups-Extension', '1.0.5');
  * @package BuddyForms Attach Posts to Groups Extension
  * @since 0.1-beta
  */
-function BuddyForms_Attach_Posts_to_Groups_Extension_init() {
-	global $wpdb;
+add_action('bp_loaded', 'bf_aptg_bp_loaded');
+function bf_aptg_bp_loaded() {
 
-	if (is_multisite() && BP_ROOT_BLOG != $wpdb->blogid)
-		return;
+    require_once (dirname(__FILE__) . '/buddyforms-groups.php');
+	new BuddyForms_Group_Extension();
 
-	require (dirname(__FILE__) . '/buddyforms-groups.php');
-	$BuddyForms_Attach_Posts_to_Groups_Extension_init = new BuddyForms_Group_Extension();
 }
 
-add_action('bp_loaded', 'BuddyForms_Attach_Posts_to_Groups_Extension_init', 0);
+
+function bf_aptg_register_widgets() {
+
+    require_once (dirname(__FILE__) . '/includes/widgets/' . 'widget-attached-group.php');
+    require_once (dirname(__FILE__) . '/includes/widgets/' . 'widget-group-list-moderators.php');
+    require_once (dirname(__FILE__) . '/includes/widgets/' . 'widget-all-posts-of-displayed-group.php');
+
+    register_widget( 'BuddyForms_Attached_Group_Widget' );
+    register_widget( 'BuddyForms_List_Moderators_Widget' );
+    register_widget( 'BuddyForms_All_Posts_of_this_Group_Widget' );
+
+
+}
+
+add_action( 'widgets_init', 'bf_aptg_register_widgets' );
