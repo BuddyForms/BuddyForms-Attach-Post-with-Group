@@ -349,4 +349,27 @@ function buddyforms_link_to_post(){
     return get_permalink($post_id);
 
 }
+
+add_filter('bf_form_before_render', 'attached_group_bf_form_before_render', 10, 2);
+
+function attached_group_bf_form_before_render($form, $args){
+
+    extract($args);
+
+    ob_start();
+    ?>
+    <script>
+        jQuery(document).ready(function(jQuery) {
+            jQuery(<?php echo "'#_bp_group_edit_nonce_" . $form_slug . "'" ?>).appendTo(jQuery('.form-actions'));
+            jQuery('#group-id').appendTo(jQuery('.form-actions'));
+        });
+    </script>
+    <?php
+    $groups_js = ob_get_contents();
+    ob_end_clean();
+
+    $form->addElement(new Element_HTML($groups_js));
+
+    return $form;
+}
 ?>

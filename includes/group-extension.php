@@ -22,6 +22,10 @@ if (class_exists('BP_Group_Extension')) :
 			$this->attached_form_slug	= get_post_meta($this->attached_post_id, '_bf_form_slug', true);
 
 
+            if($this->attached_form_slug)
+                add_filter('buddyforms_front_js_css_loader', array($this, 'buddyforms_front_js_loader_bp_groups_support'));
+
+
 			if(isset($buddyforms['buddyforms'][$this->attached_form_slug]['revision'])){
 					
 				$form_slug	= $this->attached_form_slug;
@@ -73,6 +77,11 @@ if (class_exists('BP_Group_Extension')) :
 
 		}
 
+
+        function buddyforms_front_js_loader_bp_groups_support($found){
+            return true;
+        }
+
 		function display_post() {
 			buddyforms_ge_locate_template('buddyforms/groups/single-post.php');
 		}
@@ -84,13 +93,11 @@ if (class_exists('BP_Group_Extension')) :
 		 * @since 0.1-beta
 		 */
 		public function edit_screen($group_id = NULL) {
-			global $buddyforms, $wp_query, $form_slug;
+			global $buddyforms, $form_slug;
 			
 			$form_slug			= $this->attached_form_slug;
 			$attached_post_id	= $this->attached_post_id;
 
-			// if post edit screen is displayed
-			wp_enqueue_style('the-form-css', plugins_url('css/the-form.css', __FILE__));
 
 			$args = array(
 				'post_type' => $buddyforms['buddyforms'][$form_slug]['post_type'],
@@ -99,22 +106,21 @@ if (class_exists('BP_Group_Extension')) :
 				'form_slug' => $form_slug,
 			);
 
-			echo buddyforms_create_edit_form_shortcode($args);
-
+            echo buddyforms_create_edit_form_shortcode($args);
 
 		}
 		
 		function edit_screen_save($group_id = NULL){
 			global $buddyforms;
-			
+
 			$form_slug			= $this->attached_form_slug;
 			$post_type			= $this->attached_post_type;
 			$attached_post_id	= $this->attached_post_id;
-			
+
 			$customfields		= $buddyforms['buddyforms'][$form_slug]['form_fields'];
-			
+
 			bf_update_post_meta($attached_post_id, $customfields);
-				
+
 			bp_core_add_message( "Post successfully updated." );
 		}
 		
