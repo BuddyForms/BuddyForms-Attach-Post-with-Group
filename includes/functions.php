@@ -273,11 +273,22 @@ function buddyforms_admin_settings_sidebar_metabox($form, $selected_form_slug){
 					
 					$form->addElement(new Element_Select("<b>Display Post</b><p>the option \"replace home create new tab activity\" only works with a buddypress themes. </p>", "buddyforms_options[buddyforms][".$selected_form_slug."][groups][display_post]", array(
 					'nothing',
-					'create a new tab', 
-					'replace home new tab activity')
+					'create a new tab')
 					,array('value' => $display_post)));
 
-			$form->addElement(new Element_HTML('
+                    $form->addElement(new Element_HTML('<br><br>'));
+
+                    $display_content = '';
+                    if(isset($buddyforms_options['buddyforms'][$selected_form_slug]['groups']['display_content']))
+                        $display_content = $buddyforms_options['buddyforms'][$selected_form_slug]['groups']['display_content'];
+
+                    $form->addElement(new Element_Checkbox("<b>View</b>", "buddyforms_options[buddyforms][".$selected_form_slug."][groups][display_content]", array("title" => "Display the Title", "content" => "Display the Content", 'meta' => 'Display Post Meta' ), array('value' => $display_content)));
+
+                    $form->addElement(new Element_HTML('<br>'));
+
+
+
+        $form->addElement(new Element_HTML('
 				</div>
 			</div>
 		</div>'));	
@@ -372,4 +383,103 @@ function attached_group_bf_form_before_render($form, $args){
 
     return $form;
 }
-?>
+
+add_action('buddyforms_groups_single_title', 'buddyforms_groups_single_title', 10, 2);
+function buddyforms_groups_single_title($title, $args){
+    global $buddyforms;
+
+    extract($args);
+
+    if(!(isset($buddyforms['buddyforms'][$form_slug]['groups']['display_content']) && in_array('title', $buddyforms['buddyforms'][$form_slug]['groups']['display_content'])))
+        return;
+
+    ?>
+
+    <?php do_action('buddyforms_before_groups_single_title') ?>
+
+    <div class="entry-title">
+        <?php echo $title ?>
+    </div>
+
+<?php
+}
+
+add_action('buddyforms_groups_single_content', 'buddyforms_groups_single_content', 10, 2);
+function buddyforms_groups_single_content($content, $args){
+    global $buddyforms;
+
+    extract($args);
+
+    if(!(isset($buddyforms['buddyforms'][$form_slug]['groups']['display_content']) && in_array('content', $buddyforms['buddyforms'][$form_slug]['groups']['display_content'])))
+        return;
+
+    ?>
+    <?php do_action('buddyforms_before_groups_single_content') ?>
+
+    <div class="entry-single-content">
+        <?php echo $content ?>
+    </div>
+
+    <?php do_action('buddyforms_after_groups_single_content') ?>
+
+<?php
+}
+
+add_action('buddyforms_groups_single_post_meta', 'buddyforms_groups_single_post_meta', 10, 2);
+function buddyforms_groups_single_post_meta($form_fields, $args){
+    global $buddyforms;
+
+    extract($args);
+
+    if(!(isset($buddyforms['buddyforms'][$form_slug]['groups']['display_content']) && in_array('meta', $buddyforms['buddyforms'][$form_slug]['groups']['display_content'])))
+        return;
+
+    ?>
+    <div class="entry-single-meta">
+
+        <?php
+
+        foreach ($form_fields as $key => $customfield) {
+
+            if (empty($customfield['slug']) || $customfield['slug'] == 'editpost_title' || $customfield['slug'] == 'editpost_content') {
+                continue;
+            }
+
+            $customfield_value = get_post_meta(get_the_ID(), $customfield['slug'], true);
+
+            if (!empty($customfield_value)) {
+                $post_meta_tmp = '<div class="post_meta ' . $customfield['slug'] . '">';
+                $post_meta_tmp .= '<label>' . $customfield['name'] . '</label>';
+
+                if (is_array($customfield_value)) {
+                    $meta_tmp = "<p>" . implode(',', $customfield_value) . "</p>";
+                } else {
+                    $meta_tmp = "<p>" . $customfield_value . "</p>";
+                }
+
+                switch ($customfield['type']) {
+                    case 'Taxonomy':
+                        $meta_tmp = get_the_term_list($post->ID, $customfield['taxonomy'], "<p>", ' - ', "</p>");
+                        break;
+                    case 'Link':
+                        $meta_tmp = "<p><a href='" . $customfield_value . "' " . $customfield['name'] . ">" . $customfield_value . " </a></p>";
+                        break;
+                    default:
+                        apply_filters('buddyforms_form_element_display_frontend', $customfield);
+                        break;
+                }
+
+                $post_meta_tmp .= $meta_tmp;
+                $post_meta_tmp .= '</div>';
+
+                echo apply_filters('buddyforms_group_single_post_meta_tmp', $post_meta_tmp);
+
+
+            }
+        }
+        ?>
+
+    </div>
+
+<?php
+}

@@ -13,14 +13,13 @@ if (class_exists('BP_Group_Extension')) :
 		*/
 		public function __construct() {
 			global $buddyforms, $post_id, $form_slug;
-
-
-
+            
 
 			$this->attached_post_id		= groups_get_groupmeta( bp_get_current_group_id(), 'group_post_id');
 			$this->attached_post_type	= groups_get_groupmeta( bp_get_current_group_id(), 'group_type');
 			$this->attached_form_slug	= get_post_meta($this->attached_post_id, '_bf_form_slug', true);
 
+            add_action( 'bp_actions', array($this, 'buddyforms_remove_group_admin_tab'), 9 );
 
             if($this->attached_form_slug)
                 add_filter('buddyforms_front_js_css_loader', array($this, 'buddyforms_front_js_loader_bp_groups_support'));
@@ -81,6 +80,33 @@ if (class_exists('BP_Group_Extension')) :
         function buddyforms_front_js_loader_bp_groups_support($found){
             return true;
         }
+
+        function buddyforms_remove_group_admin_tab() {
+            if ( ! bp_is_group() || ! ( bp_is_current_action( 'admin' ) && bp_action_variable( 0 ) )) {
+                return;
+            }
+
+            // Add the admin subnav slug you want to hide in the
+            // following array
+            $hide_tabs = array(
+                'group-avatar' => 1,
+                'delete-group' => 1,
+            );
+
+            $parent_nav_slug = bp_get_current_group_slug() . '_manage';
+
+            // Remove the nav items
+            foreach ( array_keys( $hide_tabs ) as $tab ) {
+                bp_core_remove_subnav_item( $parent_nav_slug, $tab );
+            }
+
+            // You may want to be sure the user can't access
+            if ( ! empty( $hide_tabs[ bp_action_variable( 0 ) ] ) ) {
+                bp_core_add_message( 'Sorry buddy, but this part is restricted to super admins!', 'error' );
+                bp_core_redirect( bp_get_group_permalink( groups_get_current_group() ) );
+            }
+        }
+
 
 		function display_post() {
 			buddyforms_ge_locate_template('buddyforms/groups/single-post.php');
