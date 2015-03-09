@@ -50,11 +50,11 @@ class BuddyForms_Attached_Group_Widget extends WP_Widget
         foreach($buddyforms['buddyforms'][$form_slug]['form_fields'] as $key => $form_field){
 
             if($form_field['type'] == 'AttachGroupType')
-                $AttachGroupType = $form_field['AttachGroupType'];
+                $Attach_group_post_type = $buddyforms['buddyforms'][$form_field['AttachGroupType']]['post_type'];
 
         }
 
-        if(empty($AttachGroupType))
+        if(empty($Attach_group_post_type))
             return;
 
         $title = ! empty( $instance['title'] ) ? $instance['title'] : '';
@@ -63,7 +63,7 @@ class BuddyForms_Attached_Group_Widget extends WP_Widget
             echo $before_title . $title . $after_title;
 
 
-        $term = wp_get_post_terms($groups_post_id, $form_slug . '_attached_' . $AttachGroupType, array("fields" => "all"));
+        $term = wp_get_post_terms($groups_post_id, $form_slug . '_attached_' . $Attach_group_post_type, array("fields" => "all"));
 
         if(is_wp_error($term))
             return;
@@ -72,7 +72,7 @@ class BuddyForms_Attached_Group_Widget extends WP_Widget
 
             $args=array(
                 'name' => $term[0]->name,
-                'post_type' => $AttachGroupType,
+                'post_type' => $Attach_group_post_type,
                 'post_status' => 'publish',
                 'posts_per_page' => 1
             );

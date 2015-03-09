@@ -39,7 +39,8 @@ function bf_display_featured_image_as_group_avatar($avatar){
  */
 add_action('buddyforms_update_post_meta', 'bf_ge_updtae_post_meta', 99, 2);
 function bf_ge_updtae_post_meta($customfield, $post_id){
-		
+	global $buddyforms;
+
 	$post_type = get_post_type($post_id);
 	$form_slug = get_post_meta($post_id, '_bf_form_slug', true);
 
@@ -47,10 +48,12 @@ function bf_ge_updtae_post_meta($customfield, $post_id){
 		return;
 			  
 	if( $customfield['type'] == 'AttachGroupType' ){
-			
-		$taxonomy = get_taxonomy($form_slug . '_attached_' . $customfield['AttachGroupType']);
+
+        $Attach_group_post_type = $buddyforms['buddyforms'][$customfield['AttachGroupType']]['post_type'];
+
+		$taxonomy = get_taxonomy($form_slug . '_attached_' . $Attach_group_post_type);
 		if (isset($taxonomy->hierarchical) && $taxonomy->hierarchical == true)  {
-			wp_set_post_terms( $post_id, $_POST[ $customfield['slug'] ], $form_slug . '_attached_' . $customfield['AttachGroupType'], false );
+			wp_set_post_terms( $post_id, $_POST[ $customfield['slug'] ], $form_slug . '_attached_' . $Attach_group_post_type, false );
 		}
 		
 	}
@@ -86,16 +89,12 @@ function buddyforms_delete_a_group($post_id){
  * @package buddyforms
  * @since 0.1-beta
  */
-function buddyforms_delete_product_post($group_id) {
+function buddyforms_delete_a_group_post($group_id) {
 	$groups_post_id = groups_get_groupmeta($group_id, 'group_post_id');
-
-	$post = get_post($groups_post_id);
-
-
     wp_delete_post($groups_post_id);
 }
 
-//add_action('groups_before_delete_group', 'buddyforms_delete_product_post');
+add_action('groups_before_delete_group', 'buddyforms_delete_a_group_post');
 
 /**
  * Update a product post
@@ -105,9 +104,8 @@ function buddyforms_delete_product_post($group_id) {
  */
 function buddyforms_group_header_fields_save($group_id) {
 	$groups_post_id = groups_get_groupmeta($group_id, 'group_post_id');
-	$posttype = groups_get_groupmeta($group_id, 'group_type');
 
-	$my_post = array('ID' => $groups_post_id, 'post_title' => $_POST['group-name'], 'post_content' => $_POST['group-desc']);
+    $my_post = array('ID' => $groups_post_id, 'post_title' => $_POST['group-name'], 'post_content' => $_POST['group-desc']);
 
 	// update the new post
 	$post_id = wp_update_post($my_post);
@@ -150,10 +148,14 @@ function buddyforms_form_element_add_field_ge($form_fields, $form_slug, $field_t
 		$value	= $buddyforms['buddyforms'][$form_slug]['form_fields'][$field_id]['AttachGroupType'];
 
 	foreach ($buddyforms['buddyforms'] as $key => $buddyform) {
-		
+
+        if($form_slug == $buddyform['slug'])
+            continue;
+
+        $AttachGroupType['none'] = 'none';
 		if(isset($buddyform['groups']['attache']))
-			$AttachGroupType[$buddyform['post_type']] = $buddyform['name'];
-	
+            $AttachGroupType[$buddyform['slug']] = $buddyform['name'];
+
 	}
 	
 	$form_fields['left']['AttachGroupType'] 	= new Element_Select('<b>' . __("Attach Group Type:", 'buddyforms'). '</b>', "buddyforms_options[buddyforms][".$form_slug."][form_fields][".$field_id."][AttachGroupType]", $AttachGroupType, array('value' => $value));
@@ -170,12 +172,19 @@ add_filter('buddyforms_form_element_add_field','buddyforms_form_element_add_fiel
 
 
 function buddyforms_attach_groups_create_edit_form_display_element_group($form, $form_args){
+    global $buddyforms;
 
     extract($form_args);
 
+    if($form_slug == $customfield['AttachGroupType'] || $customfield['AttachGroupType'] == 'none')
+        return;
+
+
 	if($customfield['type']  == 'AttachGroupType'){
-		
-		$attached_tax_name = $form_slug . '_attached_' . $customfield['AttachGroupType'];
+
+        $Attach_group_post_type = $buddyforms['buddyforms'][$customfield['AttachGroupType']]['post_type'];
+
+		$attached_tax_name = $form_slug . '_attached_' . $Attach_group_post_type;
 		$term_list = wp_get_post_terms($post_id, $attached_tax_name, array("fields" => "ids"));
 
 		$multiple = '';
@@ -270,10 +279,12 @@ function buddyforms_admin_settings_sidebar_metabox($form, $selected_form_slug){
 					$display_post = '';
 					if(isset($buddyforms_options['buddyforms'][$selected_form_slug]['groups']['display_post']))
 						$display_post = $buddyforms_options['buddyforms'][$selected_form_slug]['groups']['display_post'];
-					
-					$form->addElement(new Element_Select("<b>Display Post</b><p>the option \"replace home create new tab activity\" only works with a buddypress themes. </p>", "buddyforms_options[buddyforms][".$selected_form_slug."][groups][display_post]", array(
+
+					$form->addElement(new Element_Select("<b>Display Post</b><br><br><p>If you want to add the post to the home tab you need to copy the single-post.php from <br> 'includes/templates/buddyforms/groups/single-post.php' to your theme and rename it to front.php 'groups/single/front.php'. </p>
+                                                           <p> If you want to change the new tab template copy single-post.php to your theme 'buddyforms/groups/single-post.php'   </p>", "buddyforms_options[buddyforms][".$selected_form_slug."][groups][display_post]", array(
 					'nothing',
-					'create a new tab')
+					'create a new tab',
+                    'before group activity')
 					,array('value' => $display_post)));
 
                     $form->addElement(new Element_HTML('<br><br>'));
@@ -388,11 +399,13 @@ add_action('buddyforms_groups_single_title', 'buddyforms_groups_single_title', 1
 function buddyforms_groups_single_title($title, $args){
     global $buddyforms;
 
+    if(!bp_is_group())
+        return;
+
     extract($args);
 
     if(!(isset($buddyforms['buddyforms'][$form_slug]['groups']['display_content']) && in_array('title', $buddyforms['buddyforms'][$form_slug]['groups']['display_content'])))
         return;
-
     ?>
 
     <?php do_action('buddyforms_before_groups_single_title') ?>
@@ -408,12 +421,15 @@ add_action('buddyforms_groups_single_content', 'buddyforms_groups_single_content
 function buddyforms_groups_single_content($content, $args){
     global $buddyforms;
 
+    if(!bp_is_group())
+        return;
+
     extract($args);
 
     if(!(isset($buddyforms['buddyforms'][$form_slug]['groups']['display_content']) && in_array('content', $buddyforms['buddyforms'][$form_slug]['groups']['display_content'])))
         return;
-
     ?>
+
     <?php do_action('buddyforms_before_groups_single_content') ?>
 
     <div class="entry-single-content">
@@ -429,7 +445,13 @@ add_action('buddyforms_groups_single_post_meta', 'buddyforms_groups_single_post_
 function buddyforms_groups_single_post_meta($form_fields, $args){
     global $buddyforms;
 
+    if(!bp_is_group())
+        return;
+
     extract($args);
+
+    if(bp_current_action() != $form_slug );
+        return;
 
     if(!(isset($buddyforms['buddyforms'][$form_slug]['groups']['display_content']) && in_array('meta', $buddyforms['buddyforms'][$form_slug]['groups']['display_content'])))
         return;

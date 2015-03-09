@@ -113,10 +113,18 @@ class BuddyForms_Group_Extension {
 		global $buddyforms;
 
 
-		if (!isset($buddyforms['buddyforms']))
-			return;
+        if (!isset($buddyforms['buddyforms']))
+            return;
 
-		foreach ($buddyforms['buddyforms'] as $key => $buddyform) :
+
+        foreach ($buddyforms['buddyforms'] as $key => $buddyform) :
+
+            if (!isset($buddyform['post_type']) || $buddyform['post_type'] == 'none'){
+                continue;
+            }
+
+
+
 			if (isset($buddyform['form_fields'])) {
 				foreach ($buddyform['form_fields'] as $key => $form_field) {
 
@@ -128,7 +136,9 @@ class BuddyForms_Group_Extension {
 							'singular_name'	=> sprintf(__('%s Category'), $form_field['name'])
 						);
 
-						register_taxonomy( $form_slug . '_attached_' . $form_field['AttachGroupType'], $buddyform['post_type'], array(
+                        $Attach_group_post_type = $buddyforms['buddyforms'][$form_field['AttachGroupType']]['post_type'];
+
+						register_taxonomy( $form_slug . '_attached_' . $Attach_group_post_type, $buddyform['post_type'], array(
 							'hierarchical' => true, 
 							'labels' => $labels_group_groups,
 							'show_ui' => true,
@@ -139,39 +149,34 @@ class BuddyForms_Group_Extension {
 						);
 
 						$args = array(
-							'post_type'=> $form_field['AttachGroupType'], // my custom post type
+							'post_type'=> $Attach_group_post_type, // my custom post type
 							'posts_per_page'	=> -1, // show all posts
 							'post_status'		=> 'publish'
 						);
 
 						$attached_posts = new WP_Query($args);
 
-
-                        $terms = get_terms( $form_slug . '_attached_' . $form_field['AttachGroupType'], array( 'fields' => 'all', 'hide_empty' => false ) );
-//                        echo '<pre>';
-//                        print_r($terms);
-//                        echo '</pre>';
+                        $terms = get_terms( $form_slug . '_attached_' . $Attach_group_post_type, array( 'fields' => 'all', 'hide_empty' => false ) );
 
                         if($terms){
                             foreach ( $terms as $value ) {
 
                                 $args=array(
                                     'name' => $terms[0]->name,
-                                    'post_type' => $form_field['AttachGroupType'],
+                                    'post_type' => $Attach_group_post_type,
                                     'post_status' => 'publish',
                                     'posts_per_page' => 1
                                 );
 
-
                                 if(!get_posts($args))
-                                    wp_delete_term( $value, $form_slug . '_attached_' . $form_field['AttachGroupType'] );
+                                    wp_delete_term( $value, $form_slug . '_attached_' . $Attach_group_post_type );
                             }
                         }
 
 
 						while ($attached_posts->have_posts()) : $attached_posts->the_post();
 
-							wp_set_object_terms(get_the_ID(), get_the_title(), $form_slug . '_attached_' . $form_field['AttachGroupType']);
+							wp_set_object_terms(get_the_ID(), get_the_title(), $form_slug . '_attached_' . $Attach_group_post_type);
 						endwhile;
 
 					}

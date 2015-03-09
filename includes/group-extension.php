@@ -20,6 +20,7 @@ if (class_exists('BP_Group_Extension')) :
 			$this->attached_form_slug	= get_post_meta($this->attached_post_id, '_bf_form_slug', true);
 
             add_action( 'bp_actions', array($this, 'buddyforms_remove_group_admin_tab'), 9 );
+            add_filter( 'buddyforms_user_can_edit', array($this, 'buddyforms_user_can_edit'), 10 );
 
             if($this->attached_form_slug)
                 add_filter('buddyforms_front_js_css_loader', array($this, 'buddyforms_front_js_loader_bp_groups_support'));
@@ -47,26 +48,14 @@ if (class_exists('BP_Group_Extension')) :
 				
 				switch ($buddyforms['buddyforms'][$this->attached_form_slug]['groups']['display_post']) :
 	
-					case 'nothing' :
+					case 'before group activity' :
 						add_action('bp_before_group_activity_post_form', array($this, 'display_post'), 1);
 						break;
 					case 'create a new tab' :
 						$this->enable_nav_item = true;
 						break;
-					case 'replace home new tab activity' :
-						add_filter('bp_located_template', 'buddyforms_groups_load_template_filter', 10, 2);
-						$this->add_activity_tab();
-						break;
 						
 				endswitch;
-	
-				if ( isset( $buddyforms['buddyforms'][$this->attached_form_slug]['groups']['title']['display'] ) && $buddyforms['buddyforms'][$this->attached_form_slug]['groups']['title']['display'] != 'no')
-					add_action($buddyforms['buddyforms'][$this->attached_form_slug]['groups']['title']['display'], create_function('', 'echo "<div class=\"group_title\">' . get_the_title($this->attached_post_id) . '</div>";'));
-				
-				
-				if ( isset( $buddyforms['buddyforms'][$this->attached_form_slug]['groups']['content']['display'] ) && $buddyforms['buddyforms'][$this->attached_form_slug]['groups']['content']['display'] != 'no')
-					add_action($buddyforms['buddyforms'][$this->attached_form_slug]['groups']['content']['display'], create_function('', 'echo "<div class=\"group_content\">' . get_post_field('post_content', $this->attached_post_id) . '</div>";'));
-
 	
 				$this->name					= $buddyforms['buddyforms'][$this->attached_form_slug]['singular_name'];
 				$this->nav_item_position	= 20;
@@ -78,6 +67,9 @@ if (class_exists('BP_Group_Extension')) :
 
 
         function buddyforms_front_js_loader_bp_groups_support($found){
+            return true;
+        }
+        function buddyforms_user_can_edit($found){
             return true;
         }
 
@@ -128,27 +120,28 @@ if (class_exists('BP_Group_Extension')) :
 			$args = array(
 				'post_type' => $buddyforms['buddyforms'][$form_slug]['post_type'],
 				'post_id' => $attached_post_id,
-				'revision_id' => false,
 				'form_slug' => $form_slug,
 			);
 
-            echo buddyforms_create_edit_form_shortcode($args);
+            echo buddyforms_create_edit_form($args);
 
 		}
-		
+
 		function edit_screen_save($group_id = NULL){
-			global $buddyforms;
 
-			$form_slug			= $this->attached_form_slug;
-			$post_type			= $this->attached_post_type;
-			$attached_post_id	= $this->attached_post_id;
+            global $buddyforms, $form_slug;
 
-			$customfields		= $buddyforms['buddyforms'][$form_slug]['form_fields'];
+            $form_slug			= $this->attached_form_slug;
 
-			bf_update_post_meta($attached_post_id, $customfields);
 
-			bp_core_add_message( "Post successfully updated." );
-		}
+            $args = array(
+                'post_type' => $buddyforms['buddyforms'][$form_slug]['post_type'],
+                'form_slug' => $form_slug,
+            );
+
+            echo buddyforms_create_edit_form($args);
+
+        }
 		
 		/**
 		* Display or edit a Post

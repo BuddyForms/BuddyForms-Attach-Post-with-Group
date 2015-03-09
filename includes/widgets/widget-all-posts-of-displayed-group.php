@@ -65,14 +65,14 @@ class BuddyForms_All_Posts_of_this_Group_Widget extends WP_Widget
         foreach($buddyforms['buddyforms'][$form_select]['form_fields'] as $key => $form_field){
 
             if($form_field['type'] == 'AttachGroupType')
-                $AttachGroupType = $form_field['AttachGroupType'];
+                $Attach_group_post_type = $buddyforms['buddyforms'][$form_field['AttachGroupType']]['post_type'];
 
         }
 
-        if(empty($AttachGroupType))
+        if(empty($Attach_group_post_type))
             return;
 
-        $term = wp_get_post_terms($groups_post_id, $form_select.'_attached_'.$AttachGroupType, array("fields" => "all"));
+        $term = wp_get_post_terms($groups_post_id, $form_select.'_attached_'.$Attach_group_post_type, array("fields" => "all"));
 
         if(is_wp_error($term))
             return;
@@ -84,9 +84,9 @@ class BuddyForms_All_Posts_of_this_Group_Widget extends WP_Widget
         if (isset($term[0]->name)){
 
             $args = array(
-                'post_type'				                        => $buddyforms['buddyforms'][$form_select]['post_type'],
-                $form_select.'_attached_'.$AttachGroupType      => $term[0]->slug,
-                'order'    				                        => 'ASC',
+                'post_type'				                            => $buddyforms['buddyforms'][$form_select]['post_type'],
+                $form_select.'_attached_'.$Attach_group_post_type   => $term[0]->slug,
+                'order'    				                            => 'ASC',
             );
 
             $gr_query = new WP_Query( $args );
@@ -107,7 +107,7 @@ class BuddyForms_All_Posts_of_this_Group_Widget extends WP_Widget
 
                         if($set_title == true){
 
-                            if( $group_type == $AttachGroupType ){
+                            if( $group_type == $Attach_group_post_type ){
                                 $h3_widget_title = '<h3 class="widgettitle">' . $title_attached_groups . '</h3>';
                             } else {
                                 $h3_widget_title = '<h3 class="widgettitle">' . $title_other_attached_groups . '</h3>';
