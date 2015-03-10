@@ -1,6 +1,6 @@
 <?php
 /**
- * A widget to display groups
+ * A widget to display BuddyForms List Admins & Moderators
  *
  * @package BuddyPress Custom Group Types
  * @since 0.1-beta
@@ -17,10 +17,10 @@ class BuddyForms_List_Moderators_Widget extends WP_Widget
     public function __construct() {
         $widget_ops = array(
             'classname'   => 'widget_buddyforms_list_moderators',
-            'description' => __( 'BuddyForms List Moderators', 'buddyforms' )
+            'description' => __( 'BuddyForms List Admins & Moderators', 'buddyforms' )
         );
 
-        parent::__construct( false, __( 'BuddyForms List Moderators', 'buddyforms' ), $widget_ops );
+        parent::__construct( false, __( 'BuddyForms List Admins & Moderators', 'buddyforms' ), $widget_ops );
     }
 
     /**

@@ -254,7 +254,7 @@ function buddyforms_admin_settings_sidebar_metabox($form, $selected_form_slug){
 					$form->addElement(new Element_HTML('<p>
 					Attach this form to groups. If a new post is created, a new group will be attached to the post.<br><br>
 					<b>Important: </b>
-					Post status will affect group privacy options.<br>
+					Post status will effect group privacy options.<br>
 				    draft = hidden<br>
 				    publish = public<br>
 					</p>'));
@@ -280,8 +280,8 @@ function buddyforms_admin_settings_sidebar_metabox($form, $selected_form_slug){
 					if(isset($buddyforms_options['buddyforms'][$selected_form_slug]['groups']['display_post']))
 						$display_post = $buddyforms_options['buddyforms'][$selected_form_slug]['groups']['display_post'];
 
-					$form->addElement(new Element_Select("<b>Display Post</b><br><br><p>If you want to add the post to the home tab you need to copy the single-post.php from <br> 'includes/templates/buddyforms/groups/single-post.php' to your theme and rename it to front.php 'groups/single/front.php'. </p>
-                                                           <p> If you want to change the new tab template copy single-post.php to your theme 'buddyforms/groups/single-post.php'   </p>", "buddyforms_options[buddyforms][".$selected_form_slug."][groups][display_post]", array(
+					$form->addElement(new Element_Select("<b>Display Post</b><br><br><p>If you want to add the post to the home tab, you need to copy the single-post.php from <br> 'includes/templates/buddyforms/groups/single-post.php' to your theme and rename it to front.php 'groups/single/front.php'. </p>
+                                                           <p> If you want to change the new tab template, copy single-post.php to your theme 'buddyforms/groups/single-post.php'   </p>", "buddyforms_options[buddyforms][".$selected_form_slug."][groups][display_post]", array(
 					'nothing',
 					'create a new tab',
                     'before group activity')

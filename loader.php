@@ -3,7 +3,7 @@
  Plugin Name: BuddyForms Attach Posts to Groups Extension
  Plugin URI: http://themekraft.com/store/wordpress-front-end-editor-and-form-builder-buddyforms/
  Description: Create engaged communities with every post.
- Version: 1.0.4
+ Version: 1.1
  Author: Sven Lehnert
  Author URI: http://themekraft.com
  Licence: GPLv3
@@ -27,7 +27,7 @@
  ****************************************************************************
  */
 
-define('BuddyForms-Attach-Posts-to-Groups-Extension', '1.0.5');
+define('BuddyForms-Attach-Posts-to-Groups-Extension', '1.1');
 
 /**
  * Loads BuddyForms Attach Posts to Groups Extension files only if BuddyPress is present
@@ -43,7 +43,6 @@ function bf_aptg_bp_loaded() {
 
 }
 
-
 function bf_aptg_register_widgets() {
 
     require_once (dirname(__FILE__) . '/includes/widgets/' . 'widget-attached-group.php');
@@ -54,7 +53,5 @@ function bf_aptg_register_widgets() {
     register_widget( 'BuddyForms_List_Moderators_Widget' );
     register_widget( 'BuddyForms_All_Posts_of_this_Group_Widget' );
 
-
 }
-
 add_action( 'widgets_init', 'bf_aptg_register_widgets' );

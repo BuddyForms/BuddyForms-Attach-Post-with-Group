@@ -1,6 +1,6 @@
 <?php
 /**
- * A widget to display groups
+ * A widget to display BuddyForms All Posts of this Group
  *
  * @package BuddyPress Custom Group Types
  * @since 0.1-beta
@@ -217,7 +217,7 @@ class BuddyForms_All_Posts_of_this_Group_Widget extends WP_Widget
             </p>
             <p>
                 <label for="<?php echo $this->get_field_id( 'widget_class' ); ?>">
-                    <?php _e( 'Add your class', 'buddyforms' ) ?>
+                    <?php _e( 'Add Custom Class', 'buddyforms' ) ?>
                     <input class="widefat" id="<?php echo $this->get_field_id( 'widget_class' ); ?>" name="<?php echo $this->get_field_name( 'widget_class' ); ?>" type="text" value="<?php echo $widget_class ?>" />
                 </label>
             </p>

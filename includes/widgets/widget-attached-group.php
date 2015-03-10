@@ -1,6 +1,6 @@
 <?php
 /**
- * A widget to display groups
+ * A widget to display BuddyForms Attached Group
  *
  * @package BuddyPress Custom Group Types
  * @since 0.1-beta
