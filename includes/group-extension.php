@@ -94,7 +94,7 @@ if (class_exists('BP_Group_Extension')) :
 
             // You may want to be sure the user can't access
             if ( ! empty( $hide_tabs[ bp_action_variable( 0 ) ] ) ) {
-                bp_core_add_message( 'Sorry buddy, but this part is restricted to super admins!', 'error' );
+                bp_core_add_message( __('Sorry buddy, but this part is restricted to super admins!', 'buddyforms'), 'error' );
                 bp_core_redirect( bp_get_group_permalink( groups_get_current_group() ) );
             }
         }

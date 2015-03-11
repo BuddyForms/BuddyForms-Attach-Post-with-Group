@@ -248,22 +248,22 @@ function buddyforms_admin_settings_sidebar_metabox($form, $selected_form_slug){
     if(bp_is_active('groups')){
 		$form->addElement(new Element_HTML('
 		<div class="accordion-group postbox">
-			<div class="accordion-heading"><p class="accordion-toggle" data-toggle="collapse" data-parent="#accordion_'.$selected_form_slug.'" href="#accordion_'.$selected_form_slug.'_group_options">Groups Control</p></div>
+			<div class="accordion-heading"><p class="accordion-toggle" data-toggle="collapse" data-parent="#accordion_'.$selected_form_slug.'" href="#accordion_'.$selected_form_slug.'_group_options">'.__('Groups Control', 'buddyforms').'</p></div>
 		    <div id="accordion_'.$selected_form_slug.'_group_options" class="accordion-body collapse">
 				<div class="accordion-inner">')); 
 					$form->addElement(new Element_HTML('<p>
-					Attach this form to groups. If a new post is created, a new group will be attached to the post.<br><br>
-					<b>Important: </b>
-					Post status will effect group privacy options.<br>
-				    draft = hidden<br>
-				    publish = public<br>
+					'.__('Attach this form to groups. If a new post is created, a new group will be attached to the post.)', 'buddyforms').'<br><br>
+					<b>'.__('Important: ', 'buddyforms').'</b>
+					'.__('Post status will effect group privacy options:', 'buddyforms').'<br>
+				    '.__('draft = hidden', 'buddyforms').'<br>
+				    '.__('publish = public', 'buddyforms').'<br>
 					</p>'));
 
                     $attache = '';
                     if(isset($buddyforms_options['buddyforms'][$selected_form_slug]['groups']['attache']))
                         $attache = $buddyforms_options['buddyforms'][$selected_form_slug]['groups']['attache'];
 
-                    $form->addElement(new Element_Checkbox("<b>Attach with Group</b>", "buddyforms_options[buddyforms][".$selected_form_slug."][groups][attache]", array("create_group" => "Create a group for each post of this form."), array('value' => $attache)));
+                    $form->addElement(new Element_Checkbox("<b>".__('Attach with Group', 'buddyforms')."</b>", "buddyforms_options[buddyforms][".$selected_form_slug."][groups][attache]", array("create_group" => __('Create a group for each post of this form.', 'buddyforms')), array('value' => $attache)));
 
                     $form->addElement(new Element_HTML('<br>'));
 
@@ -271,7 +271,7 @@ function buddyforms_admin_settings_sidebar_metabox($form, $selected_form_slug){
                     if(isset($buddyforms_options['buddyforms'][$selected_form_slug]['groups']['redirect']))
                         $redirect = $buddyforms_options['buddyforms'][$selected_form_slug]['groups']['redirect'];
 
-                    $form->addElement(new Element_Checkbox("<b>Redirect to Group</b>", "buddyforms_options[buddyforms][".$selected_form_slug."][groups][redirect]", array("redirect_group" => "Redirect the post to the group."), array('value' => $redirect)));
+                    $form->addElement(new Element_Checkbox("<b>".__('Redirect to Group', 'buddyforms')."</b>", "buddyforms_options[buddyforms][".$selected_form_slug."][groups][redirect]", array("redirect_group" => __('Redirect the post to the group.', 'buddyforms')), array('value' => $redirect)));
 
                     $form->addElement(new Element_HTML('<br>'));
 
@@ -280,8 +280,8 @@ function buddyforms_admin_settings_sidebar_metabox($form, $selected_form_slug){
 					if(isset($buddyforms_options['buddyforms'][$selected_form_slug]['groups']['display_post']))
 						$display_post = $buddyforms_options['buddyforms'][$selected_form_slug]['groups']['display_post'];
 
-					$form->addElement(new Element_Select("<b>Display Post</b><br><br><p>If you want to add the post to the home tab, you need to copy the single-post.php from <br> 'includes/templates/buddyforms/groups/single-post.php' to your theme and rename it to front.php 'groups/single/front.php'. </p>
-                                                           <p> If you want to change the new tab template, copy single-post.php to your theme 'buddyforms/groups/single-post.php'   </p>", "buddyforms_options[buddyforms][".$selected_form_slug."][groups][display_post]", array(
+					$form->addElement(new Element_Select("<b>".__('Display Post', 'buddyforms')."</b><br><br><p>".__("If you want to add the post to the home tab, you need to copy the single-post.php from <br> 'includes/templates/buddyforms/groups/single-post.php' to your theme and rename it to front.php 'groups/single/front.php'.", 'buddyforms')."</p>
+                                                           <p> ".__("If you want to change the new tab template, copy single-post.php to your theme 'buddyforms/groups/single-post.php'", 'buddyforms')."</p>", "buddyforms_options[buddyforms][".$selected_form_slug."][groups][display_post]", array(
 					'nothing',
 					'create a new tab',
                     'before group activity')
@@ -293,7 +293,7 @@ function buddyforms_admin_settings_sidebar_metabox($form, $selected_form_slug){
                     if(isset($buddyforms_options['buddyforms'][$selected_form_slug]['groups']['display_content']))
                         $display_content = $buddyforms_options['buddyforms'][$selected_form_slug]['groups']['display_content'];
 
-                    $form->addElement(new Element_Checkbox("<b>View</b>", "buddyforms_options[buddyforms][".$selected_form_slug."][groups][display_content]", array("title" => "Display the Title", "content" => "Display the Content", 'meta' => 'Display Post Meta' ), array('value' => $display_content)));
+                    $form->addElement(new Element_Checkbox("<b>".__('View', 'buddyforms')."</b>", "buddyforms_options[buddyforms][".$selected_form_slug."][groups][display_content]", array("title" => __('Display the Title', 'buddyforms'), "content" => __('Display the Content', 'buddyforms'), 'meta' => __('Display Post Meta', 'buddyforms') ), array('value' => $display_content)));
 
                     $form->addElement(new Element_HTML('<br>'));
 
