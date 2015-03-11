@@ -1,0 +1,158 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: BuddyForms Attach Posts to Groups Extension v1.1\n"
+"POT-Creation-Date: 2015-03-11 15:20+0100\n"
+"PO-Revision-Date: 2015-03-11 15:21+0100\n"
+"Last-Translator: Sol Huebner <translations@it-specialist.net>\n"
+"Language-Team: Sol Huebner <translations@it-specialist.net>\n"
+"Language: de\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.7.4\n"
+"X-Poedit-Basepath: ..\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;esc_attr__;"
+"esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c;_n_noop:1,2;"
+"_nx_noop:3c,1,2;__ngettext_noop:1,2\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: *.js\n"
+
+#: buddyforms-groups.php:135
+#, php-format
+msgid "%s Categories"
+msgstr ""
+
+#: buddyforms-groups.php:136
+#, php-format
+msgid "%s Category"
+msgstr ""
+
+#: includes/functions.php:161
+msgid "Attach Group Type:"
+msgstr ""
+
+#: includes/functions.php:167
+msgid "Multiple:"
+msgstr ""
+
+#: includes/functions.php:251
+msgid "Groups Control"
+msgstr ""
+
+#: includes/functions.php:255
+msgid ""
+"Attach this form to groups. If a new post is created, a new group will be "
+"attached to the post.)"
+msgstr ""
+
+#: includes/functions.php:256
+msgid "Important: "
+msgstr ""
+
+#: includes/functions.php:257
+msgid "Post status will effect group privacy options:"
+msgstr ""
+
+#: includes/functions.php:258
+msgid "draft = hidden"
+msgstr ""
+
+#: includes/functions.php:259
+msgid "publish = public"
+msgstr ""
+
+#: includes/functions.php:266
+msgid "Attach with Group"
+msgstr ""
+
+#: includes/functions.php:266
+msgid "Create a group for each post of this form."
+msgstr ""
+
+#: includes/functions.php:274
+msgid "Redirect to Group"
+msgstr ""
+
+#: includes/functions.php:274
+msgid "Redirect the post to the group."
+msgstr ""
+
+#: includes/functions.php:283
+msgid "Display Post"
+msgstr ""
+
+#: includes/functions.php:283
+msgid ""
+"If you want to add the post to the home tab, you need to copy the single-"
+"post.php from <br> 'includes/templates/buddyforms/groups/single-post.php' to "
+"your theme and rename it to front.php 'groups/single/front.php'."
+msgstr ""
+
+#: includes/functions.php:284
+msgid ""
+"If you want to change the new tab template, copy single-post.php to your "
+"theme 'buddyforms/groups/single-post.php'"
+msgstr ""
+
+#: includes/functions.php:296
+msgid "View"
+msgstr ""
+
+#: includes/functions.php:296
+msgid "Display the Title"
+msgstr ""
+
+#: includes/functions.php:296
+msgid "Display the Content"
+msgstr ""
+
+#: includes/functions.php:296
+msgid "Display Post Meta"
+msgstr ""
+
+#: includes/group-control.php:150
+#, php-format
+msgid "%s joined the group %s"
+msgstr ""
+
+#: includes/group-extension.php:97
+msgid "Sorry buddy, but this part is restricted to super admins!"
+msgstr ""
+
+#: includes/widgets/widget-all-posts-of-displayed-group.php:20
+#: includes/widgets/widget-all-posts-of-displayed-group.php:23
+msgid "BuddyForms All Posts of this Group"
+msgstr ""
+
+#: includes/widgets/widget-all-posts-of-displayed-group.php:195
+msgid "Select the Form to use:"
+msgstr ""
+
+#: includes/widgets/widget-all-posts-of-displayed-group.php:208
+msgid "Attached Groups:"
+msgstr ""
+
+#: includes/widgets/widget-all-posts-of-displayed-group.php:214
+msgid "Other Attached Groups:"
+msgstr ""
+
+#: includes/widgets/widget-all-posts-of-displayed-group.php:220
+msgid "Add Custom Class"
+msgstr ""
+
+#: includes/widgets/widget-attached-group.php:20
+#: includes/widgets/widget-attached-group.php:23
+msgid "BuddyForms Attached Group"
+msgstr ""
+
+#: includes/widgets/widget-attached-group.php:150
+#: includes/widgets/widget-group-list-moderators.php:100
+msgid "Title:"
+msgstr ""
+
+#: includes/widgets/widget-group-list-moderators.php:20
+#: includes/widgets/widget-group-list-moderators.php:23
+msgid "BuddyForms List Admins & Moderators"
+msgstr ""
