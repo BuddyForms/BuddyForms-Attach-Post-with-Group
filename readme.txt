@@ -11,18 +11,18 @@ Create engaged communities with every post.
 
 == Description ==
 
-This is the BuddyForms Attach Posts to Groups Extension. You need the BuddyForms plugin installed for the plugin to work. <a href="http://themekraft.com/store/wordpress-front-end-editor-and-form-builder-buddyforms/" target="_blank">Get BuddyForms now!</a>
+This is the BuddyForms Attach Posts to Groups extension. You need the BuddyForms plugin installed for the plugin to work. <a href="http://themekraft.com/store/wordpress-front-end-editor-and-form-builder-buddyforms/" target="_blank">Get BuddyForms now!</a>
 
-With this plugin, you’ll be able to automatically create a new BuddyPress group for pre-assigned BuddyForms post submissions and attach that group to the post. User-submitted posts with BuddyForms then become a BuddyPress group with all the included functionality and endless possibilities.
+With this plugin, you’ll automatically be able to create a new BuddyPress group for pre-assigned BuddyForms post submissions and attach that group to the post. Then User-submitted posts with BuddyForms become a BuddyPress group with all the included functionality and endless possibilities.
 
-<h4>Now “why would you want to create groups for every post”, you ask? </h4>Here’s some quick examples of why it’s the perfect plugin to help grow your community and business:
+<h4>Now “why would you want to create groups for every post”, you ask? </h4>Here’s some quick examples of why it’s the perfect plugin to help your community and business grow:
 
-1) You have a product-based website and use two post types: a "Product" post type and a “Brand" post type. Every product can then easily be categorized as a product of a brand. Every Product and Brand can be a Group so you can have forums or contact persons etc available product specific or centralised in the brand.
+1) You have a product-based website and use two post types: a "Product" post type and a “Brand" post type. Every product can then easily be categorized as a product of a brand. Every Product and Brand can be a group, so you can have forums or contact persons etc - available product specific or centralised in the brand.
 
-2) You have a listing website that users directly add events to. Wouldn't it be great if a group was automatically created whenever a user creates a new event? The event suddenly has access to members, forums, & everything else possible within BuddyPress groups!
+2) You have a listing website that users directly add events to. Wouldn't it be great if a group would be automatically created whenever a user creates a new event? The event suddenly has access to members, forums & everything else - possible within BuddyPress groups!
 
 <h4>How It Works?</h4>
-Create and attach new BuddyPress groups to your posts created with BuddyForms. Whenever a new post is created, a group is also created (you of course get to choose which post types create groups in BuddyForms). The permalink will be rewritten to the group and a redirect will publish the posts to the attached group.
+Create and attach new BuddyPress groups to your posts with BuddyForms. Whenever a new post is created, a group is also created (of course you get to choose, which post types create groups in BuddyForms). The permalink will be rewritten to the group and a redirect will publish the posts to the attached group.
 
 <h4>Great Features </h4>
 Here’s the list of powerful features that will help manage your BuddyPress groups:
@@ -30,12 +30,12 @@ Here’s the list of powerful features that will help manage your BuddyPress gro
 <ul>
 <li>* Categorize your groups with all the power WordPress already provides.</li>
 <li>* Get the combined benefits of WordPress posts and taxonomies with the added power of BuddyPress groups.</li>
-<li>* Filter and sort groups in a newly designed and intuitive way.</li>
+<li>* Filter and sort groups in a new designed and intuitive way.</li>
 <li>* Organize your groups within categories and custom post types.</li>
 <li>* Use ANY 3rd party post-type based plugins and power them up with BuddyPress Groups.</li>
-<li>* Attach Group Type to attach groups to other groups. Create complex relationships between your groups for every Form which is attached to groups.</li>
-<li>* 3 Widgets to display your Groups Relations in your Group Sidebar</li>
-<li>* Edit the post from within the Group Admin</li>
+<li>* Attach Group Type to attach groups to other groups. Create complex relationships between your groups for every form which is attached to groups.</li>
+<li>* 3 widgets to display your groups relations in your group sidebar</li>
+<li>* Edit the post from the Group Admin</li>
 </ul>
 
 <h4>Display Post in the Group</h4>
@@ -94,7 +94,7 @@ BuddyForms gives you these possibilities for a wide variety of uses.
 
 4. **Widget to display other Attached Posts** - This can be used to see Other Posts attached to a group. For example Products of a Brand.
 
-5. **Widget to display a Moderator's and Admins** - This could be use to display contact person.
+5. **Overview FormBuilder** - This is a Screenshot of the Form builder with BuddyForms Attached Groups enabled.
 
 
 == Changelog ==
