@@ -1,9 +1,9 @@
-=== BuddyForms Attach Posts to Groups Extension  ===
-Contributors: svenl77
+=== BuddyForms Attach Post with Group ===
+Contributors: svenl77, themekraft
 Tags: buddypress, user, members, profiles, custom post types, taxonomy, frontend posting, frontend editing, groups, post attached to groups
-Requires at least: WordPress 3.x, BuddyPress 2.x
-Tested up to: WordPress 4.1, BuddyPress 2.x
-Stable tag: 1.1
+Requires at least: 4.0
+Tested up to: 4.2.2
+Stable tag: 1.1.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -98,6 +98,13 @@ BuddyForms gives you these possibilities for a wide variety of uses.
 
 
 == Changelog ==
+
+= 1.1.1 =
+Add a check if the post_excerpt exists in the group creation and use the post_excerpt for the group content if possible.
+Made more strings translatable. Merge pull request #1 from RugWarrior/master
+Added PO/MO files.
+spelling correction
+Rename the plugin from "BuddyForms Attach Posts to Groups Extension" to "BuddyForms Attach Post with Group"
 
 = 1.1 =
 give group admins the rights to change the post
