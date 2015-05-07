@@ -62,7 +62,6 @@ function bf_ge_updtae_post_meta($customfield, $post_id){
             'ID'        		=> $post_id,
             'post_excerpt'		=> $_POST['post_excerpt'],
             'post_type' 		=> $post_type,
-            'post_status' 		=> 'publish'
 		);
           
 		// Update the new post

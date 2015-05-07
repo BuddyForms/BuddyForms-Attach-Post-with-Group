@@ -25,7 +25,7 @@ class BuddyForms_GroupControl {
 	 * @since 0.1-beta
 	 */
 	public function create_a_group($post_ID) {
-		global $bp, $buddyforms;
+		global $buddyforms;
 		
 		$post = get_post($post_ID);
 
@@ -52,41 +52,49 @@ class BuddyForms_GroupControl {
 			
         $post_group_id = get_post_meta($post->ID, '_post_group_id', true);
 
-        $new_group = new BP_Groups_Group();
 
-        if (!empty($post_group_id))
-            $new_group->id = $post_group_id;
+        if (empty($post_group_id)){
+            $the_group = new BP_Groups_Group();
 
-        $new_group->creator_id = $post->post_author;
-        $new_group->admins = $post->post_author;
-        $new_group->name = $post->post_title;
-        $new_group->slug = $post->post_name;
+            $the_group->status = $post->post_status;
 
+            if ( $post->post_status == 'draft' || $post->post_status == 'pending' || $post->post_status == 'trash' )
+                $the_group->status = 'hidden';
 
-        $new_group->description = !empty($post->post_excerpt) ? $post->post_excerpt : $post->post_content;
+            if ( $post->post_status == 'publish' )
+                $the_group->status = 'public';
 
-        if ($post->post_status == 'draft')
-            $new_group->status = 'hidden';
-        elseif ($post->post_status == 'publish')
-            $new_group->status = 'public';
+            if ( $post->post_status == 'private' )
+                $the_group->status = 'private';
 
-        $new_group->is_invitation_only = 1;
-        $new_group->enable_forum = 0;
-        $new_group->date_created = current_time('mysql');
-        $new_group->total_member_count = 1;
-        $new_group->save();
+        } else {
+            $the_group = groups_get_group( array( 'group_id' => $post_group_id ) );
+        }
 
-        update_post_meta($post->ID, '_post_group_id', $new_group->id);
-        update_post_meta($post->ID, '_link_to_group', $new_group->slug);
+        $the_group->creator_id = $post->post_author;
+        $the_group->admins = $post->post_author;
+        $the_group->name = $post->post_title;
+        $the_group->slug = $post->post_name;
 
-        groups_update_groupmeta($new_group->id, 'total_member_count', 1);
-        groups_update_groupmeta($new_group->id, 'last_activity', time());
-        groups_update_groupmeta($new_group->id, 'theme', 'buddypress');
-        groups_update_groupmeta($new_group->id, 'stylesheet', 'buddypress');
-        groups_update_groupmeta($new_group->id, 'group_post_id', $post->ID);
-        groups_update_groupmeta($new_group->id, 'group_type', $post->post_type);
+        $the_group->description = !empty($post->post_excerpt) ? $post->post_excerpt : $post->post_content;
 
-		self::add_member_to_group($new_group->id, $post->post_author);
+        $the_group->is_invitation_only = 1;
+        $the_group->enable_forum = 0;
+        $the_group->date_created = current_time('mysql');
+        $the_group->total_member_count = 1;
+        $the_group->save();
+
+        update_post_meta($post->ID, '_post_group_id', $the_group->id);
+        update_post_meta($post->ID, '_link_to_group', $the_group->slug);
+
+        groups_update_groupmeta($the_group->id, 'total_member_count', 1);
+        groups_update_groupmeta($the_group->id, 'last_activity', time());
+        groups_update_groupmeta($the_group->id, 'theme', 'buddypress');
+        groups_update_groupmeta($the_group->id, 'stylesheet', 'buddypress');
+        groups_update_groupmeta($the_group->id, 'group_post_id', $post->ID);
+        groups_update_groupmeta($the_group->id, 'group_type', $post->post_type);
+
+		self::add_member_to_group($the_group->id, $post->post_author);
 	}
 
 	/**
