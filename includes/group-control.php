@@ -61,7 +61,9 @@ class BuddyForms_GroupControl {
         $new_group->admins = $post->post_author;
         $new_group->name = $post->post_title;
         $new_group->slug = $post->post_name;
-        $new_group->description = $post->post_content;
+
+
+        $new_group->description = !empty($post->post_excerpt) ? $post->post_excerpt : $post->post_content;
 
         if ($post->post_status == 'draft')
             $new_group->status = 'hidden';
