@@ -64,7 +64,7 @@ function bf_ge_updtae_post_meta($customfield, $post_id){
             'post_type' 		=> $post_type,
 		);
           
-		// Update the new post
+		// Update the post
         $post_id = wp_update_post( $my_post );
 	}
 
@@ -104,12 +104,44 @@ add_action('groups_before_delete_group', 'buddyforms_delete_a_group_post');
 function buddyforms_group_header_fields_save($group_id) {
 	$groups_post_id = groups_get_groupmeta($group_id, 'group_post_id');
 
-    $my_post = array('ID' => $groups_post_id, 'post_title' => $_POST['group-name'], 'post_content' => $_POST['group-desc']);
+    $my_post = array(
+        'ID' => $groups_post_id,
+        'post_title' => $_POST['group-name'],
+        'post_content' => $_POST['group-desc']
+    );
 
-	// update the new post
+    // update the post
 	$post_id = wp_update_post($my_post);
 }
 add_action('groups_group_details_edited', 'buddyforms_group_header_fields_save');
+
+
+function buddyforms_groups_group_settings_edited($group_id){
+    $groups_post_id = groups_get_groupmeta($group_id, 'group_post_id');
+
+    $group_status = $_POST['group-status'];
+
+    $post_status = $group_status;
+
+    if ( $group_status == 'hidden' )
+        $post_status = 'draft';
+
+    if ( $group_status == 'public' )
+        $post_status = 'publish';
+
+    $post_status = apply_filters( 'bf_attached_grouppost_post_status', $post_status, $group_status );
+
+    $my_post = array(
+        'ID' => $groups_post_id,
+        'post_status' => $post_status
+    );
+
+    // update the post
+    $post_id = wp_update_post($my_post);
+
+}
+add_action('groups_group_settings_edited','buddyforms_groups_group_settings_edited');
+
 
  /**
  * this function is a bit tricky and needs some fixing.

@@ -29,6 +29,10 @@ class BuddyForms_GroupControl {
 		
 		$post = get_post($post_ID);
 
+        // First create/update the group if the post gets published.
+        if ( !($post->post_status == 'publish' || $post->post_status == 'private') )
+            return;
+
 		// make sure we get the correct data
 		if ($post->post_type == 'revision')
 			$post = get_post($post->post_parent);
@@ -53,23 +57,26 @@ class BuddyForms_GroupControl {
         $post_group_id = get_post_meta($post->ID, '_post_group_id', true);
 
 
-        if (empty($post_group_id)){
+        if( empty($post_group_id) ){
             $the_group = new BP_Groups_Group();
-
-            $the_group->status = $post->post_status;
-
-            if ( $post->post_status == 'draft' || $post->post_status == 'pending' || $post->post_status == 'trash' )
-                $the_group->status = 'hidden';
-
-            if ( $post->post_status == 'publish' )
-                $the_group->status = 'public';
-
-            if ( $post->post_status == 'private' )
-                $the_group->status = 'private';
-
         } else {
             $the_group = groups_get_group( array( 'group_id' => $post_group_id ) );
         }
+
+        $old_group_status = $the_group->status;
+
+        $the_group->status = 'hidden';
+
+        if ( $post->post_status == 'draft' || $post->post_status == 'pending' || $post->post_status == 'trash' )
+            $the_group->status = 'hidden';
+
+        if ( $post->post_status == 'publish' )
+            $the_group->status = 'public';
+
+        if ( $post->post_status == 'private' )
+            $the_group->status = 'private';
+
+        $the_group->status = apply_filters( 'bf_attached_group_status', $the_group->status, $old_group_status, $post->post_status );
 
         $the_group->creator_id = $post->post_author;
         $the_group->admins = $post->post_author;
@@ -82,6 +89,9 @@ class BuddyForms_GroupControl {
         $the_group->enable_forum = 0;
         $the_group->date_created = current_time('mysql');
         $the_group->total_member_count = 1;
+
+        $the_group = apply_filters( 'bf_attached_group_save', $the_group );
+
         $the_group->save();
 
         update_post_meta($post->ID, '_post_group_id', $the_group->id);
