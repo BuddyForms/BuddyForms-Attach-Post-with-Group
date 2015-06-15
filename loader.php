@@ -1,7 +1,7 @@
 <?php
 /*
  Plugin Name: BuddyForms Attach Post with Group
- Plugin URI: http://themekraft.com/store/wordpress-front-end-editor-and-form-builder-buddyforms/
+ Plugin URI: https://wordpress.org/plugins/buddyforms-attach-posts-to-groups-extension/
  Description: Create engaged communities with every post.
 
  Requires at least: 4.0

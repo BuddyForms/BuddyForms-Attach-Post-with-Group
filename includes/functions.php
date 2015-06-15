@@ -205,6 +205,9 @@ add_filter('buddyforms_form_element_add_field','buddyforms_form_element_add_fiel
 function buddyforms_attach_groups_create_edit_form_display_element_group($form, $form_args){
     global $buddyforms;
 
+    if ( !is_admin() || defined( 'DOING_AJAX' ) )
+        return;
+
     extract($form_args);
 
     if($form_slug == $customfield['AttachGroupType'] || $customfield['AttachGroupType'] == 'none')
