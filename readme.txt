@@ -3,7 +3,7 @@ Contributors: svenl77, themekraft
 Tags: buddypress, user, members, profiles, custom post types, taxonomy, frontend posting, frontend editing, groups, post attached to groups
 Requires at least: 4.0
 Tested up to: 4.2.2
-Stable tag: 1.1.2
+Stable tag: 1.1.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -98,6 +98,9 @@ BuddyForms gives you these possibilities for a wide variety of uses.
 
 
 == Changelog ==
+
+= 1.1.3 =
+add check DOING_AJAX
 
 = 1.1.2 =
 add a new function buddyforms_groups_group_settings_edited to sync the post status

@@ -7,7 +7,7 @@
  Requires at least: 4.0
  Tested up to: 4.2.2
 
- Version: 1.1.2
+ Version: 1.1.3
 
  Author: Sven Lehnert
  Author URI: http://themekraft.com/
@@ -32,7 +32,7 @@
  ****************************************************************************
  */
 
-define('BuddyForms_Attach_Post_with_Group', '1.1.2');
+define('BuddyForms_Attach_Post_with_Group', '1.1.3');
 
 /**
  * Loads BuddyForms Attach Posts to Groups Extension files only if BuddyPress is present
