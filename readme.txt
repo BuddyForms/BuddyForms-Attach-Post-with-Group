@@ -1,6 +1,7 @@
 === BuddyForms Attach Post with Group ===
-Contributors: svenl77, themekraft
+Contributors: svenl77, themekraft, buddyforms
 Tags: buddypress, user, members, profiles, custom post types, taxonomy, frontend posting, frontend editing, groups, post attached to groups
+Plugin URI: http://buddyforms.com/downloads/attach-post-with-group/
 Requires at least: 4.0
 Tested up to: 4.2.2
 Stable tag: 1.1.3
@@ -11,7 +12,7 @@ Create engaged communities with every post.
 
 == Description ==
 
-This is the BuddyForms Attach Posts to Groups extension. You need the BuddyForms plugin installed for the plugin to work. <a href="http://themekraft.com/store/wordpress-front-end-editor-and-form-builder-buddyforms/" target="_blank">Get BuddyForms now!</a>
+This is the BuddyForms Attach Posts to Groups extension. You need the BuddyForms plugin installed for the plugin to work. <a href="http://buddyforms.com" target="_blank">Get BuddyForms now!</a>
 
 With this plugin, you’ll automatically be able to create a new BuddyPress group for pre-assigned BuddyForms post submissions and attach that group to the post. Then User-submitted posts with BuddyForms become a BuddyPress group with all the included functionality and endless possibilities.
 
@@ -62,7 +63,7 @@ See the Plugin in action on our Front and Back-end (Admin) Demo
 All code is neat, clean and well documented (inline & in the documentation).
 The BuddyForms Documentation with tons of resourceful how-to’s and information is now available!
 
-If you’re still having difficulties, get direct support from the developers to help get you back on the right track. Access the HELP buttons at anytime through the BuddyForms Settings Panel in your WP Dashboard or visit our Support Base: https://themekraft.zendesk.com/hc/en-us/categories/200022561-BuddyForms
+If you’re still having difficulties, get direct support from the developers to help get you back on the right track. Access the HELP buttons at anytime through the BuddyForms Settings Panel in your WP Dashboard or visit our Support Base: http://buddyforms.com
 
 == Installation ==
 
@@ -76,7 +77,7 @@ Activate BuddyPress in the "Plugins" admin panel using the "Activate" link. If y
 Which plugins do I need to install before?
 
 You need the BuddyForms plugin and the BuddyPress plugin installed before.
-<a href="http://themekraft.com/store/wordpress-front-end-editor-and-form-builder-buddyforms/" target="_blank">Get BuddyForms now!</a>
+<a href="http://buddyforms.com" target="_blank">Get BuddyForms now!</a>
 Get BuddyPress here: http://buddypress.org
 
 When is it the right choice for you?
