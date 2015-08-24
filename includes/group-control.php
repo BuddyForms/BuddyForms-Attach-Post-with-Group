@@ -104,6 +104,16 @@ class BuddyForms_GroupControl {
         groups_update_groupmeta($the_group->id, 'group_post_id', $post->ID);
         groups_update_groupmeta($the_group->id, 'group_type', $post->post_type);
 
+		$minimum_user_role = 'admin';
+		if(isset($buddyforms['buddyforms'][$form_slug]['groups']['minimum_user_role']))
+			$minimum_user_role = $buddyforms['buddyforms'][$form_slug]['groups']['minimum_user_role'];
+
+		$settings = apply_filters( 'buddyforms_aptg_default_group_settings', array(
+			'can-create' 	=> $minimum_user_role
+		) );
+
+		groups_update_groupmeta($the_group->id, 'buddyforms-aptg', $settings );
+
 		self::add_member_to_group($the_group->id, $post->post_author);
 	}
 

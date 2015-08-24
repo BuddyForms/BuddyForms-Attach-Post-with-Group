@@ -301,6 +301,18 @@ function buddyforms_admin_settings_sidebar_metabox($form, $selected_form_slug){
 
                     $form->addElement(new Element_HTML('<br>'));
 
+                    $minimum_user_role = '';
+                    if(isset($buddyforms_options['buddyforms'][$selected_form_slug]['groups']['minimum_user_role']))
+                        $minimum_user_role = $buddyforms_options['buddyforms'][$selected_form_slug]['groups']['minimum_user_role'];
+
+                    $form->addElement(new Element_Select("<b>".__('Minimum User Role', 'buddyforms')."</b><br><p>".__("Select the minimum group role a user needs to edit the post", 'buddyforms')."</p>", "buddyforms_options[buddyforms][".$selected_form_slug."][groups][minimum_user_role]", array(
+                            'admin'  => 'Group Admin',
+                            'mod'    => 'Group Moderator',
+                            'member' => 'Group member')
+                        ,array('value' => $minimum_user_role)));
+
+                    $form->addElement(new Element_HTML('<br><br>'));
+
                     $redirect = '';
                     if(isset($buddyforms_options['buddyforms'][$selected_form_slug]['groups']['redirect']))
                         $redirect = $buddyforms_options['buddyforms'][$selected_form_slug]['groups']['redirect'];
@@ -309,7 +321,7 @@ function buddyforms_admin_settings_sidebar_metabox($form, $selected_form_slug){
 
                     $form->addElement(new Element_HTML('<br>'));
 
-					
+
 					$display_post = '';
 					if(isset($buddyforms_options['buddyforms'][$selected_form_slug]['groups']['display_post']))
 						$display_post = $buddyforms_options['buddyforms'][$selected_form_slug]['groups']['display_post'];

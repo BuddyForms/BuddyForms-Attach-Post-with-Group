@@ -13,18 +13,40 @@ if (class_exists('BP_Group_Extension')) :
 		*/
 		public function __construct() {
 			global $buddyforms, $post_id, $form_slug;
-            
 
 			$this->attached_post_id		= groups_get_groupmeta( bp_get_current_group_id(), 'group_post_id');
 			$this->attached_post_type	= groups_get_groupmeta( bp_get_current_group_id(), 'group_type');
 			$this->attached_form_slug	= get_post_meta($this->attached_post_id, '_bf_form_slug', true);
+			$this->buddyforms_aptg		= groups_get_groupmeta( bp_get_current_group_id(), 'buddyforms-aptg' );
+			$this->buddyforms_user_can	= false;
 
-            add_action( 'bp_actions', array($this, 'buddyforms_remove_group_admin_tab'), 9 );
-            add_filter( 'buddyforms_user_can_edit', array($this, 'buddyforms_user_can_edit'), 10 );
+			xdebug_break();
+
+			if ( isset( $this->buddyforms_aptg['can-create'] ) ) {
+				switch ( $this->buddyforms_aptg['can-create'] ) {
+					case 'admin' :
+						if ( groups_is_user_admin( bp_loggedin_user_id(), bp_get_current_group_id() ) )
+							$this->buddyforms_user_can = true;
+						break;
+					case 'mod' :
+						if ( groups_is_user_mod(bp_loggedin_user_id(), bp_get_current_group_id()) || groups_is_user_(bp_loggedin_user_id(), bp_get_current_group_id()) )
+							$this->buddyforms_user_can = true;
+						break;
+					case 'member' :
+					default :
+						if ( groups_is_user_member(bp_loggedin_user_id(), bp_get_current_group_id()) )
+							$this->buddyforms_user_can = true;
+						break;
+				}
+			}
+
+			add_action( 'bp_actions', array($this, 'buddyforms_remove_group_admin_tab'), 9 );
+
+			if($this->buddyforms_user_can)
+				add_filter( 'buddyforms_user_can_edit', array($this, 'buddyforms_user_can_edit'), 10 );
 
             if($this->attached_form_slug)
                 add_filter('buddyforms_front_js_css_loader', array($this, 'buddyforms_front_js_loader_bp_groups_support'));
-
 
 			if(isset($buddyforms['buddyforms'][$this->attached_form_slug]['revision'])){
 					
@@ -100,8 +122,57 @@ if (class_exists('BP_Group_Extension')) :
         }
 
 
-		function display_post() {
-			buddyforms_ge_locate_template('buddyforms/groups/single-post.php');
+	function display_post($group_id = NULL) {
+		global $buddyforms, $form_slug;
+		$attached_post_id	= $this->attached_post_id;
+		$form_slug			= $this->attached_form_slug;
+		$group_permalink = bp_get_group_permalink( groups_get_current_group()) . bp_current_action();
+
+		ob_start(); ?>
+		<script>
+			jQuery(function(){
+				jQuery(".bf_show_aptg").click(function(){
+
+					jQuery(".bf_main_aptg").hide();
+					jQuery("#bf_aptg"+jQuery(this).attr("target")).show();
+
+					jQuery("li.current").removeClass("current");
+					jQuery(this).closest("li").addClass("current");
+
+					return false;
+				});
+
+			});
+		</script>
+
+		<div class="item-list-tabs no-ajax" id="subnav" role="navigation">
+			<ul>
+				<li id="view-post-details-groups-li" class="current"><a id="view-post-details" class="bf_show_aptg" target="1" href=" <?php $group_permalink ?>">View</a></li>
+
+				<?php if( $this->buddyforms_user_can ){ ?>
+					<li id="edit-post-details-groups-li"><a id="edit-post-details" class="bf_show_aptg" target="2" href="<?php get_edit_post_link($attached_post_id) ?>">Edit</a></li>
+				<?php } ?>
+			</ul>
+		</div>
+
+		<div id="bf_aptg1" class="bf_main_aptg"><?php buddyforms_ge_locate_template('buddyforms/groups/single-post.php') ?></div>
+
+		<?php if( $this->buddyforms_user_can ){ ?>
+			<div id="bf_aptg2" style="display: none;" class="bf_main_aptg">
+			<?php
+				$args = array(
+					'post_type' => $buddyforms['buddyforms'][$form_slug]['post_type'],
+					'post_id' => $attached_post_id,
+					'form_slug' => $form_slug,
+				);
+
+				echo buddyforms_create_edit_form($args);
+			?>
+			</div>
+		<?php } ?>
+		<?php
+		$tmp = ob_get_clean();
+		echo $tmp;
 		}
 
 		/**
@@ -111,38 +182,53 @@ if (class_exists('BP_Group_Extension')) :
 		 * @since 0.1-beta
 		 */
 		public function edit_screen($group_id = NULL) {
-			global $buddyforms, $form_slug;
-			
-			$form_slug			= $this->attached_form_slug;
-			$attached_post_id	= $this->attached_post_id;
 
+			$form_slug	= $this->attached_form_slug;
+			$settings	= groups_get_groupmeta( $group_id, 'buddyforms-aptg' );
 
-			$args = array(
-				'post_type' => $buddyforms['buddyforms'][$form_slug]['post_type'],
-				'post_id' => $attached_post_id,
-				'form_slug' => $form_slug,
-			);
+			$can_create = empty( $settings['can-create'] ) ? false : $settings['can-create'];
 
-            echo buddyforms_create_edit_form($args);
+			?>
+
+			<h2><?php echo $this->name; ?> <?php _e( 'options', 'buddyforms' ) ?></h2>
+
+			<div id="group-bf-aptg-options" <?php if ( $form_slug ) : ?>class="hidden"<?php endif ?>>
+
+				<table class="group-bf-aptg-options">
+					<tr>
+						<td class="label">
+							<label for="buddyforms-aptg-can-create"><?php _e( 'Minimum role to edit the attached post:', 'buddyforms' ) ?></label>
+						</td>
+
+						<td>
+							<select name="buddyforms-aptg[can-create]" id="buddyforms-aptg-can-create">
+								<option value="admin" <?php selected( $can_create, 'admin' ) ?> /><?php _e( 'Group admin', 'buddyforms' ) ?></option>
+								<option value="mod" <?php selected( $can_create, 'mod' ) ?> /><?php _e( 'Group moderator', 'buddyforms' ) ?></option>
+								<option value="member" <?php selected( $can_create, 'member' ) ?> /><?php _e( 'Group member', 'buddyforms' ) ?></option>
+							</select>
+						</td>
+					</tr>
+
+				</table>
+			</div>
+			<?php
 
 		}
 
 		function edit_screen_save($group_id = NULL){
+			$success = false;
 
-            global $buddyforms, $form_slug;
+			if ( !$group_id )
+				$group_id = $this->maybe_group_id;
 
-            $form_slug			= $this->attached_form_slug;
+			$settings = !empty( $_POST['buddyforms-aptg'] ) ? $_POST['buddyforms-aptg'] : array();
 
+			if(groups_update_groupmeta( $group_id, 'buddyforms-aptg', $settings ) )
+				$success = true;
 
-            $args = array(
-                'post_type' => $buddyforms['buddyforms'][$form_slug]['post_type'],
-                'form_slug' => $form_slug,
-            );
-
-            echo buddyforms_create_edit_form($args);
-
+			return $success;
         }
-		
+
 		/**
 		* Display or edit a Post
 		*
@@ -150,9 +236,8 @@ if (class_exists('BP_Group_Extension')) :
 		* @since 0.1-beta
 		*/
 		public function display($group_id = NULL) {
-			$group_id = bp_get_group_id();
-			buddyforms_ge_locate_template('buddyforms/groups/single-post.php');
 
+			$this->display_post($group_id);
 		}
 
 		/**
