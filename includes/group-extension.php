@@ -14,13 +14,12 @@ if (class_exists('BP_Group_Extension')) :
 		public function __construct() {
 			global $buddyforms, $post_id, $form_slug;
 
-			$this->attached_post_id		= groups_get_groupmeta( bp_get_current_group_id(), 'group_post_id');
-			$this->attached_post_type	= groups_get_groupmeta( bp_get_current_group_id(), 'group_type');
-			$this->attached_form_slug	= get_post_meta($this->attached_post_id, '_bf_form_slug', true);
+			$this->attached_post_id		= groups_get_groupmeta( bp_get_current_group_id(), 'group_post_id' );
+			$this->attached_post_type	= groups_get_groupmeta( bp_get_current_group_id(), 'group_type' );
+			$this->attached_form_slug	= get_post_meta( $this->attached_post_id, '_bf_form_slug', true );
 			$this->buddyforms_aptg		= groups_get_groupmeta( bp_get_current_group_id(), 'buddyforms-aptg' );
 			$this->buddyforms_user_can	= false;
 
-			xdebug_break();
 
 			if ( isset( $this->buddyforms_aptg['can-create'] ) ) {
 				switch ( $this->buddyforms_aptg['can-create'] ) {
@@ -29,7 +28,7 @@ if (class_exists('BP_Group_Extension')) :
 							$this->buddyforms_user_can = true;
 						break;
 					case 'mod' :
-						if ( groups_is_user_mod(bp_loggedin_user_id(), bp_get_current_group_id()) || groups_is_user_(bp_loggedin_user_id(), bp_get_current_group_id()) )
+						if ( groups_is_user_mod(bp_loggedin_user_id(), bp_get_current_group_id()) || groups_is_user_admin(bp_loggedin_user_id(), bp_get_current_group_id()) )
 							$this->buddyforms_user_can = true;
 						break;
 					case 'member' :
@@ -63,8 +62,7 @@ if (class_exists('BP_Group_Extension')) :
 
 				$this->enable_edit_item	= false;
 			}
-			
-	
+
 			if( isset($this->attached_form_slug) && isset($buddyforms['buddyforms'][$this->attached_form_slug]['groups']['display_post'])){
 
 				
@@ -120,7 +118,6 @@ if (class_exists('BP_Group_Extension')) :
                 bp_core_redirect( bp_get_group_permalink( groups_get_current_group() ) );
             }
         }
-
 
 	function display_post($group_id = NULL) {
 		global $buddyforms, $form_slug;
@@ -212,7 +209,6 @@ if (class_exists('BP_Group_Extension')) :
 				</table>
 			</div>
 			<?php
-
 		}
 
 		function edit_screen_save($group_id = NULL){

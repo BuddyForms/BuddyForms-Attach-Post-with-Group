@@ -1,9 +1,9 @@
 === BuddyForms Attach Post with Group ===
-Contributors: svenl77, themekraft, buddyforms
+Contributors: svenl77, buddyforms
 Tags: buddypress, user, members, profiles, custom post types, taxonomy, frontend posting, frontend editing, groups, post attached to groups
 Plugin URI: http://buddyforms.com/downloads/attach-post-with-group/
 Requires at least: 4.0
-Tested up to: 4.2.2
+Tested up to: 4.3
 Stable tag: 1.1.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -102,6 +102,14 @@ BuddyForms gives you these possibilities for a wide variety of uses.
 
 = 1.1.3 =
 add check DOING_AJAX
+change the url to buddyforms.com
+new language files for Spanish
+restructure the logic of the plugin.
+create a new nav bar for the post view and edit
+move the edit out of the admin section and use the admin section for options
+create a new option to select the group user role needed to edit the post
+rework the templates
+clean up the code
 
 = 1.1.2 =
 add a new function buddyforms_groups_group_settings_edited to sync the post status
