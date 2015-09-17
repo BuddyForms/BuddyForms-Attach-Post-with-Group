@@ -3,8 +3,8 @@ Contributors: svenl77, buddyforms
 Tags: buddypress, user, members, profiles, custom post types, taxonomy, frontend posting, frontend editing, groups, post attached to groups
 Plugin URI: http://buddyforms.com/downloads/attach-post-with-group/
 Requires at least: 4.0
-Tested up to: 4.3
-Stable tag: 1.1.3
+Tested up to: 4.3.1
+Stable tag: 1.1.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -12,7 +12,7 @@ Create engaged communities with every post.
 
 == Description ==
 
-This is the BuddyForms Attach Posts to Groups extension. You need the BuddyForms plugin installed for the plugin to work. <a href="http://buddyforms.com" target="_blank">Get BuddyForms now!</a>
+This is the BuddyForms Attach Post with Group extension. You need the BuddyForms plugin installed for the plugin to work. <a href="http://buddyforms.com" target="_blank">Get BuddyForms now!</a>
 
 With this plugin, you’ll automatically be able to create a new BuddyPress group for pre-assigned BuddyForms post submissions and attach that group to the post. Then User-submitted posts with BuddyForms become a BuddyPress group with all the included functionality and endless possibilities.
 
@@ -99,6 +99,12 @@ BuddyForms gives you these possibilities for a wide variety of uses.
 
 
 == Changelog ==
+
+= 1.1.4 =
+Enable avatar management and group delete.
+Thanks to imath for the super great patch https://buddypress.trac.wordpress.org/attachment/ticket/5202/5202.02.patch
+We use his function with our bf_ prefix to create group avatars from featured image until it gets in core ;)
+Increase the theme_redirect priority to 999. For some strange reason from the last WordPress update people report issues and this fix them all.
 
 = 1.1.3 =
 add check DOING_AJAX
