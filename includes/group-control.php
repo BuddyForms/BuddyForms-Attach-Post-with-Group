@@ -26,7 +26,7 @@ class BuddyForms_GroupControl {
 	 */
 	public function create_a_group($post_ID) {
 		global $buddyforms;
-		
+
 		$post = get_post($post_ID);
 
         // First create/update the group if the post gets published.
@@ -93,6 +93,26 @@ class BuddyForms_GroupControl {
         $the_group = apply_filters( 'bf_attached_group_save', $the_group );
 
         $the_group->save();
+
+
+		// Create Group Avatar from featured image
+		$image_id = get_post_thumbnail_id($post->ID);
+		$image_url = wp_get_attachment_image_src($image_id);
+
+		if($image_id){
+			$args = array(
+				'item_id'   => $the_group->id,
+				'object'    => 'group',
+				'component' => 'groups',
+				'image'     => esc_url( $image_url[0] ),
+				'crop_w'    => bp_core_avatar_full_width(),
+				'crop_h'    => bp_core_avatar_full_height(),
+				'crop_x'    => 0,
+				'crop_y'    => 0
+			);
+			bf_bp_avatar_create_item_avatar($args);
+		}
+
 
         update_post_meta($post->ID, '_post_group_id', $the_group->id);
         update_post_meta($post->ID, '_link_to_group', $the_group->slug);
@@ -190,4 +210,89 @@ class BuddyForms_GroupControl {
 
 }
 add_action('buddyforms_init', new BuddyForms_GroupControl() );
+
+/**
++ * Use the absolute path to an image to set an object's avatar
++ *
++ * @since BuddyPress (?)
++ *
++ * @param  array  $args {
++ *     @type int    $item_id   The ID of the object
++ *     @type string $object    The object type (eg: group, user, blog)
++ *     @type string $component The component for the object (eg: groups, xprofile, blogs)
++ *     @type string $image     The absolute path to the image
++ *     @type int    $crop_w    Crop width. Default: the global 'full' avatar width,
++ *                             as retrieved by bp_core_avatar_full_width().
++ *     @type int    $crop_h    Crop height. Default: the global 'full' avatar height,
++ *                             as retrieved by bp_core_avatar_full_height().
++ *     @type int    $crop_x    The horizontal starting point of the crop. Default: 0.
++ *     @type int    $crop_y    The vertical starting point of the crop. Default: 0.
++ * }
++ * @return bool  true on success, false otherwise
++ */
+
+function bf_bp_avatar_create_item_avatar( $args = array() ) {
+
+	$r = bp_parse_args( $args, array(
+				'item_id'   => 0,
+				'object'    => 'user',
+				'component' => 'xprofile',
+				'image'     => '',
+				'crop_w'    => bp_core_avatar_full_width(),
+				'crop_h'    => bp_core_avatar_full_height(),
+				'crop_x'    => 0,
+				'crop_y'    => 0
+			), 'create_item_avatar' );
+
+	if ( empty( $r['item_id'] ) || ! @getimagesize( $r['image'] ) ) {
+					return false;
+	}
+
+	if ( is_callable( $r['component'] . '_avatar_upload_dir' ) ) {
+					$dir_args = array( $r['item_id'] );
+
+					// In case  of xprofile, we need an extra argument
+					if ( 'xprofile' === $r['component'] ) {
+								$dir_args = array( false, $r['item_id'] );
+						}
+
+			$avatar_data = call_user_func_array( $r['component'] . '_avatar_upload_dir', $dir_args );
+	}
+
+	if ( ! isset( $avatar_data['path'] ) || ! isset( $avatar_data['subdir'] ) ) {
+					return false;
+	}
+
+	// It's not a regular upload, we may need to create this folder
+	if( ! is_dir( $avatar_data['path'] ) ) {
+					if ( ! wp_mkdir_p( $avatar_data['path'] ) ) {
+								return false;
+			}
+	}
+
+	$image_file_name = wp_unique_filename( $avatar_data['path'], basename( $r['image'] ) );
+
+	// Copy the image file into the avatar dir
+	copy( $r['image'], $avatar_data['path'] . '/' . $image_file_name );
+
+	// Check the original file is copied
+	if ( ! file_exists( $avatar_data['path'] . '/' . $image_file_name ) ) {
+					return false;
+	}
+
+	if ( ! bp_core_avatar_handle_crop( array(
+					'object'        => $r['object'],
+					'avatar_dir'    => trim( dirname( $avatar_data['subdir'] ), '/' ),
+					'item_id'       => (int) $r['item_id'],
+					'original_file' => trailingslashit( $avatar_data['subdir'] ) . $image_file_name,
+					'crop_w'        => $r['crop_w'],
+					'crop_h'        => $r['crop_h'],
+					'crop_x'        => $r['crop_x'],
+					'crop_y'        => $r['crop_y']
+				) ) ) {
+					return false;
+	} else {
+					return true;
+	}
+}
 ?>

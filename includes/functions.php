@@ -6,7 +6,7 @@
  * @package buddyforms
  * @since 1.0
  */
-add_filter( 'bp_get_group_avatar','bf_display_featured_image_as_group_avatar',1,1 );
+//add_filter( 'bp_get_group_avatar','bf_display_featured_image_as_group_avatar',1,1 );
 function bf_display_featured_image_as_group_avatar($avatar){
     global $groups_template;
 

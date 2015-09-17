@@ -39,7 +39,7 @@ if (class_exists('BP_Group_Extension')) :
 				}
 			}
 
-			add_action( 'bp_actions', array($this, 'buddyforms_remove_group_admin_tab'), 9 );
+			//add_action( 'bp_actions', array($this, 'buddyforms_remove_group_admin_tab'), 9 );
 
 			if($this->buddyforms_user_can)
 				add_filter( 'buddyforms_user_can_edit', array($this, 'buddyforms_user_can_edit'), 10 );

@@ -18,7 +18,7 @@ class BuddyForms_Group_Extension {
 		add_action('init'				, array($this, 'load_plugin_textdomain'), 10, 1);
 		add_action('init'				, array($this, 'register_taxonomy'), 10, 2);
 		add_action('bp_init'			, array($this, 'setup_group_extension'), 10, 1);
-		add_action('template_redirect'	, array($this, 'theme_redirect'), 1, 2);
+		add_action('template_redirect'	, array($this, 'theme_redirect'), 999, 2);
 
 		add_filter('post_type_link'		, array($this, 'remove_slug'), 1, 3);
 
@@ -228,6 +228,7 @@ class BuddyForms_Group_Extension {
 	 * @since 0.1-beta
 	 */
 	public function theme_redirect() {
+
 		global $wp_query, $post, $buddyforms;
 
 		if (!isset($buddyforms['buddyforms']))
