@@ -49,7 +49,7 @@ function bf_ge_updtae_post_meta($customfield, $post_id){
 			  
 	if( $customfield['type'] == 'AttachGroupType' ){
 
-        $Attach_group_post_type = $buddyforms['buddyforms'][$customfield['AttachGroupType']]['post_type'];
+        $Attach_group_post_type = $buddyforms[$customfield['AttachGroupType']]['post_type'];
 
 		$taxonomy = get_taxonomy($form_slug . '_attached_' . $Attach_group_post_type);
 		if (isset($taxonomy->hierarchical) && $taxonomy->hierarchical == true)  {
@@ -166,194 +166,6 @@ function buddyforms_groups_load_template_filter($found_template, $templates) {
 	return apply_filters('buddyforms_groups_load_template_filter', $found_template, $templates);
 }
 
-function buddyforms_form_element_add_field_ge($form_fields, $form_slug, $field_type, $field_id){
-	global $buddyforms;
-
-	if($field_type != 'AttachGroupType')
-		return $form_fields;	
- 
-	$AttachGroupType	= Array();
-	
-	$value = '';
-	if(isset($buddyforms['buddyforms'][$form_slug]['form_fields'][$field_id]['AttachGroupType']))
-		$value	= $buddyforms['buddyforms'][$form_slug]['form_fields'][$field_id]['AttachGroupType'];
-
-	foreach ($buddyforms['buddyforms'] as $key => $buddyform) {
-
-        if($form_slug == $buddyform['slug'])
-            continue;
-
-        $AttachGroupType['none'] = 'none';
-		if(isset($buddyform['groups']['attache']))
-            $AttachGroupType[$buddyform['slug']] = $buddyform['name'];
-
-	}
-	
-	$form_fields['left']['AttachGroupType'] 	= new Element_Select('<b>' . __("Attach Group Type:", 'buddyforms'). '</b>', "buddyforms_options[buddyforms][".$form_slug."][form_fields][".$field_id."][AttachGroupType]", $AttachGroupType, array('value' => $value));
-	
-	$multiple = 'false';
-	if(isset($buddyforms_options['buddyforms'][$form_slug]['form_fields'][$field_id]['multiple']))
-		$multiple = $buddyforms_options['buddyforms'][$form_slug]['form_fields'][$field_id]['multiple'];
-
-		$form_fields['left']['multiple'] = new Element_Checkbox('',"buddyforms_options[buddyforms][".$form_slug."][form_fields][".$field_id."][multiple]",array('multiple' => '<b>' . __("Multiple:", 'buddyforms') . '</b>' ),array('value' => $multiple));
-				
-	return $form_fields;	
-}
-add_filter('buddyforms_form_element_add_field','buddyforms_form_element_add_field_ge',1,5);
-
-
-function buddyforms_attach_groups_create_edit_form_display_element_group($form, $form_args){
-    global $buddyforms;
-
-    if ( !is_admin() || defined( 'DOING_AJAX' ) )
-        return;
-
-    extract($form_args);
-
-    if($form_slug == $customfield['AttachGroupType'] || $customfield['AttachGroupType'] == 'none')
-        return;
-
-
-	if($customfield['type']  == 'AttachGroupType'){
-
-        $Attach_group_post_type = $buddyforms['buddyforms'][$customfield['AttachGroupType']]['post_type'];
-
-		$attached_tax_name = $form_slug . '_attached_' . $Attach_group_post_type;
-		$term_list = wp_get_post_terms($post_id, $attached_tax_name, array("fields" => "ids"));
-
-		$multiple = '';
-		if(isset($customfield['multiple']))
-			$multiple = $customfield['multiple'];
-		
-		$args = array(
-			'multiple' => $multiple,
-			'selected_cats' => $term_list,
-			'hide_empty' => 0,
-			//'id' => $key,
-			'child_of' => 0,
-			'echo' => FALSE,
-			'selected' => false,
-			'hierarchical' => 1,
-			'name' => sanitize_title($customfield['name']) . '[]',
-			'class' => 'postform bf-select2',
-			'depth' => 0,
-			'tab_index' => 0,
-			'taxonomy' => $attached_tax_name,
-			'hide_if_empty' => FALSE,
-            'show_option_none' => 'Nothing Selected'
-		);
-
-		$dropdown = wp_dropdown_categories($args);
-
-		 if (isset($multiple) && is_array($multiple)) {
-			 $dropdown = str_replace('id=', 'multiple="multiple" id=', $dropdown);
-		 }
-		if (is_array($term_list)) {
-			foreach ($term_list as $value) {
-				$dropdown = str_replace(' value="' . $value . '"', ' value="' . $value . '" selected="selected"', $dropdown);
-			}
-		}
-		$element = new Element_HTML('<label>'.$customfield['name'] . ':</label><p><i>' . $customfield['description'] . '</i></p>');
-		bf_add_element($form, $element);
-					
-		$element = new Element_HTML($dropdown);
-		bf_add_element($form, $element);
-
-		}
-	return $form;
-	
-}
-add_filter('buddyforms_create_edit_form_display_element','buddyforms_attach_groups_create_edit_form_display_element_group',1,2);
-
-function buddyforms_add_form_element_to_sidebar($form, $form_slug){
-	
-	if(bp_is_active('groups')){		
-		$form->addElement(new Element_HTML('<p><a href="AttachGroupType/'.$form_slug.'/unique" class="action">AttachGroupType</a></p>'));
-	}
-	return $form;
-}
-add_filter('buddyforms_add_form_element_to_sidebar','buddyforms_add_form_element_to_sidebar',1,2);
-
-
-function buddyforms_admin_settings_sidebar_metabox($form, $selected_form_slug){
-
-	$buddyforms_options = get_option('buddyforms_options');
-
-    if(bp_is_active('groups')){
-		$form->addElement(new Element_HTML('
-		<div class="accordion-group postbox">
-			<div class="accordion-heading"><p class="accordion-toggle" data-toggle="collapse" data-parent="#accordion_'.$selected_form_slug.'" href="#accordion_'.$selected_form_slug.'_group_options">'.__('Groups Control', 'buddyforms').'</p></div>
-		    <div id="accordion_'.$selected_form_slug.'_group_options" class="accordion-body collapse">
-				<div class="accordion-inner">')); 
-					$form->addElement(new Element_HTML('<p>
-					'.__('Attach this form to groups. If a new post is created, a new group will be attached to the post.)', 'buddyforms').'<br><br>
-					<b>'.__('Important: ', 'buddyforms').'</b>
-					'.__('Post status will effect group privacy options:', 'buddyforms').'<br>
-				    '.__('draft = hidden', 'buddyforms').'<br>
-				    '.__('publish = public', 'buddyforms').'<br>
-					</p>'));
-
-                    $attache = '';
-                    if(isset($buddyforms_options['buddyforms'][$selected_form_slug]['groups']['attache']))
-                        $attache = $buddyforms_options['buddyforms'][$selected_form_slug]['groups']['attache'];
-
-                    $form->addElement(new Element_Checkbox("<b>".__('Attach with Group', 'buddyforms')."</b>", "buddyforms_options[buddyforms][".$selected_form_slug."][groups][attache]", array("create_group" => __('Create a group for each post of this form.', 'buddyforms')), array('value' => $attache)));
-
-                    $form->addElement(new Element_HTML('<br>'));
-
-                    $minimum_user_role = '';
-                    if(isset($buddyforms_options['buddyforms'][$selected_form_slug]['groups']['minimum_user_role']))
-                        $minimum_user_role = $buddyforms_options['buddyforms'][$selected_form_slug]['groups']['minimum_user_role'];
-
-                    $form->addElement(new Element_Select("<b>".__('Minimum User Role', 'buddyforms')."</b><br><p>".__("Select the minimum group role a user needs to edit the post", 'buddyforms')."</p>", "buddyforms_options[buddyforms][".$selected_form_slug."][groups][minimum_user_role]", array(
-                            'admin'  => 'Group Admin',
-                            'mod'    => 'Group Moderator',
-                            'member' => 'Group member')
-                        ,array('value' => $minimum_user_role)));
-
-                    $form->addElement(new Element_HTML('<br><br>'));
-
-                    $redirect = '';
-                    if(isset($buddyforms_options['buddyforms'][$selected_form_slug]['groups']['redirect']))
-                        $redirect = $buddyforms_options['buddyforms'][$selected_form_slug]['groups']['redirect'];
-
-                    $form->addElement(new Element_Checkbox("<b>".__('Redirect to Group', 'buddyforms')."</b>", "buddyforms_options[buddyforms][".$selected_form_slug."][groups][redirect]", array("redirect_group" => __('Redirect the post to the group.', 'buddyforms')), array('value' => $redirect)));
-
-                    $form->addElement(new Element_HTML('<br>'));
-
-
-					$display_post = '';
-					if(isset($buddyforms_options['buddyforms'][$selected_form_slug]['groups']['display_post']))
-						$display_post = $buddyforms_options['buddyforms'][$selected_form_slug]['groups']['display_post'];
-
-					$form->addElement(new Element_Select("<b>".__('Display Post', 'buddyforms')."</b><br><br><p>".__("If you want to add the post to the home tab, you need to copy the single-post.php from <br> 'includes/templates/buddyforms/groups/single-post.php' to your theme and rename it to front.php 'groups/single/front.php'.", 'buddyforms')."</p>
-                                                           <p> ".__("If you want to change the new tab template, copy single-post.php to your theme 'buddyforms/groups/single-post.php'", 'buddyforms')."</p>", "buddyforms_options[buddyforms][".$selected_form_slug."][groups][display_post]", array(
-					'nothing',
-					'create a new tab',
-                    'before group activity')
-					,array('value' => $display_post)));
-
-                    $form->addElement(new Element_HTML('<br><br>'));
-
-                    $display_content = '';
-                    if(isset($buddyforms_options['buddyforms'][$selected_form_slug]['groups']['display_content']))
-                        $display_content = $buddyforms_options['buddyforms'][$selected_form_slug]['groups']['display_content'];
-
-                    $form->addElement(new Element_Checkbox("<b>".__('View', 'buddyforms')."</b>", "buddyforms_options[buddyforms][".$selected_form_slug."][groups][display_content]", array("title" => __('Display the Title', 'buddyforms'), "content" => __('Display the Content', 'buddyforms'), 'meta' => __('Display Post Meta', 'buddyforms') ), array('value' => $display_content)));
-
-                    $form->addElement(new Element_HTML('<br>'));
-
-
-
-        $form->addElement(new Element_HTML('
-				</div>
-			</div>
-		</div>'));	
-	}				  
-	return $form;
-}	
-add_filter('buddyforms_admin_settings_sidebar_metabox','buddyforms_admin_settings_sidebar_metabox',1,2);
-
 /**
  * Locate a template
  *
@@ -419,7 +231,6 @@ function buddyforms_link_to_post(){
 }
 
 add_filter('bf_form_before_render', 'attached_group_bf_form_before_render', 10, 2);
-
 function attached_group_bf_form_before_render($form, $args){
 
     extract($args);
@@ -441,6 +252,7 @@ function attached_group_bf_form_before_render($form, $args){
     return $form;
 }
 
+
 add_action('buddyforms_groups_single_title', 'buddyforms_groups_single_title', 10, 2);
 function buddyforms_groups_single_title($title, $args){
     global $buddyforms;
@@ -450,7 +262,7 @@ function buddyforms_groups_single_title($title, $args){
 
     extract($args);
 
-    if(!(isset($buddyforms['buddyforms'][$form_slug]['groups']['display_content']) && in_array('title', $buddyforms['buddyforms'][$form_slug]['groups']['display_content'])))
+    if(!(isset($buddyforms[$form_slug]['groups']['display_content']) && in_array('title', $buddyforms[$form_slug]['groups']['display_content'])))
         return;
     ?>
 
@@ -472,7 +284,7 @@ function buddyforms_groups_single_content($content, $args){
 
     extract($args);
 
-    if(!(isset($buddyforms['buddyforms'][$form_slug]['groups']['display_content']) && in_array('content', $buddyforms['buddyforms'][$form_slug]['groups']['display_content'])))
+    if(!(isset($buddyforms[$form_slug]['groups']['display_content']) && in_array('content', $buddyforms[$form_slug]['groups']['display_content'])))
         return;
     ?>
 
@@ -499,7 +311,7 @@ function buddyforms_groups_single_post_meta($form_fields, $args){
     if(bp_current_action() != $form_slug );
         return;
 
-    if(!(isset($buddyforms['buddyforms'][$form_slug]['groups']['display_content']) && in_array('meta', $buddyforms['buddyforms'][$form_slug]['groups']['display_content'])))
+    if(!(isset($buddyforms[$form_slug]['groups']['display_content']) && in_array('meta', $buddyforms[$form_slug]['groups']['display_content'])))
         return;
 
     ?>

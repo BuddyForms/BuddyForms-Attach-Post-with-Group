@@ -47,10 +47,10 @@ class BuddyForms_Attached_Group_Widget extends WP_Widget
         if(empty($form_slug))
             return;
 
-        foreach($buddyforms['buddyforms'][$form_slug]['form_fields'] as $key => $form_field){
+        foreach($buddyforms[$form_slug]['form_fields'] as $key => $form_field){
 
             if($form_field['type'] == 'AttachGroupType')
-                $Attach_group_post_type = $buddyforms['buddyforms'][$form_field['AttachGroupType']]['post_type'];
+                $Attach_group_post_type = $buddyforms[$form_field['AttachGroupType']]['post_type'];
 
         }
 

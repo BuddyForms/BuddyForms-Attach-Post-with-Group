@@ -47,7 +47,7 @@ if (class_exists('BP_Group_Extension')) :
             if($this->attached_form_slug)
                 add_filter('buddyforms_front_js_css_loader', array($this, 'buddyforms_front_js_loader_bp_groups_support'));
 
-			if(isset($buddyforms['buddyforms'][$this->attached_form_slug]['revision'])){
+			if(isset($buddyforms[$this->attached_form_slug]['revision'])){
 					
 				$form_slug	= $this->attached_form_slug;
 				$post_id	= $this->attached_post_id;
@@ -58,15 +58,15 @@ if (class_exists('BP_Group_Extension')) :
 			
 			add_action('buddyforms_hook_fields_from_post_id', create_function('', 'return "' . $this->attached_post_id . '";'));
 
-			if ( !isset( $buddyforms['buddyforms'][$this->attached_form_slug]['form_fields'] ) ){
+			if ( !isset( $buddyforms[$this->attached_form_slug]['form_fields'] ) ){
 
 				$this->enable_edit_item	= false;
 			}
 
-			if( isset($this->attached_form_slug) && isset($buddyforms['buddyforms'][$this->attached_form_slug]['groups']['display_post'])){
+			if( isset($this->attached_form_slug) && isset($buddyforms[$this->attached_form_slug]['groups']['display_post'])){
 
 				
-				switch ($buddyforms['buddyforms'][$this->attached_form_slug]['groups']['display_post']) :
+				switch ($buddyforms[$this->attached_form_slug]['groups']['display_post']) :
 	
 					case 'before group activity' :
 						add_action('bp_before_group_activity_post_form', array($this, 'display_post'), 1);
@@ -77,9 +77,9 @@ if (class_exists('BP_Group_Extension')) :
 						
 				endswitch;
 	
-				$this->name					= $buddyforms['buddyforms'][$this->attached_form_slug]['singular_name'];
+				$this->name					= $buddyforms[$this->attached_form_slug]['singular_name'];
 				$this->nav_item_position	= 20;
-				$this->slug					= $buddyforms['buddyforms'][$this->attached_form_slug]['slug'];
+				$this->slug					= $buddyforms[$this->attached_form_slug]['slug'];
 				
 			}
 
@@ -158,7 +158,7 @@ if (class_exists('BP_Group_Extension')) :
 			<div id="bf_aptg2" style="display: none;" class="bf_main_aptg">
 			<?php
 				$args = array(
-					'post_type' => $buddyforms['buddyforms'][$form_slug]['post_type'],
+					'post_type' => $buddyforms[$form_slug]['post_type'],
 					'post_id' => $attached_post_id,
 					'form_slug' => $form_slug,
 				);

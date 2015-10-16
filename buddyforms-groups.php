@@ -71,9 +71,11 @@ class BuddyForms_Group_Extension {
 	public function includes() {
 
         require_once (BUDDYFORMS_GE_INCLUDES_PATH	. 'group-control.php');
-        require_once (BUDDYFORMS_GE_INCLUDES_PATH	. 'functions.php');
+		require_once (BUDDYFORMS_GE_INCLUDES_PATH	. 'functions.php');
+		require_once (BUDDYFORMS_GE_INCLUDES_PATH	. 'form-elements.php');
 
-    }
+
+	}
 
 	/**
 	 * Loads the textdomain for the plugin
@@ -115,11 +117,11 @@ class BuddyForms_Group_Extension {
         if ( defined( 'DOING_AJAX' ) )
             return;
 
-        if (!isset($buddyforms['buddyforms']))
+        if (!isset($buddyforms))
             return;
 
 
-        foreach ($buddyforms['buddyforms'] as $key => $buddyform) :
+        foreach ($buddyforms as $key => $buddyform) :
 
             if (!isset($buddyform['post_type']) || $buddyform['post_type'] == 'none'){
                 continue;
@@ -138,7 +140,7 @@ class BuddyForms_Group_Extension {
 							'singular_name'	=> sprintf(__('%s Category'), $form_field['name'])
 						);
 
-                        $Attach_group_post_type = $buddyforms['buddyforms'][$form_field['AttachGroupType']]['post_type'];
+                        $Attach_group_post_type = $buddyforms[$form_field['AttachGroupType']]['post_type'];
 
 						register_taxonomy( $form_slug . '_attached_' . $Attach_group_post_type, $buddyform['post_type'], array(
 							'hierarchical' => true, 
@@ -170,14 +172,13 @@ class BuddyForms_Group_Extension {
                                     'posts_per_page' => 1
                                 );
 
-                                if(!get_posts($args))
-                                    wp_delete_term( $value, $form_slug . '_attached_' . $Attach_group_post_type );
+//                                if(!get_posts($args))
+//                                    wp_delete_term( $value, $form_slug . '_attached_' . $Attach_group_post_type );
                             }
                         }
 
 
 						while ($attached_posts->have_posts()) : $attached_posts->the_post();
-
 							wp_set_object_terms(get_the_ID(), get_the_title(), $form_slug . '_attached_' . $Attach_group_post_type);
 						endwhile;
 
@@ -197,7 +198,7 @@ class BuddyForms_Group_Extension {
 	public function remove_slug($permalink, $post, $leavename) {
 		global $buddyforms, $bp;
 
-		if (!isset($buddyforms['buddyforms']))
+		if (!isset($buddyforms))
 			return $permalink;
 
 		if(!bp_is_active('groups'))
@@ -206,7 +207,7 @@ class BuddyForms_Group_Extension {
 		$post_group_id	= get_post_meta($post->ID, '_post_group_id', true);
 		$bf_form_slug	= get_post_meta($post->ID, '_bf_form_slug', true);
 
-        if ( !isset($buddyforms['buddyforms'][$bf_form_slug]['groups']['redirect']))
+        if ( !isset($buddyforms[$bf_form_slug]['groups']['redirect']))
             return $permalink;
 
 		$group_post_id	= groups_get_groupmeta($post_group_id, 'group_post_id');
@@ -214,7 +215,7 @@ class BuddyForms_Group_Extension {
 		if ($post->ID != $group_post_id)
 			return $permalink;
 
-		if (isset($buddyforms['buddyforms'][$bf_form_slug]['groups']['attache'])){
+		if (isset($buddyforms[$bf_form_slug]['groups']['attache'])){
             $permalink = get_bloginfo('url') . '/' . $bp->groups->root_slug . '/' . basename($permalink);
 		}
 
@@ -231,7 +232,7 @@ class BuddyForms_Group_Extension {
 
 		global $wp_query, $post, $buddyforms;
 
-		if (!isset($buddyforms['buddyforms']))
+		if (!isset($buddyforms))
 			return;
 
 		if(!bp_is_active('groups'))
@@ -245,10 +246,10 @@ class BuddyForms_Group_Extension {
 
 		$bf_form_slug = get_post_meta(get_the_ID(), '_bf_form_slug', true);
 
-		if (!isset($buddyforms['buddyforms'][$bf_form_slug]['groups']['attache']))
+		if (!isset($buddyforms[$bf_form_slug]['groups']['attache']))
 			 return;
 
-        if ( !isset($buddyforms['buddyforms'][$bf_form_slug]['groups']['redirect']))
+        if ( !isset($buddyforms[$bf_form_slug]['groups']['redirect']))
             return;
 
 		$post_group_id = get_post_meta(get_the_ID(), '_post_group_id', true);
@@ -262,23 +263,5 @@ class BuddyForms_Group_Extension {
             wp_redirect($link, '301');
             exit ;
         }
-
 	}
-
-	/**
-	 * Perform the redirect
-	 *
-	 * @package buddyforms
-	 * @since 0.1-beta
-	 */
-	public static function do_theme_redirect($url) {
-		global $wp_query;
-		if (have_posts()) {
-			include ($url);
-			die();
-		} else {
-			$wp_query->is_404 = true;
-		}
-	}
-
 }

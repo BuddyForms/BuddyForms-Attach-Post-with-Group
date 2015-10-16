@@ -37,13 +37,15 @@ define('BuddyForms_Attach_Post_with_Group', '1.1.4');
  * @package BuddyForms Attach Posts to Groups Extension
  * @since 0.1-beta
  */
-add_action('bp_loaded', 'bf_aptg_bp_loaded');
-function bf_aptg_bp_loaded() {
+//add_action('bp_loaded', 'bf_aptg_bp_loaded');
+//function bf_aptg_bp_loaded() {
+    global $buddyforms_group_extension;
 
     require_once (dirname(__FILE__) . '/buddyforms-groups.php');
-	new BuddyForms_Group_Extension();
+    $buddyforms_group_extension = new BuddyForms_Group_Extension();
 
-}
+
+//}
 
 function bf_aptg_register_widgets() {
 

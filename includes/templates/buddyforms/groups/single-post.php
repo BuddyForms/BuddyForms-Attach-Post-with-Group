@@ -20,6 +20,6 @@ $attached_post = new WP_Query( array('post_type' => $group_type, 'p' => $groups_
 
     <?php do_action('buddyforms_groups_single_title'        , get_the_title()   , $args) ?>
     <?php do_action('buddyforms_groups_single_content'      , get_the_content() , $args) ?>
-    <?php do_action('buddyforms_groups_single_post_meta'    , $buddyforms['buddyforms'][$form_slug]['form_fields'], $args) ?>
+    <?php do_action('buddyforms_groups_single_post_meta'    , $buddyforms[$form_slug]['form_fields'], $args) ?>
 
 <?php endwhile; ?>

@@ -59,13 +59,13 @@ class BuddyForms_All_Posts_of_this_Group_Widget extends WP_Widget
         $widget_class = ! empty( $instance['widget_class'] ) ? $instance['widget_class'] : '';
 
 
-        if(!isset($buddyforms['buddyforms'][$form_select]['form_fields']))
+        if(!isset($buddyforms[$form_select]['form_fields']))
             return;
 
-        foreach($buddyforms['buddyforms'][$form_select]['form_fields'] as $key => $form_field){
+        foreach($buddyforms[$form_select]['form_fields'] as $key => $form_field){
 
             if($form_field['type'] == 'AttachGroupType')
-                $Attach_group_post_type = $buddyforms['buddyforms'][$form_field['AttachGroupType']]['post_type'];
+                $Attach_group_post_type = $buddyforms[$form_field['AttachGroupType']]['post_type'];
 
         }
 
@@ -84,7 +84,7 @@ class BuddyForms_All_Posts_of_this_Group_Widget extends WP_Widget
         if (isset($term[0]->name)){
 
             $args = array(
-                'post_type'				                            => $buddyforms['buddyforms'][$form_select]['post_type'],
+                'post_type'				                            => $buddyforms[$form_select]['post_type'],
                 $form_select.'_attached_'.$Attach_group_post_type   => $term[0]->slug,
                 'order'    				                            => 'ASC',
             );
@@ -172,7 +172,7 @@ class BuddyForms_All_Posts_of_this_Group_Widget extends WP_Widget
 
 
         $form_select_options = Array();
-        foreach($buddyforms['buddyforms'] as $key => $buddyform){
+        foreach($buddyforms as $key => $buddyform){
 
             if(isset($buddyform['form_fields'])){
                 foreach($buddyform['form_fields'] as $field_key => $form_field){

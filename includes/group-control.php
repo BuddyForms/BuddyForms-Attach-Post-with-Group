@@ -42,16 +42,16 @@ class BuddyForms_GroupControl {
 		if (!isset($form_slug))
 			return;
 		
-		if (!isset($buddyforms['buddyforms']))
+		if (!isset($buddyforms))
 			return;
 
-		if (!isset($buddyforms['buddyforms'][$form_slug]['groups']['attache'][0]))
+		if (!isset($buddyforms[$form_slug]['groups']['attache'][0]))
 			return;
 
 		if (!class_exists('BP_Groups_Group'))
 			return;
 
-		if ($post->post_type != $buddyforms['buddyforms'][$form_slug]['post_type']) 
+		if ($post->post_type != $buddyforms[$form_slug]['post_type'])
 			return;
 			
         $post_group_id = get_post_meta($post->ID, '_post_group_id', true);
@@ -96,15 +96,18 @@ class BuddyForms_GroupControl {
 
 
 		// Create Group Avatar from featured image
-		$image_id = get_post_thumbnail_id($post->ID);
-		$image_url = wp_get_attachment_image_src($image_id);
+		$image_id	= get_post_thumbnail_id($post->ID);
+		//$image_url	= wp_get_attachment_thumb_file($image_id);
+		$fullsize_path = get_attached_file( $image_id ); // Full path
+//		$domain 	= get_site_url(); // returns domain like http://www.my-site-domain.com
+//		$relative_image_url = str_replace( $domain, '/', $image_url[0] );
 
 		if($image_id){
 			$args = array(
 				'item_id'   => $the_group->id,
 				'object'    => 'group',
 				'component' => 'groups',
-				'image'     => esc_url( $image_url[0] ),
+				'image'     => $fullsize_path,
 				'crop_w'    => bp_core_avatar_full_width(),
 				'crop_h'    => bp_core_avatar_full_height(),
 				'crop_x'    => 0,
@@ -125,8 +128,8 @@ class BuddyForms_GroupControl {
         groups_update_groupmeta($the_group->id, 'group_type', $post->post_type);
 
 		$minimum_user_role = 'admin';
-		if(isset($buddyforms['buddyforms'][$form_slug]['groups']['minimum_user_role']))
-			$minimum_user_role = $buddyforms['buddyforms'][$form_slug]['groups']['minimum_user_role'];
+		if(isset($buddyforms[$form_slug]['groups']['minimum_user_role']))
+			$minimum_user_role = $buddyforms[$form_slug]['groups']['minimum_user_role'];
 
 		$settings = apply_filters( 'buddyforms_aptg_default_group_settings', array(
 			'can-create' 	=> $minimum_user_role
@@ -244,8 +247,8 @@ function bf_bp_avatar_create_item_avatar( $args = array() ) {
 				'crop_y'    => 0
 			), 'create_item_avatar' );
 
-	if ( empty( $r['item_id'] ) || ! @getimagesize( $r['image'] ) ) {
-					return false;
+	if ( empty( $r['item_id'] ) || ! file_exists( $r['image'] ) || ! @getimagesize( $r['image'] ) ) {
+		return false;
 	}
 
 	if ( is_callable( $r['component'] . '_avatar_upload_dir' ) ) {
