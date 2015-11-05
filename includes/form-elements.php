@@ -6,8 +6,11 @@ function buddyforms_add_form_element_to_sidebar($sidebar_elements){
     if($post->post_type != 'buddyforms')
         return;
 
+    if(!defined('BP_VERSION'))
+        return;
+
     if(bp_is_active('groups')){
-        $sidebar_elements[] = new Element_HTML('<p><a href="#" data-fieldtype="AttachGroupType" data-unique="unique" class="bf_add_element_action">AttachGroupType</a></p>');
+        $sidebar_elements[] = new Element_HTML('<p><a href="#" data-fieldtype="attachgrouptype" data-unique="unique" class="bf_add_element_action">Attach Group Type</a></p>');
     }
     return $sidebar_elements;
 }
@@ -105,27 +108,27 @@ function buddyforms_form_element_add_field_ge($form_fields, $form_slug, $field_t
 
     $buddyform = get_post_meta(get_the_ID(), '_buddyforms_options', true);
 
-    if($field_type != 'AttachGroupType')
+    if($field_type != 'attachgrouptype')
         return $form_fields;
 
-    $AttachGroupType	= Array();
+    $attachgrouptype	= Array();
 
     $value = '';
-    if(isset($buddyform['form_fields'][$field_id]['AttachGroupType']))
-        $value	= $buddyform['form_fields'][$field_id]['AttachGroupType'];
+    if(isset($buddyform['form_fields'][$field_id]['attachgrouptype']))
+        $value	= $buddyform['form_fields'][$field_id]['attachgrouptype'];
 
     foreach ($buddyforms as $key => $bform) {
 
         if(isset($bform['slug']) && $form_slug == $bform['slug'])
             continue;
 
-        $AttachGroupType['none'] = 'none';
+        $attachgrouptype['none'] = 'none';
         if(isset($bform['groups']['attache']))
-            $AttachGroupType[$bform['slug']] = $bform['name'];
+            $attachgrouptype[$bform['slug']] = $bform['name'];
 
     }
 
-    $form_fields['general']['AttachGroupType'] 	= new Element_Select('<b>' . __("Attach Group Type:", 'buddyforms'). '</b>', "buddyforms_options[form_fields][".$field_id."][AttachGroupType]", $AttachGroupType, array('value' => $value));
+    $form_fields['general']['attachgrouptype'] 	= new Element_Select('<b>' . __("Attach Group Type:", 'buddyforms'). '</b>', "buddyforms_options[form_fields][".$field_id."][attachgrouptype]", $attachgrouptype, array('value' => $value));
 
     $multiple = 'false';
     if(isset($buddyform_options['form_fields'][$field_id]['multiple']))
@@ -148,15 +151,12 @@ function buddyforms_attach_groups_create_edit_form_display_element_group($form, 
 
     extract($form_args);
 
+    if($customfield['type']  == 'attachgrouptype'){
 
-
-
-    if($customfield['type']  == 'AttachGroupType'){
-
-        if($form_slug == $customfield['AttachGroupType'] || $customfield['AttachGroupType'] == 'none')
+        if($form_slug == $customfield['attachgrouptype'] || $customfield['attachgrouptype'] == 'none')
             return;
 
-        $Attach_group_post_type = $buddyforms[$customfield['AttachGroupType']]['post_type'];
+        $Attach_group_post_type = $buddyforms[$customfield['attachgrouptype']]['post_type'];
 
         $attached_tax_name = $form_slug . '_attached_' . $Attach_group_post_type;
         $term_list = wp_get_post_terms($post_id, $attached_tax_name, array("fields" => "ids"));

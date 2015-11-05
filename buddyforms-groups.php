@@ -13,7 +13,6 @@ class BuddyForms_Group_Extension {
 		$this->init_hook();
 		$this->load_constants();
 
-
 		add_action('init'				, array($this, 'includes'));
 		add_action('init'				, array($this, 'load_plugin_textdomain'), 10, 1);
 		add_action('init'				, array($this, 'register_taxonomy'), 10, 2);
@@ -106,7 +105,7 @@ class BuddyForms_Group_Extension {
 	}
 
 	/**
-	 * Registers BuddyPress buddyforms taxonomies for AttachGroupTypes
+	 * Registers BuddyPress buddyforms taxonomies for attachgrouptypes
 	 *
 	 * @package buddyforms
 	 * @since 0.1-beta
@@ -132,7 +131,7 @@ class BuddyForms_Group_Extension {
 			if (isset($buddyform['form_fields'])) {
 				foreach ($buddyform['form_fields'] as $key => $form_field) {
 
-					if ($form_field['type'] == 'AttachGroupType') {
+					if (isset($form_field['type']) && $form_field['type'] == 'attachgrouptype') {
 
 						$form_slug = $buddyform['slug'];
 						$labels_group_groups = array(
@@ -140,14 +139,14 @@ class BuddyForms_Group_Extension {
 							'singular_name'	=> sprintf(__('%s Category'), $form_field['name'])
 						);
 
-                        $Attach_group_post_type = $buddyforms[$form_field['AttachGroupType']]['post_type'];
+                        $Attach_group_post_type = $buddyforms[$form_field['attachgrouptype']]['post_type'];
 
 						register_taxonomy( $form_slug . '_attached_' . $Attach_group_post_type, $buddyform['post_type'], array(
 							'hierarchical' => true, 
 							'labels' => $labels_group_groups,
 							'show_ui' => true,
 							'query_var' => true,
-							'rewrite' => array('slug' => $form_slug . '_attached_' . $form_field['AttachGroupType']),
+							'rewrite' => array('slug' => $form_slug . '_attached_' . $form_field['attachgrouptype']),
 							'show_in_nav_menus' => false, 
 							)
 						);
@@ -201,6 +200,9 @@ class BuddyForms_Group_Extension {
 		if (!isset($buddyforms))
 			return $permalink;
 
+		if(!defined('BP_VERSION'))
+			return;
+
 		if(!bp_is_active('groups'))
 			return $permalink;
 
@@ -235,10 +237,14 @@ class BuddyForms_Group_Extension {
 		if (!isset($buddyforms))
 			return;
 
+		if(!defined('BP_VERSION'))
+			return;
+
 		if(!bp_is_active('groups'))
 			return;
 
-        if(bp_is_group_single())
+
+		if(bp_is_group_single())
             return;
 
         if(!isset($post))

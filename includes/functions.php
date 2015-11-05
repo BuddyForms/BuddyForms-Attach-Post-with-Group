@@ -47,9 +47,9 @@ function bf_ge_updtae_post_meta($customfield, $post_id){
 	if(!isset($form_slug))
 		return;
 			  
-	if( $customfield['type'] == 'AttachGroupType' ){
+	if( $customfield['type'] == 'attachgrouptype' ){
 
-        $Attach_group_post_type = $buddyforms[$customfield['AttachGroupType']]['post_type'];
+        $Attach_group_post_type = $buddyforms[$customfield['attachgrouptype']]['post_type'];
 
 		$taxonomy = get_taxonomy($form_slug . '_attached_' . $Attach_group_post_type);
 		if (isset($taxonomy->hierarchical) && $taxonomy->hierarchical == true)  {
@@ -338,10 +338,10 @@ function buddyforms_groups_single_post_meta($form_fields, $args){
                 }
 
                 switch ($customfield['type']) {
-                    case 'Taxonomy':
+                    case 'taxonomy':
                         $meta_tmp = get_the_term_list($post->ID, $customfield['taxonomy'], "<p>", ' - ', "</p>");
                         break;
-                    case 'Link':
+                    case 'link':
                         $meta_tmp = "<p><a href='" . $customfield_value . "' " . $customfield['name'] . ">" . $customfield_value . " </a></p>";
                         break;
                     default:

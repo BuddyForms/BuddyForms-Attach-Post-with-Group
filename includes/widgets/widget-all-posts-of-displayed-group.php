@@ -64,8 +64,8 @@ class BuddyForms_All_Posts_of_this_Group_Widget extends WP_Widget
 
         foreach($buddyforms[$form_select]['form_fields'] as $key => $form_field){
 
-            if($form_field['type'] == 'AttachGroupType')
-                $Attach_group_post_type = $buddyforms[$form_field['AttachGroupType']]['post_type'];
+            if($form_field['type'] == 'attachgrouptype')
+                $Attach_group_post_type = $buddyforms[$form_field['attachgrouptype']]['post_type'];
 
         }
 
@@ -176,7 +176,7 @@ class BuddyForms_All_Posts_of_this_Group_Widget extends WP_Widget
 
             if(isset($buddyform['form_fields'])){
                 foreach($buddyform['form_fields'] as $field_key => $form_field){
-                    if($form_field['type'] == 'AttachGroupType')
+                    if($form_field['type'] == 'attachgrouptype')
                         $form_select_options[$key] = $buddyform['name'];
 
                 }
