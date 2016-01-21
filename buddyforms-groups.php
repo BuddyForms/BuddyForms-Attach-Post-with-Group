@@ -48,7 +48,7 @@ class BuddyForms_Group_Extension {
 	 */
 
 	public function load_constants() {
-		
+
 		if (!defined('BUDDYFORMS_GE_INSTALL_PATH'))
 			define('BUDDYFORMS_GE_INSTALL_PATH', dirname(__FILE__) . '/');
 
@@ -57,7 +57,7 @@ class BuddyForms_Group_Extension {
 
 		if (!defined('BUDDYFORMS_GE_TEMPLATE_PATH'))
 			define('BUDDYFORMS_GE_TEMPLATE_PATH', BUDDYFORMS_GE_INCLUDES_PATH . 'templates/');
-		
+
 	}
 
 	/**
@@ -84,9 +84,9 @@ class BuddyForms_Group_Extension {
 	 */
 
 	public function load_plugin_textdomain() {
-		
+
 		load_plugin_textdomain('buddyforms', false, dirname(plugin_basename(__FILE__)) . '/languages/');
-	
+
 	}
 
 	/**
@@ -96,10 +96,10 @@ class BuddyForms_Group_Extension {
 	 * @since 0.1-beta
 	 */
 	public function setup_group_extension() {
-		
+
 		/*if(!function_exists('buddyforms_wp_list_post_revisions'))
 			require_once (BUDDYFORMS_INCLUDES_PATH		. 'revisions.php');*/
-		
+
 		require_once (BUDDYFORMS_GE_INCLUDES_PATH . 'group-extension.php');
 
 	}
@@ -113,20 +113,18 @@ class BuddyForms_Group_Extension {
 	public function register_taxonomy() {
 		global $buddyforms;
 
-        if ( defined( 'DOING_AJAX' ) )
-            return;
+    if ( defined( 'DOING_AJAX' ) )
+        return;
 
-        if (!isset($buddyforms))
-            return;
-
-
-        foreach ($buddyforms as $key => $buddyform) :
-
-            if (!isset($buddyform['post_type']) || $buddyform['post_type'] == 'none'){
-                continue;
-            }
+    if (!isset($buddyforms))
+        return;
 
 
+    foreach ($buddyforms as $key => $buddyform) :
+
+        if (!isset($buddyform['post_type']) || $buddyform['post_type'] == 'none'){
+            continue;
+        }
 
 			if (isset($buddyform['form_fields'])) {
 				foreach ($buddyform['form_fields'] as $key => $form_field) {
@@ -142,12 +140,12 @@ class BuddyForms_Group_Extension {
                         $Attach_group_post_type = $buddyforms[$form_field['attachgrouptype']]['post_type'];
 
 						register_taxonomy( $form_slug . '_attached_' . $Attach_group_post_type, $buddyform['post_type'], array(
-							'hierarchical' => true, 
+							'hierarchical' => true,
 							'labels' => $labels_group_groups,
 							'show_ui' => true,
 							'query_var' => true,
 							'rewrite' => array('slug' => $form_slug . '_attached_' . $form_field['attachgrouptype']),
-							'show_in_nav_menus' => false, 
+							'show_in_nav_menus' => false,
 							)
 						);
 
@@ -213,7 +211,7 @@ class BuddyForms_Group_Extension {
             return $permalink;
 
 		$group_post_id	= groups_get_groupmeta($post_group_id, 'group_post_id');
-		
+
 		if ($post->ID != $group_post_id)
 			return $permalink;
 

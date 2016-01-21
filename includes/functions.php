@@ -232,9 +232,10 @@ function buddyforms_link_to_post(){
 
 add_filter('bf_form_before_render', 'attached_group_bf_form_before_render', 10, 2);
 function attached_group_bf_form_before_render($form, $args){
+    if(!bp_is_group())
+        return $form;
 
     extract($args);
-
     ob_start();
     ?>
     <script>
