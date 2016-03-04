@@ -116,9 +116,11 @@ class BuddyForms_Group_Extension {
     if ( defined( 'DOING_AJAX' ) )
         return;
 
-    if (!isset($buddyforms))
+		if (!isset($buddyforms))
         return;
 
+		if (!is_array($buddyforms))
+				return;
 
     foreach ($buddyforms as $key => $buddyform) :
 

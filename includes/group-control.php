@@ -8,13 +8,13 @@ class BuddyForms_GroupControl {
 	 * @since 0.1-beta
 	 */
 	public function __construct() {
-		
+
 		if(is_admin()){
 			add_action('save_post', array($this, 'create_a_group'), 99, 2);
 		} else {
 			add_action('buddyforms_after_save_post', array($this, 'create_a_group'), 10, 2);
 		}
-		
+
 		add_action('wp_trash_post', array($this, 'delete_a_group'), 10, 1);
 	}
 
@@ -38,10 +38,10 @@ class BuddyForms_GroupControl {
 			$post = get_post($post->post_parent);
 
 		$form_slug = get_post_meta($post->ID,'_bf_form_slug', true);
-		
+
 		if (!isset($form_slug))
 			return;
-		
+
 		if (!isset($buddyforms))
 			return;
 
@@ -53,7 +53,7 @@ class BuddyForms_GroupControl {
 
 		if ($post->post_type != $buddyforms[$form_slug]['post_type'])
 			return;
-			
+
         $post_group_id = get_post_meta($post->ID, '_post_group_id', true);
 
 
@@ -150,10 +150,10 @@ class BuddyForms_GroupControl {
 
 		$post = get_post($post_id);
 		$post_group_id = get_post_meta($post->ID, '_post_group_id', true);
-		
+
 		//$terms = wp_get_object_terms($post->ID, 'product');
 		//wp_remove_object_terms( $post_group_id, $terms, $taxonomy );
-		
+
 		if (!empty($post_group_id))
 			groups_delete_group($post_group_id);
 
@@ -213,26 +213,6 @@ class BuddyForms_GroupControl {
 
 }
 add_action('buddyforms_init', new BuddyForms_GroupControl() );
-
-/**
-+ * Use the absolute path to an image to set an object's avatar
-+ *
-+ * @since BuddyPress (?)
-+ *
-+ * @param  array  $args {
-+ *     @type int    $item_id   The ID of the object
-+ *     @type string $object    The object type (eg: group, user, blog)
-+ *     @type string $component The component for the object (eg: groups, xprofile, blogs)
-+ *     @type string $image     The absolute path to the image
-+ *     @type int    $crop_w    Crop width. Default: the global 'full' avatar width,
-+ *                             as retrieved by bp_core_avatar_full_width().
-+ *     @type int    $crop_h    Crop height. Default: the global 'full' avatar height,
-+ *                             as retrieved by bp_core_avatar_full_height().
-+ *     @type int    $crop_x    The horizontal starting point of the crop. Default: 0.
-+ *     @type int    $crop_y    The vertical starting point of the crop. Default: 0.
-+ * }
-+ * @return bool  true on success, false otherwise
-+ */
 
 function bf_bp_avatar_create_item_avatar( $args = array() ) {
 
