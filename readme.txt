@@ -3,8 +3,8 @@ Contributors: svenl77, buddyforms
 Tags: buddypress, user, members, profiles, custom post types, taxonomy, frontend posting, frontend editing, groups, post attached to groups
 Plugin URI: http://buddyforms.com/downloads/attach-post-with-group/
 Requires at least: 4.0
-Tested up to: 4.4.1
-Stable tag: 1.1.6
+Tested up to: 4.4.2
+Stable tag: 1.1.7
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -99,6 +99,10 @@ BuddyForms gives you these possibilities for a wide variety of uses.
 
 
 == Changelog ==
+
+= 1.1.7 =
+Clean up the code
+Add one small check if $buddyforms is an array to avoid a notice in the foreach
 
 = 1.1.6 =
 Smaller changes
