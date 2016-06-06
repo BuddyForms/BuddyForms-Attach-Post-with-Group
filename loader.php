@@ -29,7 +29,7 @@
  ****************************************************************************
  */
 
-define('BuddyForms_Attach_Post_with_Group', '1.1.7');
+define( 'BuddyForms_Attach_Post_with_Group', '1.1.7' );
 
 /**
  * Loads BuddyForms Attach Posts to Groups Extension files only if BuddyPress is present
@@ -37,27 +37,28 @@ define('BuddyForms_Attach_Post_with_Group', '1.1.7');
  * @package BuddyForms Attach Posts to Groups Extension
  * @since 0.1-beta
  */
-add_action('plugins_loaded', 'buddyforms_attach_post_with_group_init');
+add_action( 'plugins_loaded', 'buddyforms_attach_post_with_group_init' );
 
-function buddyforms_attach_post_with_group_init(){
-    if(defined('BP_VERSION')){
-        global $buddyforms_group_extension;
+function buddyforms_attach_post_with_group_init() {
+	if ( defined( 'BP_VERSION' ) ) {
+		global $buddyforms_group_extension;
 
-        require_once (dirname(__FILE__) . '/buddyforms-groups.php');
-        $buddyforms_group_extension = new BuddyForms_Group_Extension();
+		require_once( dirname( __FILE__ ) . '/buddyforms-groups.php' );
+		$buddyforms_group_extension = new BuddyForms_Group_Extension();
 
-    }
+	}
 }
 
 function bf_aptg_register_widgets() {
 
-    require_once (dirname(__FILE__) . '/includes/widgets/' . 'widget-attached-group.php');
-    require_once (dirname(__FILE__) . '/includes/widgets/' . 'widget-group-list-moderators.php');
-    require_once (dirname(__FILE__) . '/includes/widgets/' . 'widget-all-posts-of-displayed-group.php');
+	require_once( dirname( __FILE__ ) . '/includes/widgets/' . 'widget-attached-group.php' );
+	require_once( dirname( __FILE__ ) . '/includes/widgets/' . 'widget-group-list-moderators.php' );
+	require_once( dirname( __FILE__ ) . '/includes/widgets/' . 'widget-all-posts-of-displayed-group.php' );
 
-    register_widget( 'BuddyForms_Attached_Group_Widget' );
-    register_widget( 'BuddyForms_List_Moderators_Widget' );
-    register_widget( 'BuddyForms_All_Posts_of_this_Group_Widget' );
+	register_widget( 'BuddyForms_Attached_Group_Widget' );
+	register_widget( 'BuddyForms_List_Moderators_Widget' );
+	register_widget( 'BuddyForms_All_Posts_of_this_Group_Widget' );
 
 }
+
 add_action( 'widgets_init', 'bf_aptg_register_widgets' );
