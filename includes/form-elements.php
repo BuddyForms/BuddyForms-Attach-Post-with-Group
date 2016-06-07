@@ -201,6 +201,9 @@ function buddyforms_attach_groups_create_edit_form_display_element_group( $form,
 		if ( isset( $multiple ) && is_array( $multiple ) ) {
 			$dropdown = str_replace( 'id=', 'multiple="multiple" id=', $dropdown );
 		}
+
+		print_r($term_list);
+
 		if ( is_array( $term_list ) ) {
 			foreach ( $term_list as $value ) {
 				$dropdown = str_replace( ' value="' . $value . '"', ' value="' . $value . '" selected="selected"', $dropdown );

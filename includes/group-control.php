@@ -108,23 +108,20 @@ class BuddyForms_GroupControl {
 
 		// Create Group Avatar from featured image
 		$image_id = get_post_thumbnail_id( $post->ID );
-		//$image_url	= wp_get_attachment_thumb_file($image_id);
-		$fullsize_path = get_attached_file( $image_id ); // Full path
-//		$domain 	= get_site_url(); // returns domain like http://www.my-site-domain.com
-//		$relative_image_url = str_replace( $domain, '/', $image_url[0] );
+		$path = bf_get_attachment_thumbnail_path($image_id);
 
 		if ( $image_id ) {
 			$args = array(
 				'item_id'   => $the_group->id,
 				'object'    => 'group',
 				'component' => 'groups',
-				'image'     => $fullsize_path,
+				'image'     => $path,
 				'crop_w'    => bp_core_avatar_full_width(),
 				'crop_h'    => bp_core_avatar_full_height(),
 				'crop_x'    => 0,
 				'crop_y'    => 0
 			);
-			bf_bp_avatar_create_item_avatar( $args );
+			bp_avatar_create_item_avatar( $args );
 		}
 
 
@@ -237,72 +234,27 @@ class BuddyForms_GroupControl {
 
 }
 
-add_action( 'buddyforms_init', new BuddyForms_GroupControl() );
+add_action( 'buddyforms_init', function () { new BuddyForms_GroupControl(); } );
 
-function bf_bp_avatar_create_item_avatar( $args = array() ) {
 
-	$r = bp_parse_args( $args, array(
-		'item_id'   => 0,
-		'object'    => 'user',
-		'component' => 'xprofile',
-		'image'     => '',
-		'crop_w'    => bp_core_avatar_full_width(),
-		'crop_h'    => bp_core_avatar_full_height(),
-		'crop_x'    => 0,
-		'crop_y'    => 0
-	), 'create_item_avatar' );
+function bf_get_attachment_thumbnail_path( $attachment_id = 0 ) {
+	$attachment_id = (int) $attachment_id;
 
-	if ( empty( $r['item_id'] ) || ! file_exists( $r['image'] ) || ! @getimagesize( $r['image'] ) ) {
+	if ( ! $attachment = get_post( $attachment_id ) ) {
 		return false;
 	}
-
-	if ( is_callable( $r['component'] . '_avatar_upload_dir' ) ) {
-		$dir_args = array( $r['item_id'] );
-
-		// In case  of xprofile, we need an extra argument
-		if ( 'xprofile' === $r['component'] ) {
-			$dir_args = array( false, $r['item_id'] );
-		}
-
-		$avatar_data = call_user_func_array( $r['component'] . '_avatar_upload_dir', $dir_args );
-	}
-
-	if ( ! isset( $avatar_data['path'] ) || ! isset( $avatar_data['subdir'] ) ) {
+	if ( ! is_array( $imagedata = wp_get_attachment_metadata( $attachment->ID ) ) ) {
 		return false;
 	}
-
-	// It's not a regular upload, we may need to create this folder
-	if ( ! is_dir( $avatar_data['path'] ) ) {
-		if ( ! wp_mkdir_p( $avatar_data['path'] ) ) {
-			return false;
-		}
-	}
-
-	$image_file_name = wp_unique_filename( $avatar_data['path'], basename( $r['image'] ) );
-
-	// Copy the image file into the avatar dir
-	copy( $r['image'], $avatar_data['path'] . '/' . $image_file_name );
-
-	// Check the original file is copied
-	if ( ! file_exists( $avatar_data['path'] . '/' . $image_file_name ) ) {
-		return false;
-	}
-
-	if ( ! bp_core_avatar_handle_crop( array(
-		'object'        => $r['object'],
-		'avatar_dir'    => trim( dirname( $avatar_data['subdir'] ), '/' ),
-		'item_id'       => (int) $r['item_id'],
-		'original_file' => trailingslashit( $avatar_data['subdir'] ) . $image_file_name,
-		'crop_w'        => $r['crop_w'],
-		'crop_h'        => $r['crop_h'],
-		'crop_x'        => $r['crop_x'],
-		'crop_y'        => $r['crop_y']
-	) )
-	) {
-		return false;
+	// Take default if no thumbnail size, BuddyPress will crop it!
+	$thumbfile  = get_attached_file( $attachment->ID );
+	if ( empty( $imagedata['sizes'][ 'thumbnail' ]['file'] ) ) {
+		return $thumbfile;
+		// We have a thumbnail! Use it
 	} else {
-		return true;
+		$thumbfile = str_replace( basename( $thumbfile ), $imagedata['sizes'][ 'thumbnail' ]['file'], $thumbfile );
 	}
+	return $thumbfile;
 }
 
 ?>

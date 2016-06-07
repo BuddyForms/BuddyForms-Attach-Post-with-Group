@@ -1,50 +1,18 @@
 <?php
 
 /**
- * Display featured image if group avatar is not set and group is attached with a post
- *
- * @package buddyforms
- * @since 1.0
- */
-//add_filter( 'bp_get_group_avatar','bf_display_featured_image_as_group_avatar',1,1 );
-function bf_display_featured_image_as_group_avatar( $avatar ) {
-	global $groups_template;
-
-	$group_post_id = groups_get_groupmeta( bp_get_group_id(), 'group_post_id' );
-
-	if ( ! isset( $group_post_id ) ) {
-		return $avatar;
-	}
-
-	$image_id  = get_post_thumbnail_id( $group_post_id );
-	$image_url = wp_get_attachment_image_src( $image_id );
-
-	if ( ! isset( $image_url[0] ) ) {
-		return $avatar;
-	}
-
-	$avatar_size = 'width="150" height="150"';
-	if ( ! bp_is_group_single() ) {
-		$avatar_size = 'width="50" height="50"';
-	}
-
-	$avatar = '<img src="' . esc_url( $image_url[0] ) . '" class="avatar" alt="' . esc_attr( $groups_template->group->name ) . '" ' . $avatar_size . '/>';
-
-	return $avatar;
-
-}
-
-/**
  * update post meta
  *
  * @package buddyforms
  * @since 1.0
  */
-add_action( 'buddyforms_update_post_meta', 'bf_ge_updtae_post_meta', 99, 2 );
+add_action( 'buddyforms_update_post_meta', 'bf_ge_updtae_post_meta', 99999, 2 );
 function bf_ge_updtae_post_meta( $customfield, $post_id ) {
-	global $buddyforms;
+	global $buddyforms, $bf_ge_updtae_post_meta;
 
-	$post_type = get_post_type( $post_id );
+//	if($bf_ge_updtae_post_meta == true)
+//		return;
+
 	$form_slug = get_post_meta( $post_id, '_bf_form_slug', true );
 
 	if ( ! isset( $form_slug ) ) {
@@ -53,107 +21,29 @@ function bf_ge_updtae_post_meta( $customfield, $post_id ) {
 
 	if ( $customfield['type'] == 'attachgrouptype' ) {
 
-		$Attach_group_post_type = $buddyforms[ $customfield['attachgrouptype'] ]['post_type'];
+		$attached_group_form_slug = $customfield['attachgrouptype'];
 
-		$taxonomy = get_taxonomy( $form_slug . '_attached_' . $Attach_group_post_type );
-		// if (isset($taxonomy->hierarchical) && $taxonomy->hierarchical == true)  {
-		// 	wp_set_post_terms( $post_id, $_POST[ $customfield['slug'] ], $form_slug . '_attached_' . $Attach_group_post_type, false );
-		// }
+		$attached_group_post_type = $buddyforms[ $attached_group_form_slug ]['post_type'];
 
+		$term_ids = '';
 
-		//$taxonomy = get_taxonomy($customfield['taxonomy']);
+		if( isset( $_POST[ $customfield['slug'] ] ) ) {
 
-		if ( isset( $customfield['multiple'] ) ) {
+			$value = $_POST[ $customfield['slug'] ];
 
-			if ( isset( $taxonomy->hierarchical ) && $taxonomy->hierarchical == true ) {
-
-				if ( isset( $_POST[ $customfield['slug'] ] ) ) {
-					$tax_item = $_POST[ $customfield['slug'] ];
+			if( is_array( $value ) ){
+				foreach( $value as $key => $term_id){
+					$term_ids .= $term_id. ',';
 				}
-
-				if ( $tax_item[0] == - 1 && ! empty( $customfield['taxonomy_default'] ) ) {
-					//$taxonomy_default = explode(',', $customfield['taxonomy_default'][0]);
-					foreach ( $customfield['taxonomy_default'] as $key => $tax ) {
-						$tax_item[ $key ] = $tax;
-					}
-				}
-
-				wp_set_post_terms( $post_id, $tax_item, $customfield['taxonomy'], false );
 			} else {
-
-				$slug = Array();
-
-				if ( isset( $_POST[ $customfield['slug'] ] ) ) {
-					$postCategories = $_POST[ $customfield['slug'] ];
-
-					foreach ( $postCategories as $postCategory ) {
-						$term   = get_term_by( 'id', $postCategory, $customfield['taxonomy'] );
-						$slug[] = $term->slug;
-					}
-				}
-
-				wp_set_post_terms( $post_id, $slug, $customfield['taxonomy'], false );
-
+				$term_ids .= $value;
 			}
 
-			if ( isset( $_POST[ $customfield['slug'] . '_creat_new_tax' ] ) && ! empty( $_POST[ $customfield['slug'] . '_creat_new_tax' ] ) ) {
-				$creat_new_tax = explode( ',', $_POST[ $customfield['slug'] . '_creat_new_tax' ] );
-				if ( is_array( $creat_new_tax ) ) {
-					foreach ( $creat_new_tax as $key => $new_tax ) {
-						$wp_insert_term = wp_insert_term( $new_tax, $customfield['taxonomy'] );
-						wp_set_post_terms( $post_id, $wp_insert_term, $customfield['taxonomy'], true );
-					}
-				}
-
-			}
-		} else {
-			wp_delete_object_term_relationships( $post_id, $customfield['taxonomy'] );
-			if ( isset( $_POST[ $customfield['slug'] . '_creat_new_tax' ] ) && ! empty( $_POST[ $customfield['slug'] . '_creat_new_tax' ] ) ) {
-				$creat_new_tax = explode( ',', $_POST[ $customfield['slug'] . '_creat_new_tax' ] );
-				if ( is_array( $creat_new_tax ) ) {
-					foreach ( $creat_new_tax as $key => $new_tax ) {
-						$wp_insert_term = wp_insert_term( $new_tax, $customfield['taxonomy'] );
-						wp_set_post_terms( $post_id, $wp_insert_term, $customfield['taxonomy'], true );
-					}
-				}
-
-			} else {
-
-				if ( isset( $taxonomy->hierarchical ) && $taxonomy->hierarchical == true ) {
-
-					if ( isset( $_POST[ $customfield['slug'] ] ) ) {
-						$tax_item = $_POST[ $customfield['slug'] ];
-					}
-
-					if ( $tax_item[0] == - 1 && ! empty( $customfield['taxonomy_default'] ) ) {
-						//$taxonomy_default = explode(',', $customfield['taxonomy_default'][0]);
-						foreach ( $customfield['taxonomy_default'] as $key => $tax ) {
-							$tax_item[ $key ] = $tax;
-						}
-					}
-
-					wp_set_post_terms( $post_id, $tax_item, $customfield['taxonomy'], false );
-				} else {
-
-					$slug = Array();
-
-					if ( isset( $_POST[ $customfield['slug'] ] ) ) {
-						$postCategories = $_POST[ $customfield['slug'] ];
-
-						foreach ( $postCategories as $postCategory ) {
-							$term   = get_term_by( 'id', $postCategory, $customfield['taxonomy'] );
-							$slug[] = $term->slug;
-						}
-					}
-
-					wp_set_post_terms( $post_id, $slug, $customfield['taxonomy'], false );
-
-				}
-			}
+			wp_set_post_terms( $post_id, $term_ids, $form_slug . '_attached_' . $attached_group_post_type, false );
 
 		}
 
-
+		$bf_ge_updtae_post_meta = true;
 	}
 
 }
@@ -275,60 +165,6 @@ function buddyforms_ge_locate_template( $file ) {
 	} else {
 		include( BUDDYFORMS_GE_TEMPLATE_PATH . $file );
 	}
-}
-
-/**
- * ShortCode/Template Tag
- *
- * Link to Attached Group
- *
- * @package Attach Posts to Groups Extension
- * @since 1.0.3
- */
-add_shortcode( 'buddyforms_link_to_group', 'buddyforms_link_to_group' );
-function buddyforms_link_to_group() {
-
-	$post_id  = get_the_ID();
-	$group_id = get_post_meta( $post_id, '_post_group_id', true );
-
-	if ( ! isset( $group_id ) ) {
-		return;
-	}
-
-	if ( ! function_exists( 'groups_get_group' ) ) {
-		return;
-	}
-
-	$group = groups_get_group( array( 'group_id' => $group_id ) );
-
-	return trailingslashit( bp_get_root_domain() . '/' . bp_get_groups_root_slug() . '/' . $group->slug . '/' );
-
-}
-
-/**
- * ShortCode/Template Tag
- *
- * Link to Attached Post
- *
- * @package Attach Posts to Groups Extension
- * @since 1.0.3
- */
-add_shortcode( 'buddyforms_link_to_post', 'buddyforms_link_to_post' );
-function buddyforms_link_to_post() {
-
-	if ( ! function_exists( 'bp_get_group_id' ) ) {
-		return;
-	}
-
-	$group_id = bp_get_group_id();
-	$post_id  = groups_get_groupmeta( $group_id, 'group_post_id' );
-
-	if ( ! isset( $post_id ) ) {
-		return;
-	}
-
-	return get_permalink( $post_id );
-
 }
 
 add_filter( 'bf_form_before_render', 'attached_group_bf_form_before_render', 10, 2 );
