@@ -62,7 +62,6 @@ class BuddyForms_List_Moderators_Widget extends WP_Widget
                             </li>
                         </ul>
                     </div>
-                    <div class="clear"></div>
                     <!-- End Widget Ansprechpartner -->
                 <?php
                 endif;

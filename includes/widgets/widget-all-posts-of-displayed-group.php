@@ -106,6 +106,7 @@ class BuddyForms_All_Posts_of_this_Group_Widget extends WP_Widget
                     if ( get_the_ID() != $groups_post_id ) {
 
                         if($set_title == true){
+                            $tmp .= '<div class="widget ' . $widget_class . '">';
 
                             if( $group_type == $Attach_group_post_type ){
                                 $h3_widget_title = '<h3 class="widgettitle">' . $title_attached_groups . '</h3>';
@@ -113,7 +114,7 @@ class BuddyForms_All_Posts_of_this_Group_Widget extends WP_Widget
                                 $h3_widget_title = '<h3 class="widgettitle">' . $title_other_attached_groups . '</h3>';
                             }
 
-                            $tmp .= '<div class="widget ' . $widget_class . '">';
+
                             $tmp .= '<div><ul>';
 
                             $tmp .= $h3_widget_title;
@@ -133,7 +134,6 @@ class BuddyForms_All_Posts_of_this_Group_Widget extends WP_Widget
                 endwhile;
 
                 $tmp .= '</ul></div></div>';
-                $tmp .= '<div class="clear"></div>';
 
                 echo $tmp;
 

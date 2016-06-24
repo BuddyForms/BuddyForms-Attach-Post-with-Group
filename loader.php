@@ -186,8 +186,7 @@ class BuddyForms_Group_Extension {
 						$attached_group_form_slug = $form_field['attachgrouptype'];
 
 						$labels_group_groups = array(
-							'name'          => sprintf( __( '%s %s Categories' ), $form_field['name'], $buddyforms[ $attached_group_form_slug ]['name'] ),
-							'singular_name' => sprintf( __( '%s %s Category' ), $form_field['name'], $buddyforms[ $attached_group_form_slug ]['name'] )
+							'name'          =>  $form_field['name'],
 						);
 
 						$attached_group_post_type = $buddyforms[ $attached_group_form_slug ]['post_type'];
@@ -201,6 +200,8 @@ class BuddyForms_Group_Extension {
 								'show_in_nav_menus' => false,
 							)
 						);
+
+						//register_taxonomy_for_object_type( $form_slug . '_attached_' . $attached_group_post_type, $buddyform['post_type'] );
 
 						$terms = get_terms(
 							$form_slug . '_attached_' . $attached_group_post_type,

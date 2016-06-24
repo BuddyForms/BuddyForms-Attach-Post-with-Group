@@ -109,8 +109,6 @@ class BuddyForms_Attached_Group_Widget extends WP_Widget
                 $tmp .= '</ul>';
                 $tmp .= '</div>';
 
-                $tmp .= '<div class="clear"></div>';
-
                 echo $tmp;
 
                 // Reset $tmp and the Query

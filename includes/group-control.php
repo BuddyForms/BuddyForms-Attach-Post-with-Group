@@ -121,7 +121,7 @@ class BuddyForms_GroupControl {
 				'crop_x'    => 0,
 				'crop_y'    => 0
 			);
-			bp_avatar_create_item_avatar( $args );
+			bf_bp_avatar_create_item_avatar( $args );
 		}
 
 
@@ -257,4 +257,69 @@ function bf_get_attachment_thumbnail_path( $attachment_id = 0 ) {
 	return $thumbfile;
 }
 
+
+function bf_bp_avatar_create_item_avatar( $args = array() ) {
+
+	$r = bp_parse_args( $args, array(
+		'item_id'   => 0,
+		'object'    => 'user',
+		'component' => 'xprofile',
+		'image'     => '',
+		'crop_w'    => bp_core_avatar_full_width(),
+		'crop_h'    => bp_core_avatar_full_height(),
+		'crop_x'    => 0,
+		'crop_y'    => 0
+	), 'create_item_avatar' );
+
+	if ( empty( $r['item_id'] ) || ! file_exists( $r['image'] ) || ! @getimagesize( $r['image'] ) ) {
+		return false;
+	}
+
+	if ( is_callable( $r['component'] . '_avatar_upload_dir' ) ) {
+		$dir_args = array( $r['item_id'] );
+
+		// In case  of xprofile, we need an extra argument
+		if ( 'xprofile' === $r['component'] ) {
+			$dir_args = array( false, $r['item_id'] );
+		}
+
+		$avatar_data = call_user_func_array( $r['component'] . '_avatar_upload_dir', $dir_args );
+	}
+
+	if ( ! isset( $avatar_data['path'] ) || ! isset( $avatar_data['subdir'] ) ) {
+		return false;
+	}
+
+	// It's not a regular upload, we may need to create this folder
+	if( ! is_dir( $avatar_data['path'] ) ) {
+		if ( ! wp_mkdir_p( $avatar_data['path'] ) ) {
+			return false;
+		}
+	}
+
+	$image_file_name = wp_unique_filename( $avatar_data['path'], basename( $r['image'] ) );
+
+	// Copy the image file into the avatar dir
+	copy( $r['image'], $avatar_data['path'] . '/' . $image_file_name );
+
+	// Check the original file is copied
+	if ( ! file_exists( $avatar_data['path'] . '/' . $image_file_name ) ) {
+		return false;
+	}
+
+	if ( ! bp_core_avatar_handle_crop( array(
+		'object'        => $r['object'],
+		'avatar_dir'    => trim( dirname( $avatar_data['subdir'] ), '/' ),
+		'item_id'       => (int) $r['item_id'],
+		'original_file' => trailingslashit( $avatar_data['subdir'] ) . $image_file_name,
+		'crop_w'        => $r['crop_w'],
+		'crop_h'        => $r['crop_h'],
+		'crop_x'        => $r['crop_x'],
+		'crop_y'        => $r['crop_y']
+	) ) ) {
+		return false;
+	} else {
+		return true;
+	}
+}
 ?>

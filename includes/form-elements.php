@@ -187,7 +187,7 @@ function buddyforms_attach_groups_create_edit_form_display_element_group( $form,
 			'echo'             => false,
 			'selected'         => false,
 			'hierarchical'     => 1,
-			'name'             => sanitize_title( $customfield['name'] ) . '[]',
+			'name'             => sanitize_title( $customfield['slug'] ),
 			'class'            => 'postform bf-select2',
 			'depth'            => 0,
 			'tab_index'        => 0,
@@ -201,8 +201,6 @@ function buddyforms_attach_groups_create_edit_form_display_element_group( $form,
 		if ( isset( $multiple ) && is_array( $multiple ) ) {
 			$dropdown = str_replace( 'id=', 'multiple="multiple" id=', $dropdown );
 		}
-
-		print_r($term_list);
 
 		if ( is_array( $term_list ) ) {
 			foreach ( $term_list as $value ) {
