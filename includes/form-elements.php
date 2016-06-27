@@ -168,9 +168,7 @@ function buddyforms_attach_groups_create_edit_form_display_element_group( $form,
 			return;
 		}
 
-		$Attach_group_post_type = $buddyforms[ $customfield['attachgrouptype'] ]['post_type'];
-
-		$attached_tax_name = $form_slug . '_attached_' . $Attach_group_post_type;
+		$attached_tax_name = 'bf_apwg_' . $customfield['slug'];
 		$term_list         = wp_get_post_terms( $post_id, $attached_tax_name, array( "fields" => "ids" ) );
 
 		$multiple = '';

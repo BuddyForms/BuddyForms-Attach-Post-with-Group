@@ -8,7 +8,7 @@
  */
 add_action( 'buddyforms_update_post_meta', 'bf_ge_updtae_post_meta', 99999, 2 );
 function bf_ge_updtae_post_meta( $customfield, $post_id ) {
-	global $buddyforms, $bf_ge_updtae_post_meta;
+	global $buddyforms, $bf_ge_updtae_post_meta, $wp_taxonomies;
 
 //	if($bf_ge_updtae_post_meta == true)
 //		return;
@@ -21,9 +21,9 @@ function bf_ge_updtae_post_meta( $customfield, $post_id ) {
 
 	if ( $customfield['type'] == 'attachgrouptype' ) {
 
-		$attached_group_form_slug = $customfield['attachgrouptype'];
+		$attached_form_slug = $customfield['attachgrouptype'];
 
-		$attached_group_post_type = $buddyforms[ $attached_group_form_slug ]['post_type'];
+		$attached_post_type = $buddyforms[ $attached_form_slug ]['post_type'];
 
 		$term_ids = '';
 
@@ -39,12 +39,16 @@ function bf_ge_updtae_post_meta( $customfield, $post_id ) {
 				$term_ids .= $value;
 			}
 
-			wp_set_post_terms( $post_id, $term_ids, $form_slug . '_attached_' . $attached_group_post_type, false );
+			wp_set_post_terms( $post_id, $term_ids, 'bf_apwg_' . $customfield['slug'], false );
 
 		}
 
 		$bf_ge_updtae_post_meta = true;
 	}
+
+// -------- MIT OLIVEN
+
+//	bf_apwg_generate_attached_tax($attached_post_type, $attached_form_slug, $attached_group_id = FALSE);
 
 }
 

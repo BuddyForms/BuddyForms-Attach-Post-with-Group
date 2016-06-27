@@ -183,28 +183,27 @@ class BuddyForms_Group_Extension {
 
 					if ( isset( $form_field['type'] ) && $form_field['type'] == 'attachgrouptype' ) {
 
-						$attached_group_form_slug = $form_field['attachgrouptype'];
+						$attached_form_slug = $form_field['attachgrouptype'];
+						$attached_post_type = $buddyforms[ $attached_form_slug ]['post_type'];
 
 						$labels_group_groups = array(
 							'name'          =>  $form_field['name'],
 						);
 
-						$attached_group_post_type = $buddyforms[ $attached_group_form_slug ]['post_type'];
-
-						register_taxonomy( $form_slug . '_attached_' . $attached_group_post_type, $buddyform['post_type'], array(
+						register_taxonomy( 'bf_apwg_' . $form_field['slug'], $buddyform['post_type'], array(
 								'hierarchical'      => true,
 								'labels'            => $labels_group_groups,
 								'show_ui'           => true,
 								'query_var'         => true,
-								'rewrite'           => array( 'slug' => $form_slug . '_attached_' . $form_field['attachgrouptype'] ),
+								'rewrite'           => array( 'slug' => 'bf_apwg_' . $form_field['slug'] ),
 								'show_in_nav_menus' => false,
 							)
 						);
 
-						//register_taxonomy_for_object_type( $form_slug . '_attached_' . $attached_group_post_type, $buddyform['post_type'] );
+						// register_taxonomy_for_object_type( 'bf_apwg_' . $form_field['slug'], $buddyform['post_type'] );
 
 						$terms = get_terms(
-							$form_slug . '_attached_' . $attached_group_post_type,
+							'bf_apwg_' . $form_field['slug'],
 							array(
 								'fields' => 'all',
 								'hide_empty' => false
@@ -221,51 +220,31 @@ class BuddyForms_Group_Extension {
 											'field' => 'id',
 											'terms' => $term->term_id,
 										)),
-									'post_type'      => $attached_group_post_type, // my custom post type
+									'post_type'      => $attached_post_type, // my custom post type
 									'posts_per_page' => 1, // show all posts
 									'post_status'    => 'publish',
 									'meta_key'       => '_bf_form_slug',
-									'meta_value'     => $attached_group_form_slug
+									'meta_value'     => $attached_form_slug
 								);
 
 								$cat_posts = get_posts($cat_posts);
 
 								if( count( $cat_posts ) < 1 ){
-									wp_delete_term( $term->term_id, $form_slug . '_attached_' . $attached_group_post_type );
+									wp_delete_term( $term->term_id, 'bf_apwg_' . $form_field['slug'] );
 								}
 
 							}
 						} else {
-							$args = array(
-								'post_type'      => $attached_group_post_type,
-								'posts_per_page' => - 1,
-								'post_status'    => 'publish',
-								'meta_query' => array(
-									array(
-										'key'     => '_post_group_id',
-									),
-									array(
-										'key' => '_bf_form_slug',
-										'value'   => $attached_group_form_slug,
-									),
-								),
-							);
 
-							$attached_posts = new WP_Query( $args );
-
-							while ( $attached_posts->have_posts() ) : $attached_posts->the_post();
-								wp_set_object_terms( get_the_ID(), get_the_title(), $form_slug . '_attached_' . $attached_group_post_type );
-							endwhile;
+							bf_apwg_generate_attached_tax($form_field['slug'], $attached_post_type, $attached_form_slug );
 
 						}
-
-
 					}
 				}
 			}
 		endforeach;
-
 	}
+
 
 	/**
 	 * Change the slug to groups slug to keep it consistent
@@ -374,6 +353,46 @@ class BuddyForms_Group_Extension {
 		register_widget( 'BuddyForms_List_Moderators_Widget' );
 		register_widget( 'BuddyForms_All_Posts_of_this_Group_Widget' );
 	}
+}
+
+
+function bf_apwg_generate_attached_tax($field_slug, $attached_post_type, $attached_form_slug, $attached_group_id = FALSE) {
+
+	$args = array(
+		'post_type'      => $attached_post_type,
+		'posts_per_page' => - 1,
+		'post_status'    => 'publish',
+		'meta_query' => array(
+			array(
+				'key'     => '_post_group_id',
+			),
+			array(
+				'key' => '_bf_form_slug',
+				'value'   => $attached_form_slug,
+			),
+		),
+	);
+
+
+	if( $attached_group_id ){
+		$args['meta_query'] = array(
+			array(
+				'key'     => '_post_group_id',
+				'value'   => $attached_group_id,
+			),
+			array(
+				'key' => '_bf_form_slug',
+				'value'   => $attached_form_slug,
+			),
+		);
+	}
+
+	$attached_posts = new WP_Query( $args );
+
+	while ( $attached_posts->have_posts() ) : $attached_posts->the_post();
+		wp_set_object_terms( get_the_ID(), get_the_title(), 'bf_apwg_' . $field_slug );
+	endwhile;
+
 }
 
 new BuddyForms_Group_Extension();

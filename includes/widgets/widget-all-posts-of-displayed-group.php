@@ -30,117 +30,126 @@ class BuddyForms_All_Posts_of_this_Group_Widget extends WP_Widget
      * @since 0.1-beta
      */
     public function widget( $args, $instance ) {
-        global $buddyforms;
+        global $buddyforms, $post;
 
         extract( $args );
 
-        if ( !bp_is_group() )
+        if ( ! bp_is_group() ) {
             return;
+        }
 
         $groups_post_id = groups_get_groupmeta( bp_get_group_id(), 'group_post_id' );
 
-        if(empty($groups_post_id))
+        if ( empty( $groups_post_id ) ) {
             return;
+        }
 
         $group_type = groups_get_groupmeta( bp_get_group_id(), 'group_type' );
 
-        if(empty($group_type))
+        if ( empty( $group_type ) ) {
             return;
+        }
 
-        $form_slug      = get_post_meta( $groups_post_id, '_bf_form_slug', true );
+        $form_slug = get_post_meta( $groups_post_id, '_bf_form_slug', true );
 
-        if(empty($form_slug))
+        if ( empty( $form_slug ) ) {
             return;
+        }
 
 
-        $form_select = ! empty( $instance['form_select'] ) ? $instance['form_select'] : '';
-        $title_attached_groups = ! empty( $instance['title_attached_groups'] ) ? $instance['title_attached_groups'] : '';
+        $form_select                 = ! empty( $instance['form_select'] ) ? $instance['form_select'] : '';
+        $title_attached_groups       = ! empty( $instance['title_attached_groups'] ) ? $instance['title_attached_groups'] : '';
         $title_other_attached_groups = ! empty( $instance['title_other_attached_groups'] ) ? $instance['title_other_attached_groups'] : '';
-        $widget_class = ! empty( $instance['widget_class'] ) ? $instance['widget_class'] : '';
+        $widget_class                = ! empty( $instance['widget_class'] ) ? $instance['widget_class'] : '';
 
 
-        if(!isset($buddyforms[$form_select]['form_fields']))
+        if ( ! isset( $buddyforms[ $form_select ]['form_fields'] ) ) {
             return;
+        }
 
-        foreach($buddyforms[$form_select]['form_fields'] as $key => $form_field){
+        foreach ( $buddyforms[ $form_select ]['form_fields'] as $key => $form_field ) {
 
-            if($form_field['type'] == 'attachgrouptype')
-                $Attach_group_post_type = $buddyforms[$form_field['attachgrouptype']]['post_type'];
+            if ( $form_field['type'] == 'attachgrouptype' ) {
+                $attachgrouptypes[ $form_field['slug'] ] = $buddyforms[ $form_field['attachgrouptype'] ]['post_type'];
+            }
+
 
         }
 
-        if(empty($Attach_group_post_type))
+        if ( ! is_array( $attachgrouptypes ) ) {
             return;
+        }
 
-        $term = wp_get_post_terms($groups_post_id, $form_select.'_attached_'.$Attach_group_post_type, array("fields" => "all"));
+        foreach ( $attachgrouptypes as $field_slug => $post_type ) {
 
-        if(is_wp_error($term))
-            return;
+            $term = wp_get_post_terms( $groups_post_id, 'bf_apwg_' . $field_slug, array( "fields" => "all" ) );
 
-//        echo '<pre>';
-//        print_r($term);
-//        echo '</pre>';
+            if ( is_wp_error( $term ) ) {
+                return;
+            }
 
-        if (isset($term[0]->name)){
+            if ( isset( $term[0]->name ) ) {
 
-            $args = array(
-                'post_type'				                            => $buddyforms[$form_select]['post_type'],
-                $form_select.'_attached_'.$Attach_group_post_type   => $term[0]->slug,
-                'order'    				                            => 'ASC',
-            );
+                $args = array(
+                    'post_type'              => $buddyforms[ $form_select ]['post_type'],
+                    'bf_apwg_' . $field_slug => $term[0]->slug,
+                    'order'                  => 'ASC',
+                );
 
-            $gr_query = new WP_Query( $args );
+                $gr_query = new WP_Query( $args );
 
-            $tmp = '';
-            if( $gr_query->have_posts() ){
+                $tmp = '';
+                if ( $gr_query->have_posts() ) {
 
-                $set_title = true;
+                    $set_title = true;
 
-                while( $gr_query->have_posts() ) : $gr_query->the_post();
+                    while ( $gr_query->have_posts() ) : $gr_query->the_post();
 
 
-                    if(!get_post_meta(get_the_ID(), '_bf_form_slug', true)){
-                        continue;
-                    }
+                        if ( ! get_post_meta( get_the_ID(), '_bf_form_slug', true ) ) {
+                            continue;
+                        }
 
-                    if ( get_the_ID() != $groups_post_id ) {
+                        if ( get_the_ID() != $groups_post_id && $term[0]->slug !=  $post->post_name ) {
+                            
+                            if ( $set_title == true ) {
+                                $tmp .= '<div class="widget ' . $widget_class . '">';
 
-                        if($set_title == true){
-                            $tmp .= '<div class="widget ' . $widget_class . '">';
+                                if ( $group_type == $attached_post_type ) {
+                                    $h3_widget_title = '<h3 class="widgettitle">' . $title_attached_groups . '</h3>';
+                                } else {
+                                    $h3_widget_title = '<h3 class="widgettitle">' . $title_other_attached_groups . '</h3>';
+                                }
 
-                            if( $group_type == $Attach_group_post_type ){
-                                $h3_widget_title = '<h3 class="widgettitle">' . $title_attached_groups . '</h3>';
-                            } else {
-                                $h3_widget_title = '<h3 class="widgettitle">' . $title_other_attached_groups . '</h3>';
+
+                                $tmp .= '<div><ul>';
+
+                                $tmp .= $h3_widget_title;
+                                $set_title = false;
                             }
 
 
-                            $tmp .= '<div><ul>';
-
-                            $tmp .= $h3_widget_title;
-                            $set_title = false;
+                            $tmp .= '<a href="' . get_permalink() . '" title="' . the_title_attribute( Array( 'echo' => 0 ) ) . '" class="clickable_box">';
+                            $tmp .= '<li>';
+                            $tmp .= get_the_post_thumbnail( get_the_id(), array( 50, 50 ) );
+                            $tmp .= '<h4>' . get_the_title() . '</h4>';
+                            $tmp .= '<p class="post_excerpt">' . get_the_excerpt() . '</p>';
+                            $tmp .= '</li>';
+                            $tmp .= '</a>';
+                            $tmp .= '<div class="clear"></div>';
                         }
+                    endwhile;
 
+                    $tmp .= '</ul></div></div>';
 
-                        $tmp .= '<a href="'.get_permalink().'" title="'.the_title_attribute(Array('echo'=> 0)).'" class="clickable_box">';
-                        $tmp .= '<li>';
-                        $tmp .= get_the_post_thumbnail(get_the_id() ,array(50, 50));
-                        $tmp .= '<h4>'.get_the_title().'</h4>';
-                        $tmp .= '<p class="post_excerpt">' . get_the_excerpt() . '</p>';
-                        $tmp .= '</li>';
-                        $tmp .= '</a>';
-                        $tmp .= '<div class="clear"></div>';
-                    }
-                endwhile;
+                    echo $tmp;
 
-                $tmp .= '</ul></div></div>';
-
-                echo $tmp;
-
-                // Reset $tmp and the Query
-                $tmp = '';
-                wp_reset_query();
+                    // Reset $tmp and the Query
+                    $tmp = '';
+                    wp_reset_query();
+                }
             }
+
         }
     }
 
@@ -172,13 +181,14 @@ class BuddyForms_All_Posts_of_this_Group_Widget extends WP_Widget
 
 
         $form_select_options = Array();
-        foreach($buddyforms as $key => $buddyform){
+        foreach($buddyforms as $form_slug => $buddyform){
 
             if(isset($buddyform['form_fields'])){
                 foreach($buddyform['form_fields'] as $field_key => $form_field){
-                    if($form_field['type'] == 'attachgrouptype')
-                        $form_select_options[$key] = $buddyform['name'];
-
+                    if($form_field['type'] == 'attachgrouptype') {
+                        $form_select_options[ $form_field['slug'] ]['name']      = $buddyform['name'];
+                        $form_select_options[ $form_field['slug'] ]['form_slug'] = $form_slug;
+                    }
                 }
             }
 
@@ -196,8 +206,8 @@ class BuddyForms_All_Posts_of_this_Group_Widget extends WP_Widget
                     <select id="<?php echo $this->get_field_id( 'form_select' ); ?>" name="<?php echo $this->get_field_name( 'form_select' ); ?>">
                         <option value="none">Select a Form</option>
                         <?php
-                        foreach($form_select_options as $key => $form){
-                            echo '<option ' . selected($form_select, $key) . ' value="' . $key . '">' . $form . '</option>';
+                        foreach($form_select_options as $field_slug => $form){
+                            echo '<option ' . selected($form_select, $form['form_slug']) . ' value="' . $form['form_slug'] . '">' . $form['name'] . '</option>';
                         }
                         ?>
                     </select>

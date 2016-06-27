@@ -49,12 +49,13 @@ class BuddyForms_Attached_Group_Widget extends WP_Widget
 
         foreach($buddyforms[$form_slug]['form_fields'] as $key => $form_field){
 
-            if($form_field['type'] == 'attachgrouptype')
-                $Attach_group_post_type = $buddyforms[$form_field['attachgrouptype']]['post_type'];
+            if($form_field['type'] == 'attachgrouptype'){
+                $attachgrouptypes[$form_field['slug']] = $buddyforms[$form_field['attachgrouptype']]['post_type'];
+            }
 
         }
 
-        if(empty($Attach_group_post_type))
+        if(!is_array($attachgrouptypes))
             return;
 
         $title = ! empty( $instance['title'] ) ? $instance['title'] : '';
@@ -62,60 +63,62 @@ class BuddyForms_Attached_Group_Widget extends WP_Widget
         if( ! empty( $title ) )
             echo $before_title . $title . $after_title;
 
+        foreach($attachgrouptypes as $field_slug => $post_type){
+            $term = wp_get_post_terms($groups_post_id, 'bf_apwg_' . $field_slug, array("fields" => "all"));
 
-        $term = wp_get_post_terms($groups_post_id, $form_slug . '_attached_' . $Attach_group_post_type, array("fields" => "all"));
+            if(is_wp_error($term))
+                return;
 
-        if(is_wp_error($term))
-            return;
+            if ( isset($term[0]->name)) {
 
-        if ( isset($term[0]->name)) {
+                $args=array(
+                    'name' => $term[0]->name,
+                    'post_type' => $attached_post_type,
+                    'post_status' => 'publish',
+                    'posts_per_page' => 1
+                );
 
-            $args=array(
-                'name' => $term[0]->name,
-                'post_type' => $Attach_group_post_type,
-                'post_status' => 'publish',
-                'posts_per_page' => 1
-            );
+                $get_the_post_thumbnail_attr = array(
+                    'class' => "avatar",
+                );
 
-            $get_the_post_thumbnail_attr = array(
-                'class' => "avatar",
-            );
+                $app_posts = get_posts($args);
 
-            $app_posts = get_posts($args);
-
-            $tmp = '';
-            if( $app_posts ) {
-
-                $tmp .= '<div id="item-list" class="widget">';
-                $tmp .= '<ul>';
-
-                foreach ( $app_posts as $post ) :
-
-                    if ( $groups_post_id != $post->ID ) {
-
-                        setup_postdata( $post );
-                        $tmp .= '<a href="'.get_permalink().'" title="'.the_title_attribute(array('echo'=> 0)).'">';
-                            $tmp .= '<li>';
-                                $tmp .= get_the_post_thumbnail($post->ID , 'post-thumbnails' , $get_the_post_thumbnail_attr);
-                                $tmp .= '<h3 class="post_title">'  . get_the_title()   . '</h3>';
-                                $tmp .= '<p class="post_excerpt">' . get_the_excerpt() . '</p>';
-                            $tmp .= '</li>';
-                        $tmp .= '</a>';
-                        $tmp .= '<div class="clear"></div>';
-                    }
-
-                endforeach;
-
-                $tmp .= '</ul>';
-                $tmp .= '</div>';
-
-                echo $tmp;
-
-                // Reset $tmp and the Query
                 $tmp = '';
-                wp_reset_query();
+                if( $app_posts ) {
+
+                    $tmp .= '<div id="item-list" class="widget">';
+                    $tmp .= '<ul>';
+
+                    foreach ( $app_posts as $post ) :
+
+                        if ( $groups_post_id != $post->ID ) {
+
+                            setup_postdata( $post );
+                            $tmp .= '<a href="'.get_permalink().'" title="'.the_title_attribute(array('echo'=> 0)).'">';
+                            $tmp .= '<li>';
+                            $tmp .= get_the_post_thumbnail($post->ID , 'post-thumbnails' , $get_the_post_thumbnail_attr);
+                            $tmp .= '<h3 class="post_title">'  . get_the_title()   . '</h3>';
+                            $tmp .= '<p class="post_excerpt">' . get_the_excerpt() . '</p>';
+                            $tmp .= '</li>';
+                            $tmp .= '</a>';
+                            $tmp .= '<div class="clear"></div>';
+                        }
+
+                    endforeach;
+
+                    $tmp .= '</ul>';
+                    $tmp .= '</div>';
+
+                    echo $tmp;
+
+                    // Reset $tmp and the Query
+                    $tmp = '';
+                    wp_reset_query();
+                }
             }
         }
+
 
     }
 
