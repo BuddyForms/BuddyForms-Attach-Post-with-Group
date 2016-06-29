@@ -111,7 +111,7 @@ class BuddyForms_All_Posts_of_this_Group_Widget extends WP_Widget
                         }
 
                         if ( get_the_ID() != $groups_post_id && $term[0]->slug !=  $post->post_name ) {
-                            
+
                             if ( $set_title == true ) {
                                 $tmp .= '<div class="widget ' . $widget_class . '">';
 

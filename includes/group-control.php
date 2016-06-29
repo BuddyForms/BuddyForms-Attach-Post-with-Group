@@ -147,6 +147,17 @@ class BuddyForms_GroupControl {
 		groups_update_groupmeta( $the_group->id, 'buddyforms-aptg', $settings );
 
 		self::add_member_to_group( $the_group->id, $post->post_author );
+
+		// Regenerate the taxonomy items
+		foreach($buddyforms as $form_slug => $form ) {
+			foreach ( $form['form_fields'] as $field_id => $field ) {
+				if ( $field['type'] == 'attachgrouptype' ) {
+					if ( taxonomy_exists( 'bf_apwg_' . $field['slug'] ) ) {
+						bf_apwg_generate_attached_tax($field['slug'], $buddyforms[$field['attachgrouptype']]['post_type'], $field['attachgrouptype'], $post_group_id );
+					}
+				}
+			}
+		}
 	}
 
 	/**

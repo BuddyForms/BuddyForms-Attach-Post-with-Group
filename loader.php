@@ -355,44 +355,4 @@ class BuddyForms_Group_Extension {
 	}
 }
 
-
-function bf_apwg_generate_attached_tax($field_slug, $attached_post_type, $attached_form_slug, $attached_group_id = FALSE) {
-
-	$args = array(
-		'post_type'      => $attached_post_type,
-		'posts_per_page' => - 1,
-		'post_status'    => 'publish',
-		'meta_query' => array(
-			array(
-				'key'     => '_post_group_id',
-			),
-			array(
-				'key' => '_bf_form_slug',
-				'value'   => $attached_form_slug,
-			),
-		),
-	);
-
-
-	if( $attached_group_id ){
-		$args['meta_query'] = array(
-			array(
-				'key'     => '_post_group_id',
-				'value'   => $attached_group_id,
-			),
-			array(
-				'key' => '_bf_form_slug',
-				'value'   => $attached_form_slug,
-			),
-		);
-	}
-
-	$attached_posts = new WP_Query( $args );
-
-	while ( $attached_posts->have_posts() ) : $attached_posts->the_post();
-		wp_set_object_terms( get_the_ID(), get_the_title(), 'bf_apwg_' . $field_slug );
-	endwhile;
-
-}
-
 new BuddyForms_Group_Extension();

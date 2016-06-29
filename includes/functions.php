@@ -8,22 +8,17 @@
  */
 add_action( 'buddyforms_update_post_meta', 'bf_ge_updtae_post_meta', 99999, 2 );
 function bf_ge_updtae_post_meta( $customfield, $post_id ) {
-	global $buddyforms, $bf_ge_updtae_post_meta, $wp_taxonomies;
+	global $buddyforms, $wp_taxonomies;
 
-//	if($bf_ge_updtae_post_meta == true)
-//		return;
-
-	$form_slug = get_post_meta( $post_id, '_bf_form_slug', true );
+	$form_slug      = get_post_meta( $post_id, '_bf_form_slug', true );
+	$post_group_id  = get_post_meta( $post_id, '_post_group_id', true );
 
 	if ( ! isset( $form_slug ) ) {
 		return;
 	}
 
+	// Set the post terms
 	if ( $customfield['type'] == 'attachgrouptype' ) {
-
-		$attached_form_slug = $customfield['attachgrouptype'];
-
-		$attached_post_type = $buddyforms[ $attached_form_slug ]['post_type'];
 
 		$term_ids = '';
 
@@ -43,14 +38,55 @@ function bf_ge_updtae_post_meta( $customfield, $post_id ) {
 
 		}
 
-		$bf_ge_updtae_post_meta = true;
 	}
 
-// -------- MIT OLIVEN
+}
 
-//	bf_apwg_generate_attached_tax($attached_post_type, $attached_form_slug, $attached_group_id = FALSE);
+/**
+ * Delete a Group
+ *
+ * @package buddyforms
+ * @since 1.6
+ */
+function bf_apwg_generate_attached_tax($field_slug, $attached_post_type, $attached_form_slug, $attached_group_id = FALSE) {
+
+	$args = array(
+		'post_type'      => $attached_post_type,
+		'posts_per_page' => - 1,
+		'post_status'    => 'publish',
+		'meta_query' => array(
+			array(
+				'key'     => '_post_group_id',
+			),
+			array(
+				'key' => '_bf_form_slug',
+				'value'   => $attached_form_slug,
+			),
+		),
+	);
+
+
+	if( $attached_group_id ){
+		$args['meta_query'] = array(
+			array(
+				'key'     => '_post_group_id',
+				'value'   => $attached_group_id,
+			),
+			array(
+				'key' => '_bf_form_slug',
+				'value'   => $attached_form_slug,
+			),
+		);
+	}
+
+	$attached_posts = new WP_Query( $args );
+
+	while ( $attached_posts->have_posts() ) : $attached_posts->the_post();
+		wp_set_object_terms( get_the_ID(), get_the_title(), 'bf_apwg_' . $field_slug );
+	endwhile;
 
 }
+
 
 /**
  * Delete a Group
