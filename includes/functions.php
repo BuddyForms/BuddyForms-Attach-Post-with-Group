@@ -1,6 +1,29 @@
 <?php
 
 /**
+ * Check the dependencies and display a admin notice if needed
+ *
+ * @package buddyforms
+ * @since 1.6
+ */
+function buddyforms_apwg_requirements(){
+
+
+	if ( !defined( 'BP_VERSION' ) ) {
+		add_action( 'admin_notices', create_function( '', 'printf(\'<div id="message" class="error"><p><strong>\' . __(\'BuddyForms Attache Post with Group needs BuddyPress to be installed and the Groups Component enabled. <a href="%s">Download it now</a>!\', " buddypress" ) . \'</strong></p></div>\', admin_url("plugin-install.php") );' ) );
+		return;
+	}
+
+	if( ! defined( 'BUDDYFORMS_VERSION' )){
+		add_action( 'admin_notices', create_function( '', 'printf(\'<div id="message" class="error"><p><strong>\' . __(\'BuddyForms Attache Post with Group needs BuddyForms to be installed. <a target="_blank" href="%s">--> Get it now</a>!\', " buddyforms" ) . \'</strong></p></div>\', "http://themekraft.com/store/wordpress-front-end-editor-and-form-builder-buddyforms/" );' ) );
+		return;
+	}
+
+}
+add_action('plugins_loaded', 'buddyforms_apwg_requirements');
+
+
+/**
  * update post meta
  *
  * @package buddyforms

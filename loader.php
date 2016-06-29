@@ -144,10 +144,9 @@ class BuddyForms_Group_Extension {
 	 */
 	public function setup_group_extension() {
 
-//		if(!function_exists('buddyforms_wp_list_post_revisions'))
-//			require_once (BUDDYFORMS_INCLUDES_PATH		. 'revisions.php');
-
-		require_once( BUDDYFORMS_GE_INCLUDES_PATH . 'group-extension.php' );
+		if ( defined( 'BP_VERSION' ) && bp_is_active( 'groups' ) ) {
+			require_once( BUDDYFORMS_GE_INCLUDES_PATH . 'group-extension.php' );
+		}
 
 	}
 
@@ -356,3 +355,6 @@ class BuddyForms_Group_Extension {
 }
 
 new BuddyForms_Group_Extension();
+
+
+
