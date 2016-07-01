@@ -159,9 +159,9 @@ class BuddyForms_Group_Extension {
 	public function register_taxonomy() {
 		global $buddyforms;
 
-//		if ( defined( 'DOING_AJAX' ) ) {
-//			return;
-//		}
+		if ( defined( 'DOING_AJAX' ) ) {
+			return;
+		}
 
 		if ( ! isset( $buddyforms ) ) {
 			return;

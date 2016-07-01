@@ -94,6 +94,11 @@ class BuddyForms_All_Posts_of_this_Group_Widget extends WP_Widget
                     'post_type'              => $buddyforms[ $form_select ]['post_type'],
                     'bf_apwg_' . $field_slug => $term[0]->slug,
                     'order'                  => 'ASC',
+                    array(
+                        'key'     => '_bf_form_slug',
+                        'value'   => $form_select,
+                    ),
+
                 );
 
                 $gr_query = new WP_Query( $args );
@@ -101,34 +106,19 @@ class BuddyForms_All_Posts_of_this_Group_Widget extends WP_Widget
                 $tmp = '';
                 if ( $gr_query->have_posts() ) {
 
-                    $set_title = true;
+                    $title = $group_type == $attached_post_type ? $title_attached_groups : $title_other_attached_groups;
+                    echo $before_title . $title . $after_title;
+
+                    $tmp .= '<div class="widget ' . $widget_class . '">';
+                    $tmp .= '<ul>';
 
                     while ( $gr_query->have_posts() ) : $gr_query->the_post();
-
 
                         if ( ! get_post_meta( get_the_ID(), '_bf_form_slug', true ) ) {
                             continue;
                         }
 
                         if ( get_the_ID() != $groups_post_id && $term[0]->slug !=  $post->post_name ) {
-
-                            if ( $set_title == true ) {
-                                $tmp .= '<div class="widget ' . $widget_class . '">';
-
-                                if ( $group_type == $attached_post_type ) {
-                                    $h3_widget_title = '<h3 class="widgettitle">' . $title_attached_groups . '</h3>';
-                                } else {
-                                    $h3_widget_title = '<h3 class="widgettitle">' . $title_other_attached_groups . '</h3>';
-                                }
-
-
-                                $tmp .= '<div><ul>';
-
-                                $tmp .= $h3_widget_title;
-                                $set_title = false;
-                            }
-
-
                             $tmp .= '<a href="' . get_permalink() . '" title="' . the_title_attribute( Array( 'echo' => 0 ) ) . '" class="clickable_box">';
                             $tmp .= '<li>';
                             $tmp .= get_the_post_thumbnail( get_the_id(), array( 50, 50 ) );
@@ -140,7 +130,7 @@ class BuddyForms_All_Posts_of_this_Group_Widget extends WP_Widget
                         }
                     endwhile;
 
-                    $tmp .= '</ul></div></div>';
+                    $tmp .= '</ul></div>';
 
                     echo $tmp;
 

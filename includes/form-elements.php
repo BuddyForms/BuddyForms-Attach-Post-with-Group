@@ -20,6 +20,27 @@ function buddyforms_add_form_element_to_sidebar( $sidebar_elements ) {
 
 add_filter( 'buddyforms_add_form_element_to_sidebar', 'buddyforms_add_form_element_to_sidebar', 1, 2 );
 
+
+function buddyforms_add_form_element_to_select( $elements_select_options ) {
+	global $post;
+
+	if ( $post->post_type != 'buddyforms' ) {
+		return;
+	}
+
+	$elements_select_options['BuddyPress'] = array(
+		'attachgrouptype' => array(
+			'label'     => __( 'Attach Group Type', 'buddyforms' ),
+			'unique'    => 'unique'
+		),
+	);
+
+	return $elements_select_options;
+}
+
+add_filter( 'buddyforms_add_form_element_to_select', 'buddyforms_add_form_element_to_select', 1, 2 );
+
+
 function buddyforms_agwp_admin_settings_sidebar_metabox() {
 	add_meta_box( 'buddyforms_apwg', __( "BP Attach Post with Group", 'buddyforms' ), 'buddyforms_agwp_admin_settings_sidebar_metabox_html', 'buddyforms', 'normal', 'low' );
 }
