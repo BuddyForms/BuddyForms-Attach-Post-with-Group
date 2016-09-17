@@ -28,11 +28,10 @@ function buddyforms_add_form_element_to_select( $elements_select_options ) {
 		return;
 	}
 
-	$elements_select_options['BuddyPress'] = array(
-		'attachgrouptype' => array(
-			'label'     => __( 'Attach Group Type', 'buddyforms' ),
-			'unique'    => 'unique'
-		),
+	$elements_select_options['buddypress']['label'] = 'BuddyPress';
+	$elements_select_options['buddypress']['fields']['attachgrouptype'] = array(
+		'label'     => __( 'Attach Group Type', 'buddyforms' ),
+		'unique'    => 'unique'
 	);
 
 	return $elements_select_options;
@@ -41,11 +40,13 @@ function buddyforms_add_form_element_to_select( $elements_select_options ) {
 add_filter( 'buddyforms_add_form_element_to_select', 'buddyforms_add_form_element_to_select', 1, 2 );
 
 
-function buddyforms_agwp_admin_settings_sidebar_metabox() {
-	add_meta_box( 'buddyforms_apwg', __( "BP Attach Post with Group", 'buddyforms' ), 'buddyforms_agwp_admin_settings_sidebar_metabox_html', 'buddyforms', 'normal', 'low' );
+function buddyforms_apwg_admin_settings_sidebar_metabox() {
+	add_meta_box( 'buddyforms_apwg', __( "BP Attach Post with Group", 'buddyforms' ), 'buddyforms_apwg_admin_settings_sidebar_metabox_html', 'buddyforms', 'normal', 'low' );
+	add_filter('postbox_classes_buddyforms_buddyforms_apwg','buddyforms_metabox_class');
 }
 
-function buddyforms_agwp_admin_settings_sidebar_metabox_html( $form, $selected_form_slug ) {
+
+function buddyforms_apwg_admin_settings_sidebar_metabox_html( $form, $selected_form_slug ) {
 	global $post;
 
 	if ( $post->post_type != 'buddyforms' ) {
@@ -119,11 +120,13 @@ function buddyforms_agwp_admin_settings_sidebar_metabox_html( $form, $selected_f
 		                                                                                                                                         'meta'    => __( 'Display Post Meta', 'buddyforms' )
 		), array( 'value' => $display_content ) );
 
+	} else {
+		$form_setup[] = new Element_HTML('<p>' . __('You need to activate the BuddyPress Groups Component for the plugin to work', 'buddyforms') . '</p>');
 	}
 	buddyforms_display_field_group_table( $form_setup, $field_id = 'global' );
 }
 
-add_filter( 'add_meta_boxes', 'buddyforms_agwp_admin_settings_sidebar_metabox', 10, 2 );
+add_filter( 'add_meta_boxes', 'buddyforms_apwg_admin_settings_sidebar_metabox', 10, 2 );
 
 function buddyforms_form_element_add_field_ge( $form_fields, $form_slug, $field_type, $field_id ) {
 	global $buddyforms, $post;
