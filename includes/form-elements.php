@@ -43,6 +43,8 @@ add_filter( 'buddyforms_add_form_element_to_select', 'buddyforms_add_form_elemen
 function buddyforms_apwg_admin_settings_sidebar_metabox() {
 	add_meta_box( 'buddyforms_apwg', __( "BP Attach Post with Group", 'buddyforms' ), 'buddyforms_apwg_admin_settings_sidebar_metabox_html', 'buddyforms', 'normal', 'low' );
 	add_filter('postbox_classes_buddyforms_buddyforms_apwg','buddyforms_metabox_class');
+	add_filter('postbox_classes_buddyforms_buddyforms_apwg','buddyforms_metabox_show_if_form_type_posts');
+	add_filter('postbox_classes_buddyforms_buddyforms_apwg','buddyforms_metabox_show_if_post_type_none');
 }
 
 
