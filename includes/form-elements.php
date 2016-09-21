@@ -29,6 +29,7 @@ function buddyforms_add_form_element_to_select( $elements_select_options ) {
 	}
 
 	$elements_select_options['buddypress']['label'] = 'BuddyPress';
+	$elements_select_options['buddypress']['class'] = 'bf_show_if_f_type_post';
 	$elements_select_options['buddypress']['fields']['attachgrouptype'] = array(
 		'label'     => __( 'Attach Group Type', 'buddyforms' ),
 		'unique'    => 'unique'
