@@ -332,7 +332,7 @@ function buddyforms_groups_single_post_meta( $form_fields, $args ) {
 
 		foreach ( $form_fields as $key => $customfield ) {
 
-			if ( empty( $customfield['slug'] ) || $customfield['slug'] == 'editpost_title' || $customfield['slug'] == 'editpost_content' ) {
+			if ( empty( $customfield['slug'] ) || $customfield['slug'] == 'buddyforms_form_title' || $customfield['slug'] == 'buddyforms_form_content' ) {
 				continue;
 			}
 
