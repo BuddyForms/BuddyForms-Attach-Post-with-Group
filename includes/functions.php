@@ -230,8 +230,8 @@ function buddyforms_ge_locate_template( $file ) {
 	}
 }
 
-add_filter( 'bf_form_before_render', 'attached_group_bf_form_before_render', 10, 2 );
-function attached_group_bf_form_before_render( $form, $args ) {
+add_filter( 'buddyforms_form_before_render', 'attached_group_buddyforms_form_before_render', 10, 2 );
+function attached_group_buddyforms_form_before_render( $form, $args ) {
 	if ( ! bp_is_group() ) {
 		return $form;
 	}
