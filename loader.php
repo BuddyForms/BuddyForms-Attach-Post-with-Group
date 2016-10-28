@@ -3,9 +3,9 @@
  Plugin Name: BuddyForms Attach Post with Group
  Plugin URI: http://buddyforms.com/downloads/attach-post-with-group/
  Description: Create engaged communities with every post.
- Requires at least: 4.0
- Tested up to: 4.4.2
- Version: 1.1.7
+ Requires at least: 3.9
+ Tested up to: 4.6.1
+ Version: 1.1.8
  Author: Sven Lehnert
  Author URI: https://profiles.wordpress.org/svenl77
  Licence: GPLv3
