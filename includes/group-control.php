@@ -151,9 +151,9 @@ class BuddyForms_GroupControl {
 		// Regenerate the taxonomy items
 		foreach($buddyforms as $form_slug => $form ) {
 			foreach ( $form['form_fields'] as $field_id => $field ) {
-				if ( $field['type'] == 'attachgrouptype' ) {
+				if ( $field['type'] == 'apwg_taxonomy' ) {
 					if ( taxonomy_exists( 'bf_apwg_' . $field['slug'] ) ) {
-						bf_apwg_generate_attached_tax($field['slug'], $buddyforms[$field['attachgrouptype']]['post_type'], $field['attachgrouptype'], $post_group_id );
+						bf_apwg_generate_attached_tax($field['slug'], $buddyforms[$field['apwg_taxonomy']]['post_type'], $field['apwg_taxonomy'], $post_group_id );
 					}
 				}
 			}

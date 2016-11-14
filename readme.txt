@@ -1,5 +1,5 @@
 === BuddyForms Attach Post with Group ===
-Contributors: svenl77, buddyforms
+Contributors: svenl77, konradS, buddyforms
 Tags: buddypress, user, members, profiles, custom post types, taxonomy, frontend posting, frontend editing, groups, post attached to groups
 Plugin URI: http://buddyforms.com/downloads/attach-post-with-group/
 Requires at least: 3.9

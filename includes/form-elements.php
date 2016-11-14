@@ -1,27 +1,6 @@
 <?php
 
-function buddyforms_add_form_element_to_sidebar( $sidebar_elements ) {
-	global $post;
-
-	if ( $post->post_type != 'buddyforms' ) {
-		return;
-	}
-
-	if ( ! defined( 'BP_VERSION' ) ) {
-		return;
-	}
-
-	if ( bp_is_active( 'groups' ) ) {
-		$sidebar_elements[] = new Element_HTML( '<p><a href="#" data-fieldtype="attachgrouptype" data-unique="unique" class="bf_add_element_action">Attach Group Type</a></p>' );
-	}
-
-	return $sidebar_elements;
-}
-
-add_filter( 'buddyforms_add_form_element_to_sidebar', 'buddyforms_add_form_element_to_sidebar', 1, 2 );
-
-
-function buddyforms_add_form_element_to_select( $elements_select_options ) {
+function buddyforms_apwg_form_element_select_option( $elements_select_options ) {
 	global $post;
 
 	if ( $post->post_type != 'buddyforms' ) {
@@ -30,26 +9,26 @@ function buddyforms_add_form_element_to_select( $elements_select_options ) {
 
 	$elements_select_options['buddypress']['label'] = 'BuddyPress';
 	$elements_select_options['buddypress']['class'] = 'bf_show_if_f_type_post';
-	$elements_select_options['buddypress']['fields']['attachgrouptype'] = array(
-		'label'     => __( 'Attach Group Type', 'buddyforms' ),
+	$elements_select_options['buddypress']['fields']['apwg_taxonomy'] = array(
+		'label'     => __( 'APWG Taxonomy', 'buddyforms' ),
 		'unique'    => 'unique'
 	);
 
 	return $elements_select_options;
 }
 
-add_filter( 'buddyforms_add_form_element_to_select', 'buddyforms_add_form_element_to_select', 1, 2 );
+add_filter( 'buddyforms_add_form_element_select_option', 'buddyforms_apwg_form_element_select_option', 1, 2 );
 
 
-function buddyforms_apwg_admin_settings_sidebar_metabox() {
-	add_meta_box( 'buddyforms_apwg', __( "BP Attach Post with Group", 'buddyforms' ), 'buddyforms_apwg_admin_settings_sidebar_metabox_html', 'buddyforms', 'normal', 'low' );
+function buddyforms_apwg_admin_settings_metabox() {
+	add_meta_box( 'buddyforms_apwg', __( "BP Attach Post with Group", 'buddyforms' ), 'buddyforms_apwg_admin_settings_metabox_html', 'buddyforms', 'normal', 'low' );
 	add_filter('postbox_classes_buddyforms_buddyforms_apwg','buddyforms_metabox_class');
 	add_filter('postbox_classes_buddyforms_buddyforms_apwg','buddyforms_metabox_show_if_form_type_post');
 	add_filter('postbox_classes_buddyforms_buddyforms_apwg','buddyforms_metabox_show_if_post_type_none');
 }
 
 
-function buddyforms_apwg_admin_settings_sidebar_metabox_html( $form, $selected_form_slug ) {
+function buddyforms_apwg_admin_settings_metabox_html( $form, $selected_form_slug ) {
 	global $post;
 
 	if ( $post->post_type != 'buddyforms' ) {
@@ -129,9 +108,9 @@ function buddyforms_apwg_admin_settings_sidebar_metabox_html( $form, $selected_f
 	buddyforms_display_field_group_table( $form_setup, $field_id = 'global' );
 }
 
-add_filter( 'add_meta_boxes', 'buddyforms_apwg_admin_settings_sidebar_metabox', 10, 2 );
+add_filter( 'add_meta_boxes', 'buddyforms_apwg_admin_settings_metabox', 10, 2 );
 
-function buddyforms_form_element_add_field_ge( $form_fields, $form_slug, $field_type, $field_id ) {
+function buddyforms_apwg_form_element_add_field( $form_fields, $form_slug, $field_type, $field_id ) {
 	global $buddyforms, $post;
 
 	if ( $post->post_type != 'buddyforms' ) {
@@ -140,15 +119,15 @@ function buddyforms_form_element_add_field_ge( $form_fields, $form_slug, $field_
 
 	$buddyform = get_post_meta( get_the_ID(), '_buddyforms_options', true );
 
-	if ( $field_type != 'attachgrouptype' ) {
+	if ( $field_type != 'apwg_taxonomy' ) {
 		return $form_fields;
 	}
 
-	$attachgrouptype = Array();
+	$apwg_taxonomy = Array();
 
 	$value = '';
-	if ( isset( $buddyform['form_fields'][ $field_id ]['attachgrouptype'] ) ) {
-		$value = $buddyform['form_fields'][ $field_id ]['attachgrouptype'];
+	if ( isset( $buddyform['form_fields'][ $field_id ]['apwg_taxonomy'] ) ) {
+		$value = $buddyform['form_fields'][ $field_id ]['apwg_taxonomy'];
 	}
 
 	foreach ( $buddyforms as $key => $bform ) {
@@ -157,14 +136,14 @@ function buddyforms_form_element_add_field_ge( $form_fields, $form_slug, $field_
 			continue;
 		}
 
-		$attachgrouptype['none'] = 'none';
+		$apwg_taxonomy['none'] = 'none';
 		if ( isset( $bform['groups']['attache'] ) ) {
-			$attachgrouptype[ $bform['slug'] ] = $bform['name'];
+			$apwg_taxonomy[ $bform['slug'] ] = $bform['name'];
 		}
 
 	}
 
-	$form_fields['general']['attachgrouptype'] = new Element_Select( '<b>' . __( "Attach Group Type:", 'buddyforms' ) . '</b>', "buddyforms_options[form_fields][" . $field_id . "][attachgrouptype]", $attachgrouptype, array( 'value' => $value ) );
+	$form_fields['general']['apwg_taxonomy'] = new Element_Select( '<b>' . __( "Attach Group Type:", 'buddyforms' ) . '</b>', "buddyforms_options[form_fields][" . $field_id . "][apwg_taxonomy]", $apwg_taxonomy, array( 'value' => $value ) );
 
 	$multiple = 'false';
 	if ( isset( $buddyform_options['form_fields'][ $field_id ]['multiple'] ) ) {
@@ -176,10 +155,10 @@ function buddyforms_form_element_add_field_ge( $form_fields, $form_slug, $field_
 	return $form_fields;
 }
 
-add_filter( 'buddyforms_form_element_add_field', 'buddyforms_form_element_add_field_ge', 1, 5 );
+add_filter( 'buddyforms_form_element_add_field', 'buddyforms_apwg_form_element_add_field', 1, 5 );
 
 
-function buddyforms_attach_groups_create_edit_form_display_element_group( $form, $form_args ) {
+function buddyforms_apwg_frontend_form_element( $form, $form_args ) {
 	global $buddyforms;
 
 
@@ -189,9 +168,9 @@ function buddyforms_attach_groups_create_edit_form_display_element_group( $form,
 	extract($form_args);
 
 
-	if ( $customfield['type'] == 'attachgrouptype' ) {
+	if ( $customfield['type'] == 'apwg_taxonomy' ) {
 
-		if ( $form_slug == $customfield['attachgrouptype'] || $customfield['attachgrouptype'] == 'none' ) {
+		if ( $form_slug == $customfield['apwg_taxonomy'] || $customfield['apwg_taxonomy'] == 'none' ) {
 			return;
 		}
 
@@ -244,4 +223,4 @@ function buddyforms_attach_groups_create_edit_form_display_element_group( $form,
 
 }
 
-add_filter( 'buddyforms_create_edit_form_display_element', 'buddyforms_attach_groups_create_edit_form_display_element_group', 1, 2 );
+add_filter( 'buddyforms_create_edit_form_display_element', 'buddyforms_apwg_frontend_form_element', 1, 2 );

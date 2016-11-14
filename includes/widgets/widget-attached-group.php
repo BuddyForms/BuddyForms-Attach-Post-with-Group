@@ -6,7 +6,7 @@
  * @since 0.1-beta
  */
 
-class BuddyForms_Attached_Group_Widget extends WP_Widget
+class BuddyForms_APWG_Taxonomy_Term_Post_Widget extends WP_Widget
 {
     /**
      * Initialize the widget
@@ -16,11 +16,11 @@ class BuddyForms_Attached_Group_Widget extends WP_Widget
      */
     public function __construct() {
         $widget_ops = array(
-            'classname'   => 'widget_display_buddyforms_attached_group',
-            'description' => __( 'BuddyForms Attached Group', 'buddyforms' )
+            'classname'   => 'buddyforms_apwg_taxonomy_term_post',
+            'description' => __( 'BuddyForms APWG Term Post', 'buddyforms' )
         );
 
-        parent::__construct( false, __( 'BuddyForms Attached Group', 'buddyforms' ), $widget_ops );
+        parent::__construct( false, __( 'BuddyForms APWG Term Post', 'buddyforms' ), $widget_ops );
     }
 
     /**
@@ -47,15 +47,17 @@ class BuddyForms_Attached_Group_Widget extends WP_Widget
         if(empty($form_slug))
             return;
 
-        foreach($buddyforms[$form_slug]['form_fields'] as $key => $form_field){
-
-            if($form_field['type'] == 'attachgrouptype'){
-                $attachgrouptypes[$form_field['slug']] = $buddyforms[$form_field['attachgrouptype']]['post_type'];
-            }
-
+        if( ! isset( $buddyforms[$form_slug]['form_fields'] )){
+            return;
         }
 
-        if(!is_array($attachgrouptypes))
+        foreach($buddyforms[$form_slug]['form_fields'] as $key => $form_field){
+            if($form_field['type'] == 'apwg_taxonomy'){
+                $apwg_taxonomys[$form_field['slug']] = $buddyforms[$form_field['apwg_taxonomy']]['post_type'];
+            }
+        }
+
+        if(!is_array($apwg_taxonomys))
             return;
 
         $title = ! empty( $instance['title'] ) ? $instance['title'] : '';
@@ -63,7 +65,7 @@ class BuddyForms_Attached_Group_Widget extends WP_Widget
         if( ! empty( $title ) )
             echo $before_title . $title . $after_title;
 
-        foreach($attachgrouptypes as $field_slug => $post_type){
+        foreach($apwg_taxonomys as $field_slug => $post_type){
             $term = wp_get_post_terms($groups_post_id, 'bf_apwg_' . $field_slug, array("fields" => "all"));
 
             if(is_wp_error($term))
@@ -148,8 +150,12 @@ class BuddyForms_Attached_Group_Widget extends WP_Widget
         <div>
             <p>
                 <label for="<?php echo $this->get_field_id( 'title' ); ?>">
-                    <?php _e( 'Title:', 'buddyforms' ) ?>
+                    <p><?php _e( 'Display the Post used to create the Taxonomy Term.', 'buddyforms' ) ?></p>
+                    <br>
+                    <?php _e( 'Taxonomy Term Post Title:', 'buddyforms' ) ?>
                     <input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo $title ?>" />
+
+
                 </label>
             </p>
         </div>

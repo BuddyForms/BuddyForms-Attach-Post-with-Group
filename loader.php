@@ -151,7 +151,7 @@ class BuddyForms_Group_Extension {
 	}
 
 	/**
-	 * Registers BuddyPress buddyforms taxonomies for attachgrouptypes
+	 * Registers BuddyPress buddyforms taxonomies for apwg_taxonomys
 	 *
 	 * @package buddyforms
 	 * @since 0.1-beta
@@ -159,9 +159,9 @@ class BuddyForms_Group_Extension {
 	public function register_taxonomy() {
 		global $buddyforms;
 
-		if ( defined( 'DOING_AJAX' ) ) {
-			return;
-		}
+//		if ( defined( 'DOING_AJAX' ) ) {
+//			return;
+//		}
 
 		if ( ! isset( $buddyforms ) ) {
 			return;
@@ -180,9 +180,9 @@ class BuddyForms_Group_Extension {
 			if ( isset( $buddyform['form_fields'] ) ) {
 				foreach ( $buddyform['form_fields'] as $field_key => $form_field ) {
 
-					if ( isset( $form_field['type'] ) && $form_field['type'] == 'attachgrouptype' ) {
+					if ( isset( $form_field['type'] ) && $form_field['type'] == 'apwg_taxonomy' ) {
 
-						$attached_form_slug = $form_field['attachgrouptype'];
+						$attached_form_slug = $form_field['apwg_taxonomy'];
 						$attached_post_type = $buddyforms[ $attached_form_slug ]['post_type'];
 
 						$labels_group_groups = array(
@@ -348,7 +348,7 @@ class BuddyForms_Group_Extension {
 		require_once( BUDDYFORMS_GE_INCLUDES_PATH . 'widgets/widget-group-list-moderators.php' );
 		require_once( BUDDYFORMS_GE_INCLUDES_PATH . 'widgets/widget-all-posts-of-displayed-group.php' );
 
-		register_widget( 'BuddyForms_Attached_Group_Widget' );
+		register_widget( 'BuddyForms_APWG_Taxonomy_Term_Post_Widget' );
 		register_widget( 'BuddyForms_List_Moderators_Widget' );
 		register_widget( 'BuddyForms_All_Posts_of_this_Group_Widget' );
 	}

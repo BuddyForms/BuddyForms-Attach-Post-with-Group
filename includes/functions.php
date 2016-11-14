@@ -41,7 +41,7 @@ function bf_ge_updtae_post_meta( $customfield, $post_id ) {
 	}
 
 	// Set the post terms
-	if ( $customfield['type'] == 'attachgrouptype' ) {
+	if ( $customfield['type'] == 'apwg_taxonomy' ) {
 
 		$term_ids = '';
 
