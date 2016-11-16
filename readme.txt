@@ -4,7 +4,7 @@ Tags: buddypress, user, members, profiles, custom post types, taxonomy, frontend
 Plugin URI: http://buddyforms.com/downloads/attach-post-with-group/
 Requires at least: 3.9
 Tested up to: 4.6.1
-Stable tag: 1.1.8
+Stable tag: 1.1.9
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -100,7 +100,7 @@ BuddyForms gives you these possibilities for a wide variety of uses.
 
 == Changelog ==
 
-= 1.1.8 =
+= 1.1.9 =
 Huge update some parts got a complete rewrite
 Hooks rename session
 Only show form type related form elements
@@ -117,7 +117,7 @@ Change the taxonomy name to have it more logical
 Fixed a couple of smaller issues
 Fixed attached form category was not saved correctly
 
-= 1.1.7 =
+= 1.1.8 =
 Clean up the code
 Add one small check if $buddyforms is an array to avoid a notice in the foreach
 
@@ -143,6 +143,10 @@ move the edit out of the admin section and use the admin section for options
 create a new option to select the group user role needed to edit the post
 rework the templates
 clean up the code
+
+= 1.1.3 =
+Rename session. Make all more logic and self explaining thanks to user feedback.
+Rebuild the ui and widgets
 
 = 1.1.2 =
 add a new function buddyforms_groups_group_settings_edited to sync the post status

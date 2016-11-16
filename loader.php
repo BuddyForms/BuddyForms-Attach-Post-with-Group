@@ -5,7 +5,7 @@
  Description: Create engaged communities with every post.
  Requires at least: 3.9
  Tested up to: 4.6.1
- Version: 1.1.8
+ Version: 1.1.9
  Author: Sven Lehnert
  Author URI: https://profiles.wordpress.org/svenl77
  Licence: GPLv3
