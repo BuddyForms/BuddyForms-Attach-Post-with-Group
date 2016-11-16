@@ -71,11 +71,11 @@ class BuddyForms_APWG_Taxonomy_Term_Post_Widget extends WP_Widget
             if(is_wp_error($term))
                 return;
 
-            if ( isset($term[0]->name)) {
+            if ( isset($term[0]->slug)) {
 
                 $args=array(
-                    'name' => $term[0]->name,
-                    'post_type' => $attached_post_type,
+                    'name' => $term[0]->slug,
+                    'post_type' => $post_type,
                     'post_status' => 'publish',
                     'posts_per_page' => 1
                 );
