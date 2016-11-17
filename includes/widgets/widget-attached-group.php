@@ -62,6 +62,10 @@ class BuddyForms_APWG_Taxonomy_Term_Post_Widget extends WP_Widget
 
         $title = ! empty( $instance['title'] ) ? $instance['title'] : '';
 
+        $show_title = ! empty( $instance['show_title'] ) ? esc_attr( $instance['show_title'] ) : '';
+        $show_avatar = ! empty( $instance['show_avatar'] ) ? esc_attr( $instance['show_avatar'] ) : '';
+        $show_excerpt = ! empty( $instance['show_excerpt'] ) ? esc_attr( $instance['show_excerpt'] ) : '';
+
         if( ! empty( $title ) )
             echo $before_title . $title . $after_title;
 
@@ -97,11 +101,22 @@ class BuddyForms_APWG_Taxonomy_Term_Post_Widget extends WP_Widget
                         if ( $groups_post_id != $post->ID ) {
 
                             setup_postdata( $post );
+
                             $tmp .= '<a href="'.get_permalink().'" title="'.the_title_attribute(array('echo'=> 0)).'">';
                             $tmp .= '<li>';
-                            $tmp .= get_the_post_thumbnail($post->ID , 'post-thumbnails' , $get_the_post_thumbnail_attr);
-                            $tmp .= '<h3 class="post_title">'  . get_the_title()   . '</h3>';
-                            $tmp .= '<p class="post_excerpt">' . get_the_excerpt() . '</p>';
+
+                            if( ! empty( $show_title ) ){
+                                $tmp .= '<h3 class="post_title">'  . get_the_title()   . '</h3>';
+                            }
+
+                            if( ! empty( $show_avatar ) ){
+                                $tmp .= '<p>' . get_the_post_thumbnail($post->ID , 'post-thumbnails' , $get_the_post_thumbnail_attr) . '</p>';
+                            }
+
+                            if( ! empty( $show_excerpt ) ){
+                                $tmp .= '<p class="post_excerpt">' . get_the_excerpt() . '</p>';
+                            }
+                            
                             $tmp .= '</li>';
                             $tmp .= '</a>';
                             $tmp .= '<div class="clear"></div>';
@@ -133,6 +148,9 @@ class BuddyForms_APWG_Taxonomy_Term_Post_Widget extends WP_Widget
     public function update( $new_instance, $old_instance ) {
         $instance          = $old_instance;
         $instance['title'] = strip_tags( $new_instance['title'] );
+        $instance['show_title'] = strip_tags( $new_instance['show_title'] );
+        $instance['show_avatar'] = strip_tags( $new_instance['show_avatar'] );
+        $instance['show_excerpt'] = strip_tags( $new_instance['show_excerpt'] );
 
         return $instance;
     }
@@ -146,6 +164,9 @@ class BuddyForms_APWG_Taxonomy_Term_Post_Widget extends WP_Widget
     public function form( $instance ) {
         $title = ! empty( $instance['title'] ) ? esc_attr( $instance['title'] ) : '';
 
+        $show_title = ! empty( $instance['show_title'] ) ? esc_attr( $instance['show_title'] ) : '';
+        $show_avatar = ! empty( $instance['show_avatar'] ) ? esc_attr( $instance['show_avatar'] ) : '';
+        $show_excerpt = ! empty( $instance['show_excerpt'] ) ? esc_attr( $instance['show_excerpt'] ) : '';
         ?>
         <div>
             <p>
@@ -157,6 +178,18 @@ class BuddyForms_APWG_Taxonomy_Term_Post_Widget extends WP_Widget
 
 
                 </label>
+            </p>
+            <p>
+                <label for="<?php echo $this->get_field_id( 'show_title' ); ?>"><?php _e( 'Show the title', 'buddyforms' ) ?></label>
+                <input <?php checked( $show_title, 'show_title') ?> class="widefat" id="<?php echo $this->get_field_id( 'show_title' ); ?>" name="<?php echo $this->get_field_name( 'show_title' ); ?>" type="checkbox" value="show_title" />
+            </p>
+            <p>
+                <label for="<?php echo $this->get_field_id( 'show_avatar' ); ?>"><?php _e( 'Show the avatar', 'buddyforms' ) ?></label>
+                <input <?php checked( $show_avatar, 'show_avatar') ?> class="widefat" id="<?php echo $this->get_field_id( 'show_avatar' ); ?>" name="<?php echo $this->get_field_name( 'show_avatar' ); ?>" type="checkbox" value="show_avatar" />
+            </p>
+            <p>
+                <label for="<?php echo $this->get_field_id( 'show_excerpt' ); ?>"><?php _e( 'Show the excerpt', 'buddyforms' ) ?></label>
+                <input <?php checked( $show_excerpt, 'show_excerpt') ?> class="widefat" id="<?php echo $this->get_field_id( 'show_excerpt' ); ?>" name="<?php echo $this->get_field_name( 'show_excerpt' ); ?>" type="checkbox" value="show_excerpt" />
             </p>
         </div>
     <?php
