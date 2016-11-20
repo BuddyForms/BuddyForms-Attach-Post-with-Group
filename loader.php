@@ -387,12 +387,12 @@ add_action('init', function(){
 		);
 
 		$config = array(
-			'id'           => 'buddyforms-apwg',         // Unique ID for hashing notices for multiple instances of TGMPA.
-			'parent_slug'  => 'edit.php?post_type=buddyforms',            // Parent menu slug.
+			'id'           => 'buddyforms-tgmpa',  // Unique ID for hashing notices for multiple instances of TGMPA.
+			'parent_slug'  => 'plugins.php',       // Parent menu slug.
 			'capability'   => 'manage_options',    // Capability needed to view plugin install page, should be a capability associated with the parent menu used.
-			'has_notices'  => true,                    // Show admin notices or not.
-			'dismissable'  => false,                    // If false, a user cannot dismiss the nag message.
-			'is_automatic' => true,                   // Automatically activate plugins after installation or not.
+			'has_notices'  => true,                // Show admin notices or not.
+			'dismissable'  => false,               // If false, a user cannot dismiss the nag message.
+			'is_automatic' => true,                // Automatically activate plugins after installation or not.
 		);
 
 		// Call the tgmpa function to register the required plugins
