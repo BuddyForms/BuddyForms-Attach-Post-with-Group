@@ -116,7 +116,7 @@ class BuddyForms_APWG_Taxonomy_Term_Post_Widget extends WP_Widget
                             if( ! empty( $show_excerpt ) ){
                                 $tmp .= '<p class="post_excerpt">' . get_the_excerpt() . '</p>';
                             }
-                            
+
                             $tmp .= '</li>';
                             $tmp .= '</a>';
                             $tmp .= '<div class="clear"></div>';
