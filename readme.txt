@@ -4,7 +4,7 @@ Tags: buddypress, user, members, profiles, custom post types, taxonomy, frontend
 Plugin URI: http://buddyforms.com/downloads/attach-post-with-group/
 Requires at least: 3.9
 Tested up to: 4.6.1
-Stable tag: 1.1.9
+Stable tag: 1.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -99,6 +99,12 @@ BuddyForms gives you these possibilities for a wide variety of uses.
 
 
 == Changelog ==
+
+= 1.2 =
+Add dependencies management with tgm
+Use the slug not the name in the query
+Add 3 new options to the attached group widget to show hide title avatar and excerpt
+
 
 = 1.1.9 =
 Huge update some parts got a complete rewrite

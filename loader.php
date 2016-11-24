@@ -5,7 +5,7 @@
  Description: Create engaged communities with every post.
  Requires at least: 3.9
  Tested up to: 4.6.1
- Version: 1.1.9
+ Version: 1.2
  Author: Sven Lehnert
  Author URI: https://profiles.wordpress.org/svenl77
  Licence: GPLv3
@@ -92,7 +92,7 @@ class BuddyForms_Group_Extension {
 
 	public function load_constants() {
 
-		define( 'BuddyForms_Attach_Post_with_Group', '1.1.7' );
+		define( 'BuddyForms_Attach_Post_with_Group', '1.2' );
 
 		if ( ! defined( 'BUDDYFORMS_GE_INSTALL_PATH' ) ) {
 			define( 'BUDDYFORMS_GE_INSTALL_PATH', dirname( __FILE__ ) . '/' );

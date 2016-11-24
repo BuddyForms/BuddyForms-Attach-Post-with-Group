@@ -206,13 +206,13 @@ class BuddyForms_All_Posts_of_this_Group_Widget extends WP_Widget
             </p>
             <p>
                 <label for="<?php echo $this->get_field_id( 'title_attached_groups' ); ?>">
-                    <?php _e( 'Parent Label e.g. Group Posts' , 'buddyforms' ) ?>
+                    <?php _e( 'Item Label e.g. Other Posts of the same apwg taxonomy', 'buddyforms' ) ?>
                     <input class="widefat" id="<?php echo $this->get_field_id( 'title_attached_groups' ); ?>" name="<?php echo $this->get_field_name( 'title_attached_groups' ); ?>" type="text" value="<?php echo $title_attached_groups ?>" />
                 </label>
             </p>
             <p>
                 <label for="<?php echo $this->get_field_id( 'title_other_attached_groups' ); ?>">
-                    <?php _e( 'Item Label e.g. Other Posts of the same apwg taxonomy', 'buddyforms' ) ?>
+                    <?php _e( 'Parent Label e.g. Group Posts' , 'buddyforms' ) ?>
                     <input class="widefat" id="<?php echo $this->get_field_id( 'title_other_attached_groups' ); ?>" name="<?php echo $this->get_field_name( 'title_other_attached_groups' ); ?>" type="text" value="<?php echo $title_other_attached_groups ?>" />
                 </label>
             </p>
