@@ -12,8 +12,6 @@ Create engaged communities with every post.
 
 == Description ==
 
-This is the BuddyForms Attach Post with Group extension. You need the BuddyForms plugin installed for the plugin to work. <a href="http://buddyforms.com" target="_blank">Get BuddyForms now!</a>
-
 With this plugin, you’ll automatically be able to create a new BuddyPress group for pre-assigned BuddyForms post submissions and attach that group to the post. Then User-submitted posts with BuddyForms become a BuddyPress group with all the included functionality and endless possibilities.
 
 <h4>Now “why would you want to create groups for every post”, you ask? </h4>Here’s some quick examples of why it’s the perfect plugin to help your community and business grow:
