@@ -6,8 +6,8 @@
  Requires at least: 3.9
  Tested up to: 4.6.1
  Version: 1.2.1
- Author: Sven Lehnert
- Author URI: https://profiles.wordpress.org/svenl77
+ Author: ThemeKraft
+ Author URI: https://themekraft.com/buddyforms/
  Licence: GPLv3
 
  *****************************************************************************
