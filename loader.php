@@ -5,7 +5,7 @@
  Description: Create engaged communities with every post.
  Requires at least: 3.9
  Tested up to: 4.6.1
- Version: 1.2.1
+ Version: 1.2.2
  Author: ThemeKraft
  Author URI: https://themekraft.com/buddyforms/
  Licence: GPLv3
@@ -92,7 +92,7 @@ class BuddyForms_Group_Extension {
 
 	public function load_constants() {
 
-		define( 'BuddyForms_Attach_Post_with_Group', '1.2' );
+		define( 'BuddyForms_Attach_Post_with_Group', '1.2.2' );
 
 		if ( ! defined( 'BUDDYFORMS_GE_INSTALL_PATH' ) ) {
 			define( 'BUDDYFORMS_GE_INSTALL_PATH', dirname( __FILE__ ) . '/' );
@@ -402,3 +402,82 @@ add_action('init', function(){
 
 	} );
 }, 1, 1);
+
+// Create a helper function for easy SDK access.
+function baptge_fs() {
+	global $baptge_fs;
+
+	if ( ! isset( $baptge_fs ) ) {
+		// Include Freemius SDK.
+		if ( file_exists( dirname( dirname( __FILE__ ) ) . '/buddyforms/includes/resources/freemius/start.php' ) ) {
+			// Try to load SDK from parent plugin folder.
+			require_once dirname( dirname( __FILE__ ) ) . '/buddyforms/includes/resources/freemius/start.php';
+		} else if ( file_exists( dirname( dirname( __FILE__ ) ) . '/buddyforms-premium/includes/resources/freemius/start.php' ) ) {
+			// Try to load SDK from premium parent plugin folder.
+			require_once dirname( dirname( __FILE__ ) ) . '/buddyforms-premium/includes/resources/freemius/start.php';
+		} else {
+			require_once dirname(__FILE__) . '/includes/resources/freemius/start.php';
+		}
+
+		$baptge_fs = fs_dynamic_init( array(
+			'id'                  => '407',
+			'slug'                => 'buddyforms-attach-posts-to-groups-extension',
+			'type'                => 'plugin',
+			'public_key'          => 'pk_c133f19751d39a5cf3cf3ef9a5129',
+			'is_premium'          => false,
+			'has_paid_plans'      => false,
+			'parent'              => array(
+				'id'         => '391',
+				'slug'       => 'buddyforms',
+				'public_key' => 'pk_dea3d8c1c831caf06cfea10c7114c',
+				'name'       => 'BuddyForms',
+			),
+			'menu'                => array(
+				'slug'           => 'edit.php?post_type=buddyforms',
+				'support'        => false,
+			),
+		) );
+	}
+
+	return $baptge_fs;
+}
+function baptge_fs_is_parent_active_and_loaded() {
+	// Check if the parent's init SDK method exists.
+	return function_exists( 'buddyforms_core_fs' );
+}
+
+function baptge_fs_is_parent_active() {
+	$active_plugins_basenames = get_option( 'active_plugins' );
+
+	foreach ( $active_plugins_basenames as $plugin_basename ) {
+		if ( 0 === strpos( $plugin_basename, 'buddyforms/' ) ||
+		     0 === strpos( $plugin_basename, 'buddyforms-premium/' )
+		) {
+			return true;
+		}
+	}
+
+	return false;
+}
+
+function baptge_fs_init() {
+	if ( baptge_fs_is_parent_active_and_loaded() ) {
+		// Init Freemius.
+		baptge_fs();
+
+		// Parent is active, add your init code here.
+	} else {
+		// Parent is inactive, add your error handling here.
+	}
+}
+
+if ( baptge_fs_is_parent_active_and_loaded() ) {
+	// If parent already included, init add-on.
+	baptge_fs_init();
+} else if ( baptge_fs_is_parent_active() ) {
+	// Init add-on only after the parent is loaded.
+	add_action( 'buddyforms_core_fs_loaded', 'baptge_fs_init' );
+} else {
+	// Even though the parent is not activated, execute add-on for activation / uninstall hooks.
+	baptge_fs_init();
+}

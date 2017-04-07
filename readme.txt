@@ -4,7 +4,7 @@ Tags: buddypress, user, members, profiles, custom post types, taxonomy, frontend
 Plugin URI: http://buddyforms.com/downloads/attach-post-with-group/
 Requires at least: 3.9
 Tested up to: 4.7
-Stable tag: 1.2.1
+Stable tag: 1.2.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -97,6 +97,10 @@ BuddyForms gives you these possibilities for a wide variety of uses.
 
 
 == Changelog ==
+
+= 1.2.2 =
+Freemius Integration
+Smaller changes
 
 = 1.2.1 =
 Fixed an issue with the dependencies management. If pro was activated it still ask for the free version. Fixed now with a new default BUDDYFORMS_PRO_VERSION in the core to check if the pro is active.
