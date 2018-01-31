@@ -97,7 +97,11 @@ if ( class_exists( 'BP_Group_Extension' ) ) :
 		function buddyforms_front_js_loader_bp_groups_support( $found ) {
 			return true;
 		}
-
+		/**
+         * In this example we generally allow all to create and edit posts. This would be really dangerous and only should be used in closed intranets.
+		 * In most situation you will use the filter to only fire in some situations. Please see the Groups Extension for a more complex example
+		 * Link to the Groups Extension Example: https://github.com/BuddyForms/BuddyForms-Attach-Post-with-Group/blob/7d7d1b9c475cdfb076ef34963aeb94952a2e9545/includes/group-extension.php#L47
+		 */
 		function buddyforms_user_can_edit( $found ) {
 			return true;
 		}
