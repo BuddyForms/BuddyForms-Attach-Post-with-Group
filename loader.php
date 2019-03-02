@@ -4,7 +4,7 @@
  Plugin URI: http://buddyforms.com/downloads/attach-post-with-group/
  Description: Create engaged communities with every post.
  Requires at least: 3.9
- Tested up to: 4.6.1
+ Tested up to: 5.0
  Version: 1.2.3
  Author: ThemeKraft
  Author URI: https://themekraft.com/buddyforms/
