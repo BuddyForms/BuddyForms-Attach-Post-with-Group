@@ -1,5 +1,5 @@
 <?php
-if ( class_exists( 'BP_Group_Extension' ) ) :
+if ( class_exists( 'BP_Group_Extension' ) ) {
 	class BuddyForms_Groups extends BP_Group_Extension {
 		public $enable_create_step = false;
 		public $enable_nav_item = false;
@@ -60,11 +60,15 @@ if ( class_exists( 'BP_Group_Extension' ) ) :
 				$form_slug = $this->attached_form_slug;
 				$post_id   = $this->attached_post_id;
 
-				add_action( 'bp_after_group_details_admin', create_function( '', 'global $post_id; buddyforms_wp_list_post_revisions($post_id);' ) );
-
+				add_action( 'bp_after_group_details_admin', function(){
+				    global $post_id;
+				    buddyforms_wp_list_post_revisions($post_id);
+                } );
 			}
 
-			add_action( 'buddyforms_hook_fields_from_post_id', create_function( '', 'return "' . $this->attached_post_id . '";' ) );
+			add_action( 'buddyforms_hook_fields_from_post_id', function () use ($post_id){
+			    return $post_id;
+            } );
 
 			if ( ! isset( $buddyforms[ $this->attached_form_slug ]['form_fields'] ) ) {
 
@@ -278,13 +282,19 @@ if ( class_exists( 'BP_Group_Extension' ) ) :
 					'parent_url'      => bp_get_group_permalink( $bp->groups->current_group ),
 					'position'        => 11,
 					'item_css_id'     => 'nav-activity',
-					'screen_function' => create_function( '', "bp_core_load_template( apply_filters( 'groups_template_group_home', 'groups/single/home' ) );" ),
+					'screen_function' => function(){
+					    bp_core_load_template( apply_filters( 'groups_template_group_home', 'groups/single/home' ) );
+                    },
 					'user_has_access' => 1
 				) );
 
 				if ( bp_is_current_action( 'activity' ) ) {
-					add_action( 'bp_template_content_header', create_function( '', 'echo "' . esc_attr( 'Activity' ) . '";' ) );
-					add_action( 'bp_template_title', create_function( '', 'echo "' . esc_attr( 'Activity' ) . '";' ) );
+					add_action( 'bp_template_content_header', function(){
+					    _e( 'Activity', 'buddyforms' );
+                    } );
+					add_action( 'bp_template_title', function(){
+					    _e( 'Activity', 'buddyforms' );
+                    } );
 				}
 			}
 		}
@@ -292,4 +302,4 @@ if ( class_exists( 'BP_Group_Extension' ) ) :
 	}
 
 	bp_register_group_extension( 'BuddyForms_Groups' );
-endif;
+}
