@@ -191,7 +191,7 @@ function buddyforms_apwg_frontend_form_element( $form, $form_args ) {
 			'echo'             => false,
 			'selected'         => false,
 			'hierarchical'     => 1,
-			'name'             => sanitize_title( $customfield['slug'] ),
+			'name'             => buddyforms_sanitize_slug( $customfield['slug'] ),
 			'class'            => 'postform bf-select2',
 			'depth'            => 0,
 			'tab_index'        => 0,
