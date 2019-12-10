@@ -1,10 +1,10 @@
 === BuddyForms Attach Post with Group ===
-Contributors: svenl77, konradS, buddyforms
+Contributors: svenl77, konradS, buddyforms, gfirem
 Tags: buddypress, user, members, profiles, custom post types, taxonomy, frontend posting, frontend editing, groups, post attached to groups
 Plugin URI: http://buddyforms.com/downloads/attach-post-with-group/
 Requires at least: 3.9
-Tested up to: 5.0
-Stable tag: 1.2.3
+Tested up to: 5.4
+Stable tag: 1.2.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -97,6 +97,9 @@ BuddyForms gives you these possibilities for a wide variety of uses.
 
 
 == Changelog ==
+= 1.2.4 - 10 Dec 2019 =
+* Improved compatibility with the last version of BuddyForms.
+* Removed deprecate use of the function `create_function`.
 
 = 1.2.3 -  Mar. 02 2019 =
 Remove sdk and load from core

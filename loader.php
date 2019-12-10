@@ -1,16 +1,17 @@
 <?php
 /*
- Plugin Name: BuddyForms Attach Post with Group
- Plugin URI: http://buddyforms.com/downloads/attach-post-with-group/
- Description: Create engaged communities with every post.
- Requires at least: 3.9
- Tested up to: 5.0
- Version: 1.2.3
- Author: ThemeKraft
- Author URI: https://themekraft.com/buddyforms/
- Licence: GPLv3
- Text Domain: buddyforms
-
+ * Plugin Name: BuddyForms Attach Post with Group
+ * Plugin URI: http://buddyforms.com/downloads/attach-post-with-group/
+ * Description: Create engaged communities with every post.
+ * Requires at least: 3.9
+ * Tested up to: 5.0
+ * Version: 1.2.4
+ * Author: ThemeKraft
+ * Author URI: https://themekraft.com/buddyforms/
+ * Licence: GPLv3
+ * Text Domain: buddyforms
+ * Svn: buddyforms-attach-posts-to-groups-extension
+ *
  *****************************************************************************
  *
  * This script is free software; you can redistribute it and/or modify
@@ -57,7 +58,7 @@ class BuddyForms_Group_Extension {
 		add_action( 'template_redirect', array( $this, 'template_redirect' ), 999, 2 );
 
 		// Register all available widgets
-		add_action( 'widgets_init', array( $this, 'widgets_init' ));
+		add_action( 'widgets_init', array( $this, 'widgets_init' ) );
 
 		// Create the Groups Component.
 		add_action( 'bp_init', array( $this, 'setup_group_extension' ), 10, 1 );
@@ -93,7 +94,7 @@ class BuddyForms_Group_Extension {
 
 	public function load_constants() {
 
-		define( 'BuddyForms_Attach_Post_with_Group', '1.2.3' );
+		define( 'BuddyForms_Attach_Post_with_Group', '1.2.4' );
 
 		if ( ! defined( 'BUDDYFORMS_GE_INSTALL_PATH' ) ) {
 			define( 'BUDDYFORMS_GE_INSTALL_PATH', dirname( __FILE__ ) . '/' );
@@ -187,7 +188,7 @@ class BuddyForms_Group_Extension {
 						$attached_post_type = $buddyforms[ $attached_form_slug ]['post_type'];
 
 						$labels_group_groups = array(
-							'name'          =>  $form_field['name'],
+							'name' => $form_field['name'],
 						);
 
 						register_taxonomy( 'bf_apwg_' . $form_field['slug'], $buddyform['post_type'], array(
@@ -205,7 +206,7 @@ class BuddyForms_Group_Extension {
 						$terms = get_terms(
 							'bf_apwg_' . $form_field['slug'],
 							array(
-								'fields' => 'all',
+								'fields'     => 'all',
 								'hide_empty' => false
 							)
 						);
@@ -214,12 +215,13 @@ class BuddyForms_Group_Extension {
 							foreach ( $terms as $term_key => $term ) {
 
 								$cat_posts = array(
-									'tax_query' => array(
+									'tax_query'      => array(
 										array(
 											'taxonomy' => $term->taxonomy,
-											'field' => 'id',
-											'terms' => $term->term_id,
-										)),
+											'field'    => 'id',
+											'terms'    => $term->term_id,
+										)
+									),
 									'post_type'      => $attached_post_type, // my custom post type
 									'posts_per_page' => 1, // show all posts
 									'post_status'    => 'publish',
@@ -227,16 +229,16 @@ class BuddyForms_Group_Extension {
 									'meta_value'     => $attached_form_slug
 								);
 
-								$cat_posts = get_posts($cat_posts);
+								$cat_posts = get_posts( $cat_posts );
 
-								if( count( $cat_posts ) < 1 ){
+								if ( count( $cat_posts ) < 1 ) {
 									wp_delete_term( $term->term_id, 'bf_apwg_' . $form_field['slug'] );
 								}
 
 							}
 						} else {
 
-							bf_apwg_generate_attached_tax($form_field['slug'], $attached_post_type, $attached_form_slug );
+							bf_apwg_generate_attached_tax( $form_field['slug'], $attached_post_type, $attached_form_slug );
 
 						}
 					}
@@ -360,18 +362,18 @@ new BuddyForms_Group_Extension();
 //
 // Check the plugin dependencies
 //
-add_action('init', function(){
+add_action( 'init', function () {
 
 	// Only Check for requirements in the admin
-	if(!is_admin()){
+	if ( ! is_admin() ) {
 		return;
 	}
 
 	// Require TGM
-	require ( dirname(__FILE__) . '/includes/resources/tgm/class-tgm-plugin-activation.php' );
+	require( dirname( __FILE__ ) . '/includes/resources/tgm/class-tgm-plugin-activation.php' );
 
 	// Hook required plugins function to the tgmpa_register action
-	add_action( 'tgmpa_register', function(){
+	add_action( 'tgmpa_register', function () {
 
 		// Create the required plugins array
 		$plugins['buddypress'] = array(
@@ -383,9 +385,9 @@ add_action('init', function(){
 
 		if ( ! defined( 'BUDDYFORMS_PRO_VERSION' ) ) {
 			$plugins['buddyforms'] = array(
-				'name'      => 'BuddyForms',
-				'slug'      => 'buddyforms',
-				'required'  => true,
+				'name'     => 'BuddyForms',
+				'slug'     => 'buddyforms',
+				'required' => true,
 			);
 		}
 
@@ -402,7 +404,7 @@ add_action('init', function(){
 		tgmpa( $plugins, $config );
 
 	} );
-}, 1, 1);
+}, 1, 1 );
 
 // Create a helper function for easy SDK access.
 function baptge_fs() {
@@ -419,27 +421,28 @@ function baptge_fs() {
 		}
 
 		$baptge_fs = fs_dynamic_init( array(
-			'id'                  => '407',
-			'slug'                => 'buddyforms-attach-posts-to-groups-extension',
-			'type'                => 'plugin',
-			'public_key'          => 'pk_c133f19751d39a5cf3cf3ef9a5129',
-			'is_premium'          => false,
-			'has_paid_plans'      => false,
-			'parent'              => array(
+			'id'             => '407',
+			'slug'           => 'buddyforms-attach-posts-to-groups-extension',
+			'type'           => 'plugin',
+			'public_key'     => 'pk_c133f19751d39a5cf3cf3ef9a5129',
+			'is_premium'     => false,
+			'has_paid_plans' => false,
+			'parent'         => array(
 				'id'         => '391',
 				'slug'       => 'buddyforms',
 				'public_key' => 'pk_dea3d8c1c831caf06cfea10c7114c',
 				'name'       => 'BuddyForms',
 			),
-			'menu'                => array(
-				'slug'           => 'edit.php?post_type=buddyforms',
-				'support'        => false,
+			'menu'           => array(
+				'slug'    => 'edit.php?post_type=buddyforms',
+				'support' => false,
 			),
 		) );
 	}
 
 	return $baptge_fs;
 }
+
 function baptge_fs_is_parent_active_and_loaded() {
 	// Check if the parent's init SDK method exists.
 	return function_exists( 'buddyforms_core_fs' );
