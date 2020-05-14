@@ -262,7 +262,7 @@ class BuddyForms_Group_Extension {
 		}
 
 		if ( ! defined( 'BP_VERSION' ) ) {
-			return;
+			return $permalink;
 		}
 
 		if ( ! bp_is_active( 'groups' ) ) {

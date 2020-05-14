@@ -27,12 +27,6 @@
     }
   ],
   "minimum-stability": "stable",
-  "require": {
-    "php": ">=5.2"
-  },
-  "require-dev": {
-    "bruli/php-git-hooks": "^5.1"
-  },
   "scripts": {
     "package": "sh .tk/package.sh loader",
     "wp-release": "sh .tk/wp_release.sh",

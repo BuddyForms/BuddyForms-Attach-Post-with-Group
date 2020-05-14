@@ -320,10 +320,9 @@ function buddyforms_groups_single_post_meta( $form_fields, $args ) {
 	extract( $args );
 
 	if ( bp_current_action() != $form_slug ) {
-		;
+		return;
 	}
 
-	return;
 
 	if ( ! ( isset( $buddyforms[ $form_slug ]['groups']['display_content'] ) && in_array( 'meta', $buddyforms[ $form_slug ]['groups']['display_content'] ) ) ) {
 		return;
