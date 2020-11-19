@@ -4,7 +4,7 @@ Tags: buddypress, user, members, profiles, custom post types, taxonomy, frontend
 Plugin URI: http://buddyforms.com/downloads/attach-post-with-group/
 Requires at least: 3.9
 Tested up to: 5.4
-Stable tag: 1.2.4
+Stable tag: 1.2.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -97,6 +97,10 @@ BuddyForms gives you these possibilities for a wide variety of uses.
 
 
 == Changelog ==
+= 1.2.5 - 19 Nov 2020 = 
+* Fixed some typos in the code.
+* Fixed the feature to render post metadata on the Group Front-end.
+
 = 1.2.4 - 10 Dec 2019 =
 * Improved compatibility with the last version of BuddyForms.
 * Removed deprecate use of the function `create_function`.
