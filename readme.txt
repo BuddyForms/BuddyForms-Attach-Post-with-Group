@@ -100,6 +100,7 @@ BuddyForms gives you these possibilities for a wide variety of uses.
 = 1.2.5 - 19 Nov 2020 = 
 * Fixed some typos in the code.
 * Fixed the feature to render post metadata on the Group Front-end.
+* Added a fallback when Singular Name isn't set.
 
 = 1.2.4 - 10 Dec 2019 =
 * Improved compatibility with the last version of BuddyForms.
