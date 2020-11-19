@@ -89,7 +89,9 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
 
 				endswitch;
 
-				$this->name              = $buddyforms[ $this->attached_form_slug ]['singular_name'];
+				$this->name              = ! empty( $buddyforms[ $this->attached_form_slug ]['singular_name'] ) 
+					? $buddyforms[ $this->attached_form_slug ]['singular_name'] 
+					: $buddyforms[ $this->attached_form_slug ]['name'];
 				$this->nav_item_position = 20;
 				$this->slug              = $buddyforms[ $this->attached_form_slug ]['slug'];
 
