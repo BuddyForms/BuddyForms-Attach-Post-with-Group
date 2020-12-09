@@ -149,11 +149,14 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
 				jQuery(function () {
 					jQuery(".bf_show_aptg").click(function () {
 
-						jQuery(".bf_main_aptg").hide();
-						jQuery("#bf_aptg" + jQuery(this).attr("target")).show();
+						var url = window.location.href;
+						var base_url = url.split("?")[0];
 
-						jQuery("li.current").removeClass("current");
-						jQuery(this).closest("li").addClass("current");
+						if ( jQuery(this).attr("id") === "edit-post-details" ) {
+							window.location.href = base_url + "?edit_post_group";
+						} else {
+							window.location.href = base_url;
+						}
 
 						return false;
 					});
@@ -176,22 +179,28 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
 				</ul>
 			</div>
 
-			<div id="bf_aptg1"
-			     class="bf_main_aptg"><?php buddyforms_ge_locate_template( 'buddyforms/groups/single-post.php' ) ?></div>
+			<?php if ( isset( $_GET['edit_post_group'] ) && $this->buddyforms_user_can ) : ?>
 
-			<?php if ( $this->buddyforms_user_can ) { ?>
-				<div id="bf_aptg2" style="display: none;" class="bf_main_aptg">
-					<?php
-					$args = array(
-						'post_type' => $buddyforms[ $form_slug ]['post_type'],
-						'post_id'   => $attached_post_id,
-						'form_slug' => $form_slug,
-					);
+			<div id="bf_aptg2" class="bf_main_aptg">
+				<?php
+				$args = array(
+					'post_type' => $buddyforms[ $form_slug ]['post_type'],
+					'post_id'   => $attached_post_id,
+					'form_slug' => $form_slug,
+				);
 
-					echo buddyforms_create_edit_form( $args );
-					?>
-				</div>
-			<?php } ?>
+				echo buddyforms_create_edit_form( $args );
+				?>
+			</div>
+
+			<?php else : ?>
+
+			<div id="bf_aptg1" class="bf_main_aptg">
+				<?php buddyforms_ge_locate_template( 'buddyforms/groups/single-post.php' ) ?>
+			</div>
+
+			<?php endif; ?>
+
 			<?php
 			$tmp = ob_get_clean();
 			echo $tmp;
