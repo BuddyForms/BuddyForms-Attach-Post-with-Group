@@ -166,13 +166,13 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
 
 			<div class="item-list-tabs no-ajax" id="subnav" role="navigation">
 				<ul>
-					<li id="view-post-details-groups-li" class="current"><a id="view-post-details" class="bf_show_aptg"
+					<li id="view-post-details-groups-li" class="<?php echo ! isset( $_GET['edit_post_group'] ) ? "current" : "" ?> "><a id="view-post-details" class="bf_show_aptg"
 					                                                        target="1"
 					                                                        href=" <?php $group_permalink ?>">View</a>
 					</li>
 
 					<?php if ( $this->buddyforms_user_can ) { ?>
-						<li id="edit-post-details-groups-li"><a id="edit-post-details" class="bf_show_aptg" target="2"
+						<li id="edit-post-details-groups-li" class="<?php echo isset( $_GET['edit_post_group'] ) ? "current" : "" ?>"><a id="edit-post-details" class="bf_show_aptg" target="2"
 						                                        href="<?php get_edit_post_link( $attached_post_id ) ?>">Edit</a>
 						</li>
 					<?php } ?>
