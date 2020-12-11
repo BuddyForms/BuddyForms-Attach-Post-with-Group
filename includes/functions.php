@@ -140,6 +140,11 @@ function buddyforms_delete_a_group_post( $group_id ) {
 	}
 
 	$groups_post_id = groups_get_groupmeta( $group_id, 'group_post_id' );
+	if ( empty($groups_post_id) ) {
+		return;
+	}
+
+	remove_action( 'groups_before_delete_group', 'buddyforms_delete_a_group_post' );
 	wp_delete_post( $groups_post_id );
 }
 

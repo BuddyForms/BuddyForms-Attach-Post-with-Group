@@ -234,14 +234,6 @@ class BuddyForms_GroupControl {
 		$post          = get_post( $post_id );
 		$post_group_id = get_post_meta( $post->ID, '_post_group_id', true );
 
-		if ( 
-			isset( $_POST['delete-group-button'] ) && 
-			isset( $_POST['delete-group-understand'] ) &&
-			(int) $_POST['delete-group-understand'] === 1 
-		) {
-			return;
-		}
-
 		//$terms = wp_get_object_terms($post->ID, 'product');
 		//wp_remove_object_terms( $post_group_id, $terms, $taxonomy );
 
