@@ -245,8 +245,7 @@ class BuddyForms_GroupControl {
 
 }
 
-add_action( 'buddyforms_init', function () { new BuddyForms_GroupControl(); } );
-
+new BuddyForms_GroupControl();
 
 function bf_get_attachment_thumbnail_path( $attachment_id = 0 ) {
 	$attachment_id = (int) $attachment_id;
