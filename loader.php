@@ -5,7 +5,7 @@
  * Description: Create engaged communities with every post.
  * Requires at least: 3.9
  * Tested up to: 5.0
- * Version: 1.2.5
+ * Version: 1.2.6
  * Author: ThemeKraft
  * Author URI: https://themekraft.com/buddyforms/
  * Licence: GPLv3
@@ -94,7 +94,7 @@ class BuddyForms_Group_Extension {
 
 	public function load_constants() {
 
-		define( 'BuddyForms_Attach_Post_with_Group', '1.2.5' );
+		define( 'BuddyForms_Attach_Post_with_Group', '1.2.6' );
 
 		if ( ! defined( 'BUDDYFORMS_GE_INSTALL_PATH' ) ) {
 			define( 'BUDDYFORMS_GE_INSTALL_PATH', dirname( __FILE__ ) . '/' );
