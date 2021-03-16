@@ -344,11 +344,23 @@ function buddyforms_groups_single_post_meta( $form_fields, $args ) {
 				continue;
 			}
 
-			$customfield_value = get_post_meta( get_the_ID(), $customfield['slug'], true );
+			$field_slug = $customfield['slug'];
+			$field_name = $customfield['name'];
+
+			if ( $customfield['type'] === 'acf-field' && function_exists('get_field_object') ) {				
+				$acf_field         = get_field_object( $customfield['acf_field'], get_the_ID(), false );
+
+				$field_slug        = $acf_field['name'];
+				$field_name        = $acf_field['label'];
+				$customfield_value = $acf_field['value'];
+
+			} else {
+				$customfield_value = get_post_meta( get_the_ID(), $field_slug, true );
+			}
 
 			if ( ! empty( $customfield_value ) ) {
-				$post_meta_tmp = '<div class="post_meta ' . $customfield['slug'] . '">';
-				$post_meta_tmp .= '<label>' . $customfield['name'] . '</label>';
+				$post_meta_tmp = '<div class="post_meta ' . $field_slug . '">';
+				$post_meta_tmp .= '<label>' . $field_name . '</label>';
 
 				if ( is_array( $customfield_value ) ) {
 					$meta_tmp = "<p>" . implode( ',', $customfield_value ) . "</p>";
@@ -361,7 +373,7 @@ function buddyforms_groups_single_post_meta( $form_fields, $args ) {
 						$meta_tmp = get_the_term_list( $post->ID, $customfield['taxonomy'], "<p>", ' - ', "</p>" );
 						break;
 					case 'link':
-						$meta_tmp = "<p><a href='" . $customfield_value . "' " . $customfield['name'] . ">" . $customfield_value . " </a></p>";
+						$meta_tmp = "<p><a href='" . $customfield_value . "' " . $field_name . ">" . $customfield_value . " </a></p>";
 						break;
 					default:
 						apply_filters( 'buddyforms_form_element_display_frontend', $customfield );
