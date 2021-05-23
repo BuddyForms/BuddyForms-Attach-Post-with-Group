@@ -3,8 +3,8 @@ Contributors: svenl77, konradS, buddyforms, gfirem
 Tags: buddypress, user, members, profiles, custom post types, taxonomy, frontend posting, frontend editing, groups, post attached to groups
 Plugin URI: http://buddyforms.com/downloads/attach-post-with-group/
 Requires at least: 3.9
-Tested up to: 5.6
-Stable tag: 1.2.6
+Tested up to: 5.7
+Stable tag: 1.2.7
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -97,6 +97,10 @@ BuddyForms gives you these possibilities for a wide variety of uses.
 
 
 == Changelog ==
+= 1.2.7 - 23 May 2021 =
+* Improved UI of the attached post's view tab.
+* Tested up to WordPress 5.7.
+
 = 1.2.6 - 29 Jan 2021 =
 * Fixed issue with BF ACF fields on the edit screen of the group post.
 * Fix issue with the list items on the Post Group tab. The items aren't marked as current when interacting with them.
