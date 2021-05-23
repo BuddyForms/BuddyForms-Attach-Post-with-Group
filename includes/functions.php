@@ -360,28 +360,37 @@ function buddyforms_groups_single_post_meta( $form_fields, $args ) {
 
 			if ( ! empty( $customfield_value ) ) {
 				$post_meta_tmp = '<div class="post_meta ' . $field_slug . '">';
-				$post_meta_tmp .= '<label>' . $field_name . '</label>';
-
-				if ( is_array( $customfield_value ) ) {
-					$meta_tmp = "<p>" . implode( ',', $customfield_value ) . "</p>";
-				} else {
-					$meta_tmp = "<p>" . $customfield_value . "</p>";
-				}
+				$post_meta_tmp .= '<label><b>' . $field_name . '</b></label>';
+				$post_meta_tmp .= '<p>';
 
 				switch ( $customfield['type'] ) {
 					case 'taxonomy':
-						$meta_tmp = get_the_term_list( $post->ID, $customfield['taxonomy'], "<p>", ' - ', "</p>" );
+						$post_meta_tmp .= get_the_term_list( $post->ID, $customfield['taxonomy'], "<span>", ' - ', "</span>" );
 						break;
 					case 'link':
-						$meta_tmp = "<p><a href='" . $customfield_value . "' " . $field_name . ">" . $customfield_value . " </a></p>";
+						$post_meta_tmp .= "<a href='" . $customfield_value . "' " . $field_name . ">" . $customfield_value . " </a>";
 						break;
+					case 'radiobutton':
+					case 'checkbox':
+						$customfield_value = ! is_array( $customfield_value ) ? array( $customfield_value ) : $customfield_value;
+
+						foreach ( $customfield['options'] as $option ) {
+							if ( in_array( $option['value'], $customfield_value ) ) {
+								$post_meta_tmp .= '<span>' . $option['label'] . '</span>';
+							}
+						}
+
+						break;
+
 					default:
+
+						$post_meta_tmp .= is_array( $customfield_value ) ? implode( ',', $customfield_value ) : $customfield_value;
+
 						apply_filters( 'buddyforms_form_element_display_frontend', $customfield );
 						break;
 				}
 
-				$post_meta_tmp .= $meta_tmp;
-				$post_meta_tmp .= '</div>';
+				$post_meta_tmp .= '</p></div>';
 
 				echo apply_filters( 'buddyforms_group_single_post_meta_tmp', $post_meta_tmp );
 

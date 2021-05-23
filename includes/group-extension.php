@@ -144,6 +144,10 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
 			$form_slug        = $this->attached_form_slug;
 			$group_permalink  = bp_get_group_permalink( groups_get_current_group() ) . bp_current_action();
 
+			if ( apply_filters( 'bf_aptg_load_styles', true ) ) {
+				wp_enqueue_style( 'bf-aptg-styles', plugins_url( 'assets/bf_aptg_styles.css', __FILE__ ) );
+			}
+
 			ob_start(); ?>
 			<script>
 				jQuery(function () {
@@ -164,7 +168,7 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
 				});
 			</script>
 
-			<div class="item-list-tabs no-ajax" id="subnav" role="navigation">
+			<div class="bf_aptg_nav item-list-tabs no-ajax" id="subnav" role="navigation">
 				<ul>
 					<li id="view-post-details-groups-li" class="<?php echo ! isset( $_GET['edit_post_group'] ) ? "current" : "" ?> "><a id="view-post-details" class="bf_show_aptg"
 					                                                        target="1"
