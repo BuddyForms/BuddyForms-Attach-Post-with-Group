@@ -3,8 +3,8 @@ Contributors: svenl77, konradS, buddyforms, gfirem
 Tags: buddypress, user, members, profiles, custom post types, taxonomy, frontend posting, frontend editing, groups, post attached to groups
 Plugin URI: http://buddyforms.com/downloads/attach-post-with-group/
 Requires at least: 3.9
-Tested up to: 5.8
-Stable tag: 1.2.8
+Tested up to: 5.9
+Stable tag: 1.2.9
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -97,6 +97,11 @@ BuddyForms gives you these possibilities for a wide variety of uses.
 
 
 == Changelog ==
+= 1.2.9 - 23 Feb 2022 =
+* Added two new hooks to customize the cropping values ​​on the group avatar image.
+* Fixed issue related to frontend shortcode malfunction.
+* Tested up to WordPress 5.9
+
 = 1.2.8 - 29 Sep 2021 =
 * Tested up to WordPress 5.8.
 
