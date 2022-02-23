@@ -122,6 +122,7 @@ class BuddyForms_Group_Extension {
 		require_once( BUDDYFORMS_GE_INCLUDES_PATH . 'group-control.php' );
 		require_once( BUDDYFORMS_GE_INCLUDES_PATH . 'functions.php' );
 		require_once( BUDDYFORMS_GE_INCLUDES_PATH . 'form-elements.php' );
+		require_once( BUDDYFORMS_GE_INCLUDES_PATH . 'shortcodes.php' );
 
 	}
 
