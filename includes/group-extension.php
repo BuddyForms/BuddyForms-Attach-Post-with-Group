@@ -168,8 +168,8 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
 				});
 			</script>
 
-			<div class="bf_aptg_nav item-list-tabs no-ajax" id="subnav" role="navigation">
-				<ul>
+			<div class="bp-navs bp-subnavs group-subnav no-ajax" id="subnav" role="navigation">
+				<ul class="subnav">
 					<li id="view-post-details-groups-li" class="<?php echo ! isset( $_GET['edit_post_group'] ) ? "current" : "" ?> "><a id="view-post-details" class="bf_show_aptg"
 					                                                        target="1"
 					                                                        href=" <?php $group_permalink ?>">View</a>
