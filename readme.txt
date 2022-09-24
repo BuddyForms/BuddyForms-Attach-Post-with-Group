@@ -4,7 +4,7 @@ Tags: buddypress, user, members, profiles, custom post types, taxonomy, frontend
 Plugin URI: http://buddyforms.com/downloads/attach-post-with-group/
 Requires at least: 3.9
 Tested up to: 6.0.2
-Stable tag: 1.2.12
+Stable tag: 1.3.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -97,6 +97,10 @@ BuddyForms gives you these possibilities for a wide variety of uses.
 
 
 == Changelog ==
+= 1.3.0 - 24 Sep 2022 =
+* Switching to paid version.
+* Adding support to bundle license auto activation.
+
 = 1.2.12 - 19 Sep 2022 =
 * Fixed issue with group settings navigation.
 
