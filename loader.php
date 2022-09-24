@@ -426,8 +426,10 @@ function baptge_fs() {
 			'slug'           => 'buddyforms-attach-posts-to-groups-extension',
 			'type'           => 'plugin',
 			'public_key'     => 'pk_c133f19751d39a5cf3cf3ef9a5129',
-			'is_premium'     => false,
-			'has_paid_plans' => false,
+			'is_premium'     => true,
+			'premium_suffix'      => 'Professional',
+			'has_premium_version' => true,
+			'has_paid_plans' => true,
 			'is_org_compliant' => false,
 			'parent'         => array(
 				'id'         => '391',
@@ -439,6 +441,7 @@ function baptge_fs() {
 				'slug'    => 'edit.php?post_type=buddyforms',
 				'support' => false,
 			),
+			'bundle_license_auto_activation' => true,
 		) );
 	}
 
