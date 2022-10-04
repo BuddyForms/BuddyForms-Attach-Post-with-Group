@@ -5,7 +5,7 @@
  * Description: Create engaged communities with every post.
  * Requires at least: 3.9
  * Tested up to: 6.0.2
- * Version: 1.3.0
+ * Version: 1.3.1
  * Author: ThemeKraft
  * Author URI: https://themekraft.com/buddyforms/
  * Licence: GPLv3
@@ -94,7 +94,7 @@ class BuddyForms_Group_Extension {
 
 	public function load_constants() {
 
-		define( 'BuddyForms_Attach_Post_with_Group', '1.3.0' );
+		define( 'BuddyForms_Attach_Post_with_Group', '1.3.1' );
 
 		if ( ! defined( 'BUDDYFORMS_GE_INSTALL_PATH' ) ) {
 			define( 'BUDDYFORMS_GE_INSTALL_PATH', dirname( __FILE__ ) . '/' );
@@ -426,10 +426,9 @@ function baptge_fs() {
 			'slug'           => 'buddyforms-attach-posts-to-groups-extension',
 			'type'           => 'plugin',
 			'public_key'     => 'pk_c133f19751d39a5cf3cf3ef9a5129',
-			'is_premium'     => true,
-			'premium_suffix'      => 'Professional',
-			'has_premium_version' => true,
-			'has_paid_plans' => true,
+			'is_premium'       => true,
+			'is_premium_only'  => true,
+			'has_paid_plans'   => true,
 			'is_org_compliant' => false,
 			'parent'         => array(
 				'id'         => '391',
