@@ -89,7 +89,9 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
 
 				endswitch;
 
-				$this->name              = $buddyforms[ $this->attached_form_slug ]['singular_name'];
+				$this->name              = ! empty( $buddyforms[ $this->attached_form_slug ]['singular_name'] ) 
+					? $buddyforms[ $this->attached_form_slug ]['singular_name'] 
+					: $buddyforms[ $this->attached_form_slug ]['name'];
 				$this->nav_item_position = 20;
 				$this->slug              = $buddyforms[ $this->attached_form_slug ]['slug'];
 
@@ -142,16 +144,23 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
 			$form_slug        = $this->attached_form_slug;
 			$group_permalink  = bp_get_group_permalink( groups_get_current_group() ) . bp_current_action();
 
+			if ( apply_filters( 'bf_aptg_load_styles', true ) ) {
+				wp_enqueue_style( 'bf-aptg-styles', plugins_url( 'assets/bf_aptg_styles.css', __FILE__ ) );
+			}
+
 			ob_start(); ?>
 			<script>
 				jQuery(function () {
 					jQuery(".bf_show_aptg").click(function () {
 
-						jQuery(".bf_main_aptg").hide();
-						jQuery("#bf_aptg" + jQuery(this).attr("target")).show();
+						var url = window.location.href;
+						var base_url = url.split("?")[0];
 
-						jQuery("li.current").removeClass("current");
-						jQuery(this).closest("li").addClass("current");
+						if ( jQuery(this).attr("id") === "edit-post-details" ) {
+							window.location.href = base_url + "?edit_post_group";
+						} else {
+							window.location.href = base_url;
+						}
 
 						return false;
 					});
@@ -159,37 +168,43 @@ if ( class_exists( 'BP_Group_Extension' ) ) {
 				});
 			</script>
 
-			<div class="item-list-tabs no-ajax" id="subnav" role="navigation">
-				<ul>
-					<li id="view-post-details-groups-li" class="current"><a id="view-post-details" class="bf_show_aptg"
+			<div class="bp-navs bp-subnavs group-subnav no-ajax" id="subnav" role="navigation">
+				<ul class="subnav">
+					<li id="view-post-details-groups-li" class="<?php echo ! isset( $_GET['edit_post_group'] ) ? "current" : "" ?> "><a id="view-post-details" class="bf_show_aptg"
 					                                                        target="1"
 					                                                        href=" <?php $group_permalink ?>">View</a>
 					</li>
 
 					<?php if ( $this->buddyforms_user_can ) { ?>
-						<li id="edit-post-details-groups-li"><a id="edit-post-details" class="bf_show_aptg" target="2"
+						<li id="edit-post-details-groups-li" class="<?php echo isset( $_GET['edit_post_group'] ) ? "current" : "" ?>"><a id="edit-post-details" class="bf_show_aptg" target="2"
 						                                        href="<?php get_edit_post_link( $attached_post_id ) ?>">Edit</a>
 						</li>
 					<?php } ?>
 				</ul>
 			</div>
 
-			<div id="bf_aptg1"
-			     class="bf_main_aptg"><?php buddyforms_ge_locate_template( 'buddyforms/groups/single-post.php' ) ?></div>
+			<?php if ( isset( $_GET['edit_post_group'] ) && $this->buddyforms_user_can ) : ?>
 
-			<?php if ( $this->buddyforms_user_can ) { ?>
-				<div id="bf_aptg2" style="display: none;" class="bf_main_aptg">
-					<?php
-					$args = array(
-						'post_type' => $buddyforms[ $form_slug ]['post_type'],
-						'post_id'   => $attached_post_id,
-						'form_slug' => $form_slug,
-					);
+			<div id="bf_aptg2" class="bf_main_aptg">
+				<?php
+				$args = array(
+					'post_type' => $buddyforms[ $form_slug ]['post_type'],
+					'post_id'   => $attached_post_id,
+					'form_slug' => $form_slug,
+				);
 
-					echo buddyforms_create_edit_form( $args );
-					?>
-				</div>
-			<?php } ?>
+				echo buddyforms_create_edit_form( $args );
+				?>
+			</div>
+
+			<?php else : ?>
+
+			<div id="bf_aptg1" class="bf_main_aptg">
+				<?php buddyforms_ge_locate_template( 'buddyforms/groups/single-post.php' ) ?>
+			</div>
+
+			<?php endif; ?>
+
 			<?php
 			$tmp = ob_get_clean();
 			echo $tmp;

@@ -3,8 +3,8 @@ Contributors: svenl77, konradS, buddyforms, gfirem
 Tags: buddypress, user, members, profiles, custom post types, taxonomy, frontend posting, frontend editing, groups, post attached to groups
 Plugin URI: http://buddyforms.com/downloads/attach-post-with-group/
 Requires at least: 3.9
-Tested up to: 5.4
-Stable tag: 1.2.4
+Tested up to: 6.1.1
+Stable tag: 1.3.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -97,6 +97,51 @@ BuddyForms gives you these possibilities for a wide variety of uses.
 
 
 == Changelog ==
+= 1.3.2 - 26 Dec 2022 =
+* Enabled trial version.
+* Tested up to WordPress 6.1.1
+
+= 1.3.1 - 04 Oct 2022 =
+* Fixed issue with plugin download url
+
+= 1.3.0 - 24 Sep 2022 =
+* Switching to paid version.
+* Adding support to bundle license auto activation.
+
+= 1.2.12 - 19 Sep 2022 =
+* Fixed issue with group settings navigation.
+
+= 1.2.11 - 18 Sep 2022 =
+* Improved plugin description on Addons page.
+* Tested up to WordPress 6.0.2
+
+= 1.2.10 - 17 May 2022 =
+* Fixed issue with duplicate hook.
+* Updated readme.txt
+
+= 1.2.9 - 23 Feb 2022 =
+* Added two new hooks to customize the cropping values ​​on the group avatar image.
+* Fixed issue related to frontend shortcode malfunction.
+* Tested up to WordPress 5.9
+
+= 1.2.8 - 29 Sep 2021 =
+* Tested up to WordPress 5.8.
+
+= 1.2.7 - 23 May 2021 =
+* Improved UI of the attached post's view tab.
+* Tested up to WordPress 5.7.
+
+= 1.2.6 - 29 Jan 2021 =
+* Fixed issue with BF ACF fields on the edit screen of the group post.
+* Fix issue with the list items on the Post Group tab. The items aren't marked as current when interacting with them.
+* Fix issue related to endless loop on the process deletion of group or post.
+* Fixed Rance Condition on class BuddyForms_GroupControl loading.
+
+= 1.2.5 - 19 Nov 2020 = 
+* Fixed some typos in the code.
+* Fixed the feature to render post metadata on the Group Front-end.
+* Added a fallback when Singular Name isn't set.
+
 = 1.2.4 - 10 Dec 2019 =
 * Improved compatibility with the last version of BuddyForms.
 * Removed deprecate use of the function `create_function`.

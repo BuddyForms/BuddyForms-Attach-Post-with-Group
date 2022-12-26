@@ -4,8 +4,8 @@
  * Plugin URI: http://buddyforms.com/downloads/attach-post-with-group/
  * Description: Create engaged communities with every post.
  * Requires at least: 3.9
- * Tested up to: 5.0
- * Version: 1.2.4
+ * Tested up to: 6.1.1
+ * Version: 1.3.2
  * Author: ThemeKraft
  * Author URI: https://themekraft.com/buddyforms/
  * Licence: GPLv3
@@ -94,7 +94,7 @@ class BuddyForms_Group_Extension {
 
 	public function load_constants() {
 
-		define( 'BuddyForms_Attach_Post_with_Group', '1.2.4' );
+		define( 'BuddyForms_Attach_Post_with_Group', '1.3.2' );
 
 		if ( ! defined( 'BUDDYFORMS_GE_INSTALL_PATH' ) ) {
 			define( 'BUDDYFORMS_GE_INSTALL_PATH', dirname( __FILE__ ) . '/' );
@@ -122,6 +122,7 @@ class BuddyForms_Group_Extension {
 		require_once( BUDDYFORMS_GE_INCLUDES_PATH . 'group-control.php' );
 		require_once( BUDDYFORMS_GE_INCLUDES_PATH . 'functions.php' );
 		require_once( BUDDYFORMS_GE_INCLUDES_PATH . 'form-elements.php' );
+		require_once( BUDDYFORMS_GE_INCLUDES_PATH . 'shortcodes.php' );
 
 	}
 
@@ -262,7 +263,7 @@ class BuddyForms_Group_Extension {
 		}
 
 		if ( ! defined( 'BP_VERSION' ) ) {
-			return;
+			return $permalink;
 		}
 
 		if ( ! bp_is_active( 'groups' ) ) {
@@ -425,8 +426,14 @@ function baptge_fs() {
 			'slug'           => 'buddyforms-attach-posts-to-groups-extension',
 			'type'           => 'plugin',
 			'public_key'     => 'pk_c133f19751d39a5cf3cf3ef9a5129',
-			'is_premium'     => false,
-			'has_paid_plans' => false,
+			'is_premium'       => true,
+			'is_premium_only'  => true,
+			'has_paid_plans'   => true,
+			'is_org_compliant' => false,
+			'trial'               => array(
+                    'days'               => 7,
+                    'is_require_payment' => true,
+                ),
 			'parent'         => array(
 				'id'         => '391',
 				'slug'       => 'buddyforms',
@@ -437,6 +444,7 @@ function baptge_fs() {
 				'slug'    => 'edit.php?post_type=buddyforms',
 				'support' => false,
 			),
+			'bundle_license_auto_activation' => true,
 		) );
 	}
 

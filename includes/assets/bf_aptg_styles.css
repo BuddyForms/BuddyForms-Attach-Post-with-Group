@@ -1,0 +1,26 @@
+#bf_aptg1.bf_main_aptg .post_meta,
+#bf_aptg1.bf_main_aptg .entry-title,
+#bf_aptg1.bf_main_aptg .entry-single-content {
+    margin-bottom: 1rem;
+}
+
+#bf_aptg1.bf_main_aptg .post_meta span {
+    margin-right: 0.5rem;
+}
+
+.bf_aptg_nav,
+#buddypress div.item-list-tabs.bf_aptg_nav {
+    margin-bottom: 1rem;
+}
+
+.bf_aptg_nav li,
+#buddypress div.item-list-tabs.bf_aptg_nav ul li {
+    margin-right: 0.5rem;
+    opacity: 0.8;
+}
+
+.bf_aptg_nav li.current,
+#buddypress div.item-list-tabs.bf_aptg_nav ul li.current {
+    opacity: 1;
+    font-weight: bold;
+}

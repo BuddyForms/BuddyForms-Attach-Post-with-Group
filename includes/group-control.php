@@ -245,8 +245,7 @@ class BuddyForms_GroupControl {
 
 }
 
-add_action( 'buddyforms_init', function () { new BuddyForms_GroupControl(); } );
-
+new BuddyForms_GroupControl();
 
 function bf_get_attachment_thumbnail_path( $attachment_id = 0 ) {
 	$attachment_id = (int) $attachment_id;
@@ -325,8 +324,8 @@ function bf_bp_avatar_create_item_avatar( $args = array() ) {
 		'original_file' => trailingslashit( $avatar_data['subdir'] ) . $image_file_name,
 		'crop_w'        => $r['crop_w'],
 		'crop_h'        => $r['crop_h'],
-		'crop_x'        => $r['crop_x'],
-		'crop_y'        => $r['crop_y']
+		'crop_x'        => apply_filters( 'buddyfroms_group_avatar_crop_x', $r['crop_x'] ),
+		'crop_y'        => apply_filters( 'buddyfroms_group_avatar_crop_y', $r['crop_y'] )
 	) ) ) {
 		return false;
 	} else {

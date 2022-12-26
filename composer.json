@@ -14,8 +14,8 @@
     "groups",
     "post attached to groups"
   ],
-  "homepage": "http://buddyforms.com/downloads/attach-post-with-group/",
-  "license": "GPL-2.0+",
+  "homepage": "https://themekraft.com/products/attach-posts-with-groups/",
+  "license": "GPLv2 or later",
   "authors": [
     {
       "name": "Sven Lehnert",
@@ -26,17 +26,9 @@
       "email": "gfirem@gmail.com"
     }
   ],
-  "minimum-stability": "stable",
+  "minimum-stability": "dev",
   "require": {
-    "php": ">=5.2"
-  },
-  "require-dev": {
-    "bruli/php-git-hooks": "^5.1"
-  },
-  "scripts": {
-    "package": "sh .tk/package.sh loader",
-    "wp-release": "sh .tk/wp_release.sh",
-    "beta-release": "sh .tk/full-deploy.sh loader 407 false beta",
-    "full-release": "sh .tk/full-deploy.sh loader 407 false released"
+  	"consolidation/robo": "^1.0.0",
+    "bamarni/composer-bin-plugin": "dev-master"
   }
 }

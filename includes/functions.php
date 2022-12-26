@@ -140,6 +140,11 @@ function buddyforms_delete_a_group_post( $group_id ) {
 	}
 
 	$groups_post_id = groups_get_groupmeta( $group_id, 'group_post_id' );
+	if ( empty($groups_post_id) ) {
+		return;
+	}
+
+	remove_action( 'groups_before_delete_group', 'buddyforms_delete_a_group_post' );
 	wp_delete_post( $groups_post_id );
 }
 
@@ -320,10 +325,9 @@ function buddyforms_groups_single_post_meta( $form_fields, $args ) {
 	extract( $args );
 
 	if ( bp_current_action() != $form_slug ) {
-		;
+		return;
 	}
 
-	return;
 
 	if ( ! ( isset( $buddyforms[ $form_slug ]['groups']['display_content'] ) && in_array( 'meta', $buddyforms[ $form_slug ]['groups']['display_content'] ) ) ) {
 		return;
@@ -340,32 +344,53 @@ function buddyforms_groups_single_post_meta( $form_fields, $args ) {
 				continue;
 			}
 
-			$customfield_value = get_post_meta( get_the_ID(), $customfield['slug'], true );
+			$field_slug = $customfield['slug'];
+			$field_name = $customfield['name'];
+
+			if ( $customfield['type'] === 'acf-field' && function_exists('get_field_object') ) {				
+				$acf_field         = get_field_object( $customfield['acf_field'], get_the_ID(), false );
+
+				$field_slug        = $acf_field['name'];
+				$field_name        = $acf_field['label'];
+				$customfield_value = $acf_field['value'];
+
+			} else {
+				$customfield_value = get_post_meta( get_the_ID(), $field_slug, true );
+			}
 
 			if ( ! empty( $customfield_value ) ) {
-				$post_meta_tmp = '<div class="post_meta ' . $customfield['slug'] . '">';
-				$post_meta_tmp .= '<label>' . $customfield['name'] . '</label>';
-
-				if ( is_array( $customfield_value ) ) {
-					$meta_tmp = "<p>" . implode( ',', $customfield_value ) . "</p>";
-				} else {
-					$meta_tmp = "<p>" . $customfield_value . "</p>";
-				}
+				$post_meta_tmp = '<div class="post_meta ' . $field_slug . '">';
+				$post_meta_tmp .= '<label><b>' . $field_name . '</b></label>';
+				$post_meta_tmp .= '<p>';
 
 				switch ( $customfield['type'] ) {
 					case 'taxonomy':
-						$meta_tmp = get_the_term_list( $post->ID, $customfield['taxonomy'], "<p>", ' - ', "</p>" );
+						$post_meta_tmp .= get_the_term_list( $post->ID, $customfield['taxonomy'], "<span>", ' - ', "</span>" );
 						break;
 					case 'link':
-						$meta_tmp = "<p><a href='" . $customfield_value . "' " . $customfield['name'] . ">" . $customfield_value . " </a></p>";
+						$post_meta_tmp .= "<a href='" . $customfield_value . "' " . $field_name . ">" . $customfield_value . " </a>";
 						break;
+					case 'radiobutton':
+					case 'checkbox':
+						$customfield_value = ! is_array( $customfield_value ) ? array( $customfield_value ) : $customfield_value;
+
+						foreach ( $customfield['options'] as $option ) {
+							if ( in_array( $option['value'], $customfield_value ) ) {
+								$post_meta_tmp .= '<span>' . $option['label'] . '</span>';
+							}
+						}
+
+						break;
+
 					default:
+
+						$post_meta_tmp .= is_array( $customfield_value ) ? implode( ',', $customfield_value ) : $customfield_value;
+
 						apply_filters( 'buddyforms_form_element_display_frontend', $customfield );
 						break;
 				}
 
-				$post_meta_tmp .= $meta_tmp;
-				$post_meta_tmp .= '</div>';
+				$post_meta_tmp .= '</p></div>';
 
 				echo apply_filters( 'buddyforms_group_single_post_meta_tmp', $post_meta_tmp );
 
