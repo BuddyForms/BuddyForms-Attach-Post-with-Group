@@ -3,8 +3,8 @@ Contributors: svenl77, konradS, buddyforms, gfirem
 Tags: buddypress, user, members, profiles, custom post types, taxonomy, frontend posting, frontend editing, groups, post attached to groups
 Plugin URI: http://buddyforms.com/downloads/attach-post-with-group/
 Requires at least: 3.9
-Tested up to: 6.0.2
-Stable tag: 1.3.1
+Tested up to: 6.1.1
+Stable tag: 1.3.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -97,6 +97,10 @@ BuddyForms gives you these possibilities for a wide variety of uses.
 
 
 == Changelog ==
+= 1.3.2 - 26 Dec 2022 =
+* Enabled trial version.
+* Tested up to WordPress 6.1.1
+
 = 1.3.1 - 04 Oct 2022 =
 * Fixed issue with plugin download url
 
